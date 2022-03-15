@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>zadanie1</title>
+    </head>
+    <body>
+        <h1>Домашнее задание по курсу “Основы java февраль 2022” </h1>
+        <h2>Студент Патюков Сергей Сергеевич</h2>
+        <h3>1 задание</h3>
+
+        <div>
+            <a th:href="@{/}">
+                <button>назад</button>
+            </a>
+        </div>
+
+        <img th:src="@{/images/zadanie1/zadanie1.png}"/>
+
+        <br>
+        <br>
+
+        <form method="post" th:action="@{/zadanie1/skrinshot}">
+            <button>скриншот страницы JavaRush</button>
+        </form>
+
+        <form method="post" th:action="@{/zadanie1/rekyrsRealizMemoriz}">
+            <button>рекурсивная реализация с использованием памяти</button>
+        </form>
+
+        <form method="post" th:action="@{/zadanie1/vCicleMemoriz}">
+            <button>в цикле - с использованием памяти</button>
+        </form>
+
+        <form method="post" th:action="@{/zadanie1/sokrMemoriz}">
+            <button>cокращаем использование памяти, и алгоритм работает</button>
+        </form>
+
+        <form method="post" th:action="@{/zadanie1/cache}">
+            <button>cокращаем использование памяти, сохраняем значения в кеш cache и алгоритм работает</button>
+        </form>
+
+    </body>
+</html>

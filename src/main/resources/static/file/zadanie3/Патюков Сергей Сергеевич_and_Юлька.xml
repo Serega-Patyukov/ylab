@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Gameplay>
+    <Player id="1" name="Юлька" symbol="О"/>
+    <Player id="2" name="Патюков Сергей Сергеевич" symbol="Х"/>
+    <Game>
+        <Step num="1" playerId="1">00</Step>
+        <Step num="2" playerId="2">10</Step>
+        <Step num="3" playerId="1">11</Step>
+        <Step num="4" playerId="2">20</Step>
+        <Step num="5" playerId="1">22</Step>
+    </Game>
+    <GameResult>
+        <Player id="1" name="Юлька" symbol="О"/>
+    </GameResult>
+</Gameplay>

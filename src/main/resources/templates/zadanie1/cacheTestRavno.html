@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>cacheTestRavno</title>
+    </head>
+    <body>
+        <h1>Домашнее задание по курсу “Основы java февраль 2022” </h1>
+        <h2>Студент Патюков Сергей Сергеевич</h2>
+        <h3>1 задание</h3>
+        <h4>Сокращаем использование памяти, сохраняем значения в кеш cache и алгоритм работает</h4>
+
+        <form method="post" th:action="@{/zadanie1/cacheTest}">
+            <button>назад</button>
+        </form>
+
+        <br>
+        <form method="post" th:action="@{/zadanie1/cacheTestRavno}">
+            <input disabled type="text" th:value="${numberN.getN()}"/>
+            <button disabled>равно</button>
+            <input disabled type="text" th:value="${numberFibonacchi.fibMemor(numberN.getN(), numberN.getMemor(numberN.getN()))}"/>
+        </form>
+
+        <br>
+
+        <img th:src="@{/images/zadanie1/cache0.png}"/>
+        <br>
+        <img th:src="@{/images/zadanie1/cache1.png}"/>
+
+    </body>
+</html>
