@@ -1,5 +1,6 @@
 package ru.patyukov.ylab.zadanie4;
 
+import ru.patyukov.ylab.zadanie4.json.JsonSimpleParser;
 import ru.patyukov.ylab.zadanie4.xml.DomParser;
 import ru.patyukov.ylab.zadanie4.model.GameResult;
 import ru.patyukov.ylab.zadanie4.model.Gameplay;
@@ -7,10 +8,12 @@ import ru.patyukov.ylab.zadanie4.xo.Cell;
 import ru.patyukov.ylab.zadanie4.xo.Field;
 import ru.patyukov.ylab.zadanie4.xo.Player;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,21 +22,32 @@ public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
     private static Field field = new Field(); // Создаем поле.
-    private static Gameplay gameplayWrite;   // Объект который хранит историю игры.
+    private static Gameplay gameplay;        // Объект который хранит историю игры.
     private static Player player1;          // Первый игрок.
     private static Player player2;         // Второй игрок.
-    public static String path;            // Файл который хранит историю игры.
-    private static int i;               // Количество ходов
+    private static int i;                 // Количество ходов
+
+    private static JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();   // Обект класса который сохраняет и читает файл json.
+    private static DomParser domParser = new DomParser();                       // Обект класса который сохраняет и читает файл xml.
+    private static InterfaceParser parser;                                     // Переменная которая может парсить json и xml.
+
+    public static String pathXML;         // Файл который хранит историю игры в xml.
+    public static String pathJSON;       // Файл который хранит историю игры в json.
+
+    private static boolean flag = true;   // этот флаг переключает пункт меню в методе gameResult()
 
     public static void main(String[] args) {
 
         System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
         gameResult();   // Метод просмотра истории.
+        flag = false;
         System.out.println("=========================================================\n\n");
         createPlayer();  // Создаем игроков.
         queue();        // Определяем кто первым начнет.
-        path = nameFileXML(player1.getName(), player2.getName());   // Создаем файл который хранит историю игры, если его нет.
+
+        pathJSON = nameFile(player1.getName(), player2.getName(), jsonSimpleParser);   // Создаем имя файла json который хранит историю игры.
+        pathXML = nameFile(player1.getName(), player2.getName(), domParser);          // Создаем имя файлф xml который хранит историю игры.
 
             // ИГРА НАЧАЛАСЬ.
         for (i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
@@ -69,7 +83,7 @@ public class Main {
         Cell cell = Cell.xy(player1, field.getN());
         if (cell != null) {
             if (field.saveCellInField(cell, player1)) {
-                gameplayWrite.setGame(player1.getId(), String.valueOf(i), cell.getX(), cell.getY());   // Добавляем очередной ход.
+                gameplay.setGame(player1.getId(), String.valueOf(i), cell.getX(), cell.getY());   // Добавляем очередной ход.
                 player1.setStartStop(false);
                 player2.setStartStop(true);
             }
@@ -86,7 +100,7 @@ public class Main {
         Cell cell = Cell.xy(player2, field.getN());
         if (cell != null) {
             if (field.saveCellInField(cell, player2)) {
-                gameplayWrite.setGame(player2.getId(), String.valueOf(i), cell.getX(), cell.getY());   // Добавляем очередной ход.
+                gameplay.setGame(player2.getId(), String.valueOf(i), cell.getX(), cell.getY());   // Добавляем очередной ход.
                 player1.setStartStop(true);
                 player2.setStartStop(false);
             }
@@ -104,12 +118,16 @@ public class Main {
         System.out.println("=========================================================\n\n");
 
         // Сохраняем победителя в объект который хранит историю игры.
-        if (player1.getName().equals(namePlayer)) gameplayWrite.setGameResult(new GameResult(player1));
-        else gameplayWrite.setGameResult(new GameResult(player2));
+        if (player1.getName().equals(namePlayer)) gameplay.setGameResult(new GameResult(player1));
+        else gameplay.setGameResult(new GameResult(player2));
 
         // Сохраняем объект который хранит историю игры в файл xml.
         try {
-            new DomParser().write(gameplayWrite, path);
+            parser = domParser;
+            parser.write(gameplay, pathXML);
+
+            parser = jsonSimpleParser;
+            parser.write(gameplay, pathJSON);
         } catch (Exception e) {
             System.out.println("Не удалось сохранить историю игры");
             e.printStackTrace();
@@ -125,11 +143,15 @@ public class Main {
         System.out.println("\nНИЧЬЯ !!!");
         System.out.println("=========================================================\n\n");
 
-        gameplayWrite.setGameResult(null);   // Сохраняем null в объект который хранит историю игры.
+        gameplay.setGameResult(null);   // Сохраняем null в объект который хранит историю игры.
 
         // Сохраняем объект который хранит историю игры в файл xml.
         try {
-            new DomParser().write(gameplayWrite, path);
+            parser = domParser;
+            parser.write(gameplay, pathXML);
+
+            parser = jsonSimpleParser;
+            jsonSimpleParser.write(gameplay, pathJSON);
         } catch (Exception e) {
             System.out.println("Не удалось сохранить историю игры");
             e.printStackTrace();
@@ -148,13 +170,13 @@ public class Main {
             player1.setStartStop(true);   // Начьнет первый.
             player1.setId("1");   // Задаем id первого игрока.
             player2.setId("2");   // Задаем id второго игрока.
-            gameplayWrite = new Gameplay(player1, player2);   // Инициализируем объект который хранит историю игры.
+            gameplay = new Gameplay(player1, player2);   // Инициализируем объект который хранит историю игры.
         }
         else {
             player2.setStartStop(true);   // Начьнет второй.
             player2.setId("1");   // Задаем id второго игрока.
             player1.setId("2");   // Задаем id первого игрока.
-            gameplayWrite = new Gameplay(player2, player1);   // Инициализируем объект который хранит историю игры.
+            gameplay = new Gameplay(player2, player1);   // Инициализируем объект который хранит историю игры.
         }
     }
 
@@ -191,8 +213,9 @@ public class Main {
             DirectoryStream<Path> paths = Files.newDirectoryStream(Path.of("src/main/resources/static/file/zadanie4"));
             for (Path paht : paths) {   // Получаем список всех файлов.
                 String strPaht = paht.getFileName().toString();   // Получаем имена файлов без директории.
-                // Сохраняем только файлы с расширение xml, но расширение несохраняем.
-                if (strPaht.endsWith(".xml")) strListPath.add(strPaht.substring(0, strPaht.length() - 4));
+                // Сохраняем только файлы с расширение xml и json.
+                if (strPaht.endsWith(".xml")) strListPath.add(strPaht);
+                if (strPaht.endsWith(".json")) strListPath.add(strPaht);
             }
         } catch (IOException e) {
             System.out.println("Не удалось посмотреть историю игр предыдущих игроков");
@@ -212,14 +235,15 @@ public class Main {
 
             System.out.println("\tДля просмотра истории игры введите имя из списка");
             System.out.println("\tДля просмотра статистики игры введите STAT");
-            System.out.println("\tДля продолжения введите NEXT\n");
+            if (flag) System.out.println("\tДля запуска игры введите NEXT\n");
+            else System.out.println("\tДля выхода введите NEXT\n");
             System.out.print("Введите - ");
 
-            String flag = scanner.nextLine();   // Ввод от пользователя.
+            String buffer = scanner.nextLine();   // Ввод от пользователя.
 
             // Обработка ввода.
-            if (flag.equals("NEXT")) return;
-            else if (flag.equals("STAT")) {
+            if (buffer.equals("NEXT")) return;
+            else if (buffer.equals("STAT")) {
                 System.out.println();
                 Statisticsplayer.printStatisticsPlayer();
                 System.out.println("*********************************************************");
@@ -230,11 +254,24 @@ public class Main {
 
                 // Ищем введенное имя в списке имен файлов с историей игр, без директории и расширения.
                 for (int i = 0; i < strListPath.size(); i++) {
-                    if (flag.equals(strListPath.get(i))) {
+                    if (buffer.equals(strListPath.get(i))) {
                         try {
-                            System.out.println("\tИстория игры - " + flag);
-                            Gameplay gameplay = new DomParser().read("src/main/resources/static/file/zadanie4/" + flag + ".xml");
-                            gameplay.printGameplay();
+                            System.out.println("\tИстория игры - " + buffer);
+
+                            if (buffer.endsWith(".xml")) {
+                                System.out.println("\nИстория игры из файла xml");
+                                parser = domParser;
+                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer);
+                                gameplay.printGameplay();
+                            }
+
+                            if (buffer.endsWith(".json")) {
+                                System.out.println("\nИстория игры из файла json");
+                                parser = jsonSimpleParser;
+                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer);
+                                gameplay.printGameplay();
+                            }
+
                         } catch (Exception e) {
                             System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
                             System.out.println("Ошибка при загрузке файла с историей игры.");
@@ -252,16 +289,55 @@ public class Main {
     }
 
     // Метод определяет имя файла для хранения истории.
-    public static String nameFileXML(String namePlayer1, String namePlayer2) {
+    public static String nameFile(String namePlayer1, String namePlayer2, InterfaceParser parser) {
 
-        String namePlayer1_and_namePlayer2 = "src/main/resources/static/file/zadanie4/" + namePlayer1 + "_and_" + namePlayer2 + ".xml";
-        String namePlayer2_and_namePlayer1 = "src/main/resources/static/file/zadanie4/" + namePlayer2 + "_and_" + namePlayer1 + ".xml";
+        String pathResult = "src/main/resources/static/file/zadanie4/" + namePlayer1 + "_and_" + namePlayer2;   // Оносительное имя файла.
 
-        if (!Files.exists(Path.of(namePlayer1_and_namePlayer2))) {
-            if (Files.exists(Path.of(namePlayer2_and_namePlayer1))) return namePlayer2_and_namePlayer1;
-            else return namePlayer1_and_namePlayer2;
+        while (true) {
+
+            // Для файлов .xml
+            if (parser instanceof DomParser) {
+                if (!Files.exists(Path.of(pathResult))) {
+                    pathResult =  pathResult + "_0" + ".xml";
+                    if (!Files.exists(Path.of(pathResult))) {
+                        try {
+                            Files.createFile(Path.of(pathResult));   // Создали пустой файл.
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+                else {
+                    String buf = String.valueOf(pathResult.charAt(pathResult.length() - 5));
+                    int temp = Integer.parseInt(buf) + 1;
+                    pathResult =  pathResult.substring(0, pathResult.length()-5) + temp + ".xml";
+                    if (!Files.exists(Path.of(pathResult))) break;
+                }
+            }
+
+            // Для файлов .json
+            if (parser instanceof JsonSimpleParser) {
+                if (!Files.exists(Path.of(pathResult))) {
+                    pathResult =  pathResult + "_0" + ".json";
+                    if (!Files.exists(Path.of(pathResult))) {
+                        try {
+                            Files.createFile(Path.of(pathResult));   // Создали пустой файл.
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+                else {
+                    String buf = String.valueOf(pathResult.charAt(pathResult.length() - 6));
+                    int temp = Integer.parseInt(buf) + 1;
+                    pathResult =  pathResult.substring(0, pathResult.length()-6) + temp + ".json";
+                    if (!Files.exists(Path.of(pathResult))) break;
+                }
+            }
         }
-        else return namePlayer1_and_namePlayer2;
 
+        return pathResult;
     }
 }
