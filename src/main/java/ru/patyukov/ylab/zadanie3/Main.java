@@ -27,18 +27,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("\n\n\t\tКрестики нолики");
+        System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
+        gameResult();   // Метод просмотра истории.
+        System.out.println("=========================================================\n\n");
         createPlayer();  // Создаем игроков.
         queue();        // Определяем кто первым начнет.
-
         path = nameFileXML(player1.getName(), player2.getName());   // Создаем файл который хранит историю игры, если его нет.
 
             // ИГРА НАЧАЛАСЬ.
         for (i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
                                     // i - количество ходов. На последнем ходе будет break.
-
-            field.printFiled();   // Выводим поле.
+            field.printFiled();    // Выводим поле.
 
                 // ПОДВОДИМ ИТОГИ ОЧЕРЕДНОГО ХОДА.
 
@@ -174,7 +174,7 @@ public class Main {
     public static void createPlayer() {
 
         // Первый игрок.
-        System.out.print("\nВведите имя первого игрока - ");
+        System.out.print("Введите имя первого игрока - ");
         String namePlayer = scanner.nextLine();
         while (true) {
             System.out.print("Введите символ первого игрока (Х или О) - ");
@@ -216,9 +216,7 @@ public class Main {
         // Цикл управления вывода истории.
         for (int j = 1; j > 0; j++) {    // Условие j > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
 
-            if (j > 1) System.out.println("=========================================================\n\n");
-
-            System.out.println("\tИстория игр предыдущих игроков\n");
+            System.out.println("\tИстория игр предыдущих игроков:\n");
 
             // Выводим список имен файлов с историей игр.
             for (String buf : strListPath) System.out.println(buf);
@@ -226,17 +224,18 @@ public class Main {
 
             System.out.println("\tДля просмотра истории игры введите имя из списка");
             System.out.println("\tДля просмотра статистики игры введите STAT");
-            System.out.println("\tДля завершения работы программы введмте EXIT\n");
+            System.out.println("\tДля продолжения введите NEXT\n");
             System.out.print("Введите - ");
 
             String flag = scanner.nextLine();   // Ввод от пользователя.
 
             // Обработка ввода.
-            if (flag.equals("EXIT")) return;
+            if (flag.equals("NEXT")) return;
             else if (flag.equals("STAT")) {
                 System.out.println();
                 Statisticsplayer.printStatisticsPlayer();
-                System.out.println("*********************************************************\n\n");
+                System.out.println("*********************************************************");
+                System.out.println("=========================================================\n\n");
             }
             else {
                 System.out.println();
@@ -247,20 +246,26 @@ public class Main {
                         try {
                             System.out.println("\tИстория игры - " + flag);
                             Gameplay gameplay = DomParser.read("src/main/resources/static/file/zadanie3/" + flag + ".xml");
-                            System.out.print(gameplay);
                             gameplay.printGameplay();
                         } catch (ParserConfigurationException e) {
                             System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
                             System.out.println("Ошибка при загрузке файла с историей игры.");
                             e.printStackTrace();
                         } catch (IOException e) {
+                            System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
+                            System.out.println("Ошибка при загрузке файла с историей игры.");
                             e.printStackTrace();
                         } catch (SAXException e) {
+                            System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
+                            System.out.println("Ошибка при загрузке файла с историей игры.");
                             e.printStackTrace();
                         }
                         break;
                     }
-                    if (i == strListPath.size() - 1) System.out.println("\tВведенное имя не найдено. ПОВТОРИТЕ !!!\n");
+                    if (i == strListPath.size() - 1) {
+                        System.out.println("\tВведенное имя не найдено. ПОВТОРИТЕ !!!");
+                        System.out.println("=========================================================\n\n");
+                    }
                 }
             }
         }

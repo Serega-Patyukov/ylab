@@ -207,7 +207,7 @@ public class DomParser {
             Player player = new Player(name, symbol);
             player.setId(id);
 
-            // Тестю
+            // Тест
             //System.out.print("\t" + player);
 
             // Добавляем созданного игрока в список.

@@ -38,7 +38,7 @@ public class Gameplay {
             if (player1.getId().equals(game.get(i).getPlayerId())) cell.setValue(player1.getValue());
             else cell.setValue(player2.getValue());
 
-            System.out.println("\nХод - " + (i + 1));
+            System.out.print("\nХод - " + (i + 1));
 
             // Выводим поле
             field.printFiled();
@@ -47,7 +47,9 @@ public class Gameplay {
         // Выводим победителя или Ничья.
         if (gameResult.getPlayer() != null) System.out.println("\nPlayer " + gameResult.getPlayer().getId() + " -> "
                 + gameResult.getPlayer().getName() + " is winner as '" + gameResult.getPlayer().getValue() + "'!");
-        else System.out.println("\nНичья");
+        else System.out.println("\nНИЧЬЯ !!!");
+
+        System.out.println("=========================================================\n\n");
 
     }
 
