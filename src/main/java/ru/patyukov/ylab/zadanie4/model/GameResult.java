@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie4.xml;
+package ru.patyukov.ylab.zadanie4.model;
 
 import ru.patyukov.ylab.zadanie4.xo.Player;
 

@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie4.xml;
+package ru.patyukov.ylab.zadanie4.model;
 
 // Объект класса хранит один ход.
 public class Step {

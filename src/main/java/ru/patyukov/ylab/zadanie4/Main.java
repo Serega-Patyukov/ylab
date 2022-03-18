@@ -1,16 +1,12 @@
 package ru.patyukov.ylab.zadanie4;
 
-import org.xml.sax.SAXException;
 import ru.patyukov.ylab.zadanie4.xml.DomParser;
-import ru.patyukov.ylab.zadanie4.xml.GameResult;
-import ru.patyukov.ylab.zadanie4.xml.Gameplay;
+import ru.patyukov.ylab.zadanie4.model.GameResult;
+import ru.patyukov.ylab.zadanie4.model.Gameplay;
 import ru.patyukov.ylab.zadanie4.xo.Cell;
 import ru.patyukov.ylab.zadanie4.xo.Field;
 import ru.patyukov.ylab.zadanie4.xo.Player;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -113,14 +109,8 @@ public class Main {
 
         // Сохраняем объект который хранит историю игры в файл xml.
         try {
-            DomParser.write(gameplayWrite, path);
-        } catch (ParserConfigurationException e) {
-            System.out.println("Не удалось сохранить историю игры");
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            System.out.println("Не удалось сохранить историю игры");
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+            new DomParser().write(gameplayWrite, path);
+        } catch (Exception e) {
             System.out.println("Не удалось сохранить историю игры");
             e.printStackTrace();
         }
@@ -139,14 +129,8 @@ public class Main {
 
         // Сохраняем объект который хранит историю игры в файл xml.
         try {
-            DomParser.write(gameplayWrite, path);
-        } catch (ParserConfigurationException e) {
-            System.out.println("Не удалось сохранить историю игры");
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            System.out.println("Не удалось сохранить историю игры");
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+            new DomParser().write(gameplayWrite, path);
+        } catch (Exception e) {
             System.out.println("Не удалось сохранить историю игры");
             e.printStackTrace();
         }
@@ -249,17 +233,9 @@ public class Main {
                     if (flag.equals(strListPath.get(i))) {
                         try {
                             System.out.println("\tИстория игры - " + flag);
-                            Gameplay gameplay = DomParser.read("src/main/resources/static/file/zadanie4/" + flag + ".xml");
+                            Gameplay gameplay = new DomParser().read("src/main/resources/static/file/zadanie4/" + flag + ".xml");
                             gameplay.printGameplay();
-                        } catch (ParserConfigurationException e) {
-                            System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
-                            System.out.println("Ошибка при загрузке файла с историей игры.");
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
-                            System.out.println("Ошибка при загрузке файла с историей игры.");
-                            e.printStackTrace();
-                        } catch (SAXException e) {
+                        } catch (Exception e) {
                             System.out.println("Не удалось посмотреть историю игры предыдущих игроков");
                             System.out.println("Ошибка при загрузке файла с историей игры.");
                             e.printStackTrace();

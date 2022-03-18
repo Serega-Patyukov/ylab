@@ -1,30 +1,33 @@
 package ru.patyukov.ylab.zadanie4.xml;
 
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+import ru.patyukov.ylab.zadanie4.InterfaceParser;
+import ru.patyukov.ylab.zadanie4.model.GameResult;
+import ru.patyukov.ylab.zadanie4.model.Gameplay;
 import ru.patyukov.ylab.zadanie4.xo.Player;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 // Класс по работе с xml файлом.
-public class DomParser {
+public class DomParser implements InterfaceParser {
 
-    // Метод записывает и сохраняет xml фйаил.
-    public static void write(Gameplay gp, String path) throws ParserConfigurationException, TransformerException, FileNotFoundException {
+    // Метод записывает и сохраняет xml файл.
+    /*
+        На вход метот получает строку с именем и директорией файла xml.
+        И объект который хранит историю игры.
+     */
+    @Override
+    public void write(Gameplay gp, String path) throws Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
@@ -82,7 +85,8 @@ public class DomParser {
 
     // Метод считывает данные из файла xml и инициализирут объект класса который хранит историю игры.
     // На вход метот получает строку с именем и директорией файла xml.
-    public static Gameplay read(String path) throws ParserConfigurationException, IOException, SAXException {
+    @Override
+    public Gameplay read(String path) throws Exception {
 
         Gameplay gameplay;   // Объект для хранения истории игры.
 
