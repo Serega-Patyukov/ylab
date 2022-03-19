@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static Field field = new Field(); // Создаем поле.
+    private static Field field;               // Поле.
     private static Gameplay gameplay;        // Объект который хранит историю игры.
     private static Player player1;          // Первый игрок.
     private static Player player2;         // Второй игрок.
@@ -34,48 +34,49 @@ public class Main {
     public static String pathXML;         // Файл который хранит историю игры в xml.
     public static String pathJSON;       // Файл который хранит историю игры в json.
 
-    private static boolean flag = true;   // этот флаг переключает пункт меню в методе gameResult()
+    private static boolean flag = true;   // Флаг завершения работы приложения.
 
     public static void main(String[] args) {
 
-        System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
+        while (flag) {
+            System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
-        gameResult();   // Метод просмотра истории.
-        flag = false;
-        System.out.println("=========================================================\n\n");
-        createPlayer();  // Создаем игроков.
-        queue();        // Определяем кто первым начнет.
+            gameResult();   // Метод просмотра истории.
+            if (!flag) break;
 
-        pathJSON = nameFile(player1.getName(), player2.getName(), jsonSimpleParser);   // Создаем имя файла json который хранит историю игры.
-        pathXML = nameFile(player1.getName(), player2.getName(), domParser);          // Создаем имя файлф xml который хранит историю игры.
+            field = new Field();   // Создаем поле.
+
+            System.out.println("=========================================================\n\n");
+            createPlayer();  // Создаем игроков.
+            queue();        // Определяем кто первым начнет.
+
+            pathJSON = nameFile(player1.getName(), player2.getName(), jsonSimpleParser);   // Создаем имя файла json который хранит историю игры.
+            pathXML = nameFile(player1.getName(), player2.getName(), domParser);          // Создаем имя файлф xml который хранит историю игры.
 
             // ИГРА НАЧАЛАСЬ.
-        for (i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
-                                    // i - количество ходов. На последнем ходе будет break.
-            field.printFiled();    // Выводим поле.
+            for (i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
+                // i - количество ходов. На последнем ходе будет break.
+                field.printFiled();    // Выводим поле.
 
                 // ПОДВОДИМ ИТОГИ ОЧЕРЕДНОГО ХОДА.
+                String namePlayer = field.gameOverFinish();   // Получаем имя победителя, если такой есть. Иначе пустую строку.
 
-            String namePlayer = field.gameOverFinish();   // Получаем имя победителя, если такой есть. Иначе пустую строку.
+                // Обрабатываем победителя, если он есть.
+                if (!namePlayer.equals("")) {
+                    finish(namePlayer);
+                    break;
+                }
+                // Проверяем на ничью.
+                if (!field.gameOver()) {
+                    draw();   // Обрабатываем ничью.
+                    break;
+                }
 
-            // Обрабатываем победителя, если он есть.
-            if (!namePlayer.equals("")) {
-                finish(namePlayer);
-                break;
+                if (player1.isStartStop()) goPlayer1();         // Первый игрок делат очередной ход.
+                else if (player2.isStartStop()) goPlayer2();   // Второй игрок делат очередной ход.
             }
-
-            // Проверяем на ничью.
-            if (!field.gameOver()) {
-                draw();   // Обрабатываем ничью.
-                break;
-            }
-
-            if (player1.isStartStop()) goPlayer1();         // Первый игрок делат очередной ход.
-            else if (player2.isStartStop()) goPlayer2();   // Второй игрок делат очередной ход.
         }
-
-        // Метод просмотра истории.
-        gameResult();
+        System.out.println("\nКОНЕЦ !!!");
     }
 
     // Первый игрок делат очередной ход.
@@ -235,20 +236,23 @@ public class Main {
 
             System.out.println("\tДля просмотра истории игры введите имя из списка");
             System.out.println("\tДля просмотра статистики игры введите STAT");
-            if (flag) System.out.println("\tДля запуска игры введите NEXT\n");
-            else System.out.println("\tДля выхода введите NEXT\n");
+            System.out.println("\tДля запуска игры введите NEXT\n");
+            System.out.println("\tДля выхода введите EXIT\n");
             System.out.print("Введите - ");
 
             String buffer = scanner.nextLine();   // Ввод от пользователя.
 
             // Обработка ввода.
-            if (buffer.equals("NEXT")) return;
+            if (buffer.equals("EXIT")) {
+                flag = false;
+                return;
+            }
             else if (buffer.equals("STAT")) {
                 System.out.println();
                 Statisticsplayer.printStatisticsPlayer();
                 System.out.println("*********************************************************");
                 System.out.println("=========================================================\n\n");
-            }
+            } else if (buffer.equals("NEXT"))  return;
             else {
                 System.out.println();
 
