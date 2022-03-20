@@ -184,23 +184,46 @@ public class Main {
     // Создаем игроков.
     public static void createPlayer() {
 
+        int lengthNamePlayer = 3;   // Длина имени игрока.
+
         // Первый игрок.
-        System.out.print("Введите имя первого игрока - ");
-        String namePlayer = scanner.nextLine();
         while (true) {
-            System.out.print("Введите символ первого игрока (Х или О) - ");
-            String namePlayerValue = scanner.nextLine();
-            if (namePlayerValue.equals("Х") || namePlayerValue.equals("О")) {
-                player1 = new Player(namePlayer, namePlayerValue);   // Создаем первого игрока.
-                break;
+            System.out.println("\tВведите имя первого игрока");
+            System.out.println("минимум 3 симврла\n");
+            System.out.print("Имя - ");
+            String namePlayer = scanner.nextLine();
+            if (namePlayer.length() < lengthNamePlayer) {
+                System.out.println("\nОШИБКА - неправельный ввод\n");
+                continue;
             }
+            while (true) {
+                System.out.println("\n\tВведите символ первого игрока (Х или О)\n");
+                System.out.print("Символ - ");
+                String namePlayerValue = scanner.nextLine();
+                if (namePlayerValue.equals("Х") || namePlayerValue.equals("О")) {
+                    player1 = new Player(namePlayer, namePlayerValue);   // Создаем первого игрока.
+                    break;
+                }
+                System.out.println("\nОШИБКА - неправельный ввод");
+            }
+            break;
         }
 
         // Второй игрок.
-        System.out.print("\nВведите имя второго игрока - ");
-        namePlayer = scanner.nextLine();
-        if (player1.getValue().equals("О")) player2 = new Player(namePlayer, "Х");   // Создаем первого игрока.
-        else player2 = new Player(namePlayer, "О");   // Создаем первого игрока.
+        while (true) {
+            System.out.println("\n\tВведите имя второго игрока");
+            System.out.println("минимум 3 симврла\n");
+            System.out.print("Имя - ");
+            String namePlayer = scanner.nextLine();
+            if (namePlayer.length() < lengthNamePlayer) {
+                System.out.println("\nОШИБКА - неправельный ввод");
+                continue;
+            }
+            if (player1.getValue().equals("О")) player2 = new Player(namePlayer, "Х");   // Создаем первого игрока.
+            else player2 = new Player(namePlayer, "О");   // Создаем первого игрока.
+            break;
+        }
+
     }
 
     // Метод просмотра истории.
@@ -234,9 +257,9 @@ public class Main {
             for (String buf : strListPath) System.out.println(buf);
             System.out.println();
 
+            System.out.println("\tДЛЯ ЗАПУСКА ИГРЫ ВВЕДИТЕ NEXT\n");
             System.out.println("\tДля просмотра истории игры введите имя из списка");
             System.out.println("\tДля просмотра статистики игры введите STAT");
-            System.out.println("\tДля запуска игры введите NEXT\n");
             System.out.println("\tДля выхода введите EXIT\n");
             System.out.print("Введите - ");
 
