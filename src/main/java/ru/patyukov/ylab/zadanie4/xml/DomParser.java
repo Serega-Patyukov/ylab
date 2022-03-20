@@ -76,8 +76,6 @@ public class DomParser implements InterfaceParser {
                     player.setAttribute("symbol", gp.getGameResult().getPlayer().getValue());
                 }
 
-
-
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.transform(new DOMSource(document), new StreamResult(new FileOutputStream(path)));

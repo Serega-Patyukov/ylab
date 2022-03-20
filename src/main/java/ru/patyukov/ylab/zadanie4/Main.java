@@ -152,7 +152,7 @@ public class Main {
             parser.write(gameplay, pathXML);
 
             parser = jsonSimpleParser;
-            jsonSimpleParser.write(gameplay, pathJSON);
+            parser.write(gameplay, pathJSON);
         } catch (Exception e) {
             System.out.println("Не удалось сохранить историю игры");
             e.printStackTrace();
@@ -305,8 +305,9 @@ public class Main {
                     pathResult =  pathResult + "_0" + ".xml";
                     if (!Files.exists(Path.of(pathResult))) {
                         try {
-                            Files.createFile(Path.of(pathResult));   // Создали пустой файл.
+                            FileWriter fileWriter = new FileWriter(pathResult);   // Создали пустой файл.
                         } catch (IOException e) {
+                            System.out.println("Не удалось создать пустой файлл");
                             e.printStackTrace();
                         }
                         break;
