@@ -65,7 +65,7 @@ public class DomParser implements InterfaceParser {
                 }
 
             gameplay.appendChild(gameResult);
-                if (gp.getGameResult() == null) {
+                if (gp.getGameResult().getPlayer() == null) {
                     Text text = document.createTextNode("\n\t\tНичья\n\t");
                     gameResult.appendChild(text);
                 }
@@ -302,7 +302,9 @@ public class DomParser implements InterfaceParser {
 
             // Если была ничья, то поле player класса GameResult инициализируем null. И выходим из цикла.
             if (nodePlayer.item(i).getTextContent().equals("\n\t\tНичья\n\t")) {
-                gameplay.setGameResult(new GameResult(null));
+                GameResult gameResult = new GameResult();
+                gameResult.setPlayer(null);
+                gameplay.setGameResult(gameResult);
                 break;
             }
             // Иначе убираем все лишнее и получаем список node атрибутов.

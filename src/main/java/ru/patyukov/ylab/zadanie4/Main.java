@@ -144,7 +144,10 @@ public class Main {
         System.out.println("\nНИЧЬЯ !!!");
         System.out.println("=========================================================\n\n");
 
-        gameplay.setGameResult(null);   // Сохраняем null в объект который хранит историю игры.
+        GameResult gameResult = new GameResult();
+        gameResult.setPlayer(null);
+
+        gameplay.setGameResult(gameResult);   // Сохраняем null в объект который хранит историю игры.
 
         // Сохраняем объект который хранит историю игры в файл xml.
         try {

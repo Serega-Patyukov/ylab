@@ -52,7 +52,7 @@ public class JsonSimpleParser implements InterfaceParser {
                 JSONObject jsonGameResult = new JSONObject();
                     JSONObject jsonPlayer = new JSONObject();
 
-                    if (gp.getGameResult() == null) {   // Если ничья.
+                    if (gp.getGameResult().getPlayer() == null) {   // Если ничья.
                         jsonPlayer.put("null", "null");
                     }
                     else {
@@ -133,15 +133,19 @@ public class JsonSimpleParser implements InterfaceParser {
         JSONObject jsonPlayer = (JSONObject) jsonGameResult.get("Player");
 
         Player player = null;
+        GameResult gameResult = new GameResult();
+        gameResult.setPlayer(player);
+
         if (jsonPlayer.size() != 1) {      // Если есть победитель.
             String name = (String) jsonPlayer.get("_name");
             String symbol = (String) jsonPlayer.get("_symbol");
             String id = (String) jsonPlayer.get("_id");
             player = new Player(name, symbol);
             player.setId(id);
+            gameResult.setPlayer(player);
         }
 
-        gameplay.setGameResult(new GameResult(player));
+        gameplay.setGameResult(gameResult);
 
         return gameplay;
     }

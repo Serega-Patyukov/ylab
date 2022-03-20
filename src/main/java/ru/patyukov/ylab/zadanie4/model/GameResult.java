@@ -4,10 +4,14 @@ import ru.patyukov.ylab.zadanie4.xo.Player;
 
 // Объект класса хранит игрока победителя.
 public class GameResult {
-    private Player player;   // Игрок победитель.
+    private Player player = null;   // Игрок победитель.
 
     // Конструктор.
     public GameResult(Player player) {
+        this.player = player;
+    }
+
+    public GameResult() {
         this.player = player;
     }
 
