@@ -40,11 +40,11 @@ public class JsonSimpleParser implements InterfaceParser {
 
                 JSONObject jsonGame = new JSONObject();
                     JSONArray jsonArrayStep = new JSONArray();
-                        for (int i = 0; i < gp.getGameSize(); i++) {
+                        for (int i = 0; i < gp.gameSize(); i++) {
                             JSONObject jsonStep = new JSONObject();
                             jsonStep.put("_num", gp.getGame(i).getNum());
                             jsonStep.put("_playerId", gp.getGame(i).getPlayerId());
-                            jsonStep.put("__text", gp.getGame(i).getXY());
+                            jsonStep.put("__text", gp.getGame(i).returnXY());
                             jsonArrayStep.add(jsonStep);
                         }
                 jsonGame.put("Step", jsonArrayStep);

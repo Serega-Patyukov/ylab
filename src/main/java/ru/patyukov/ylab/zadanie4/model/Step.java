@@ -17,7 +17,7 @@ public class Step {
     }
 
     // Метод возвращает координаты х у в виде строки.
-    public String getXY() {
+    public String returnXY() {
 
             /*
             Метод возвращает координаты х у в виде строки.
@@ -45,6 +45,6 @@ public class Step {
 
     @Override
     public String toString() {
-        return "\t\t<Step num=\"" + num + "\" playerId=\"" + playerId + "\">" + getXY() + "</Step>\n";
+        return "\t\t<Step num=\"" + num + "\" playerId=\"" + playerId + "\">" + returnXY() + "</Step>\n";
     }
 }

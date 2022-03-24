@@ -39,11 +39,37 @@ public class RestAPIController {
             return "Исторя игры воспроизведена на сервере";   // Сообщение для клиента.
 
         } catch (Exception e) {
-            System.out.println("\nError in RestController");   // Сообщение для сервера.
+            System.out.println("\nError in RestController postRestAPIController");   // Сообщение для сервера.
             e.printStackTrace();
         }
 
-        return "Error in RestController";   // Сообщение для клиента.
+        return "Error in RestController postRestAPIController";   // Сообщение для клиента.
+    }
+
+    @PostMapping("/returnJSON")
+    public Gameplay postJSON(@RequestPart MultipartFile file) {
+
+        Gameplay gameplay = null;
+
+        try {
+            JSONParser parser = new JSONParser();
+
+            InputStream inputStream = file.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            JSONObject jsonObject = (JSONObject) parser.parse(bufferedReader);   // Получаем объект jsonObject из полученного файла
+
+            JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();   // Объект который умеет парсить файл json
+
+            gameplay = jsonSimpleParser.read(null, jsonObject);   // Получаем объект который хранит историю игры.
+
+        } catch (Exception e) {
+            System.out.println("\nError in RestController postJSON");   // Сообщение для сервера.
+            e.printStackTrace();
+        }
+
+        return gameplay;
     }
 
 }

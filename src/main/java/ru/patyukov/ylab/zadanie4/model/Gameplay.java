@@ -11,14 +11,14 @@ public class Gameplay {
     private Player player1;    // Игрок который ходит первым.
     private Player player2;   // Игрок который ходит вторым.
 
-    private GameResult gameResult;   // Игрок победитель.
-
     private ArrayList<Step> game = new ArrayList<>();   // Список ходов.
                                                     // 0 элемент - ход первого игрока.
                                                     // 1 элемент - ход второго игрока.
                                                     // 2 элемент - ход первого игрока.
                                                     // 3 элемент - ход второго игрока.
                                                     // ...
+    private GameResult gameResult;   // Игрок победитель.
+
     // Конструктор.
     public Gameplay(Player player1, Player player2) {
         this.player1 = player1;
@@ -56,7 +56,7 @@ public class Gameplay {
     }
 
     // Колличество ходов.
-    public int getGameSize() {
+    public int gameSize() {
         return game.size();
     }
 
@@ -69,25 +69,11 @@ public class Gameplay {
         return game.get(i);
     }
 
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
-    }
-
-    public GameResult getGameResult() {
-        return gameResult;
-    }
-    public void setGameResult(GameResult gameResult) {
-        this.gameResult = gameResult;
-    }
-
+    // Метод написан для метода toString()
     public String printgame() {
         String s ="";
         s = "\t<Game>\n";
-        for (int i = 0; i < getGameSize(); i++) {
+        for (int i = 0; i < gameSize(); i++) {
             s += getGame(i);
         }
         s +="\t</Game>\n";
@@ -104,5 +90,27 @@ public class Gameplay {
                 printgame() +
                 gameResult +
                 "\n</Gameplay>\n";
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public ArrayList<Step> getGame() {
+        return game;
+    }
+    public void setGame(ArrayList<Step> game) {
+        this.game = game;
+    }
+
+    public GameResult getGameResult() {
+        return gameResult;
+    }
+    public void setGameResult(GameResult gameResult) {
+        this.gameResult = gameResult;
     }
 }

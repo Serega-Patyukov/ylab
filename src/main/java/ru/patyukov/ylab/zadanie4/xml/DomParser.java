@@ -56,12 +56,12 @@ public class DomParser implements InterfaceParser {
                 player2.setAttribute("symbol", gp.getPlayer2().getValue());
 
             gameplay.appendChild(game);
-                for (int i = 0; i < gp.getGameSize(); i++) {
+                for (int i = 0; i < gp.gameSize(); i++) {
                     Element step = document.createElement("Step");
                         game.appendChild(step);
                             step.setAttribute("num", gp.getGame(i).getNum());
                             step.setAttribute("playerId", gp.getGame(i).getPlayerId());
-                            Text text = document.createTextNode(gp.getGame(i).getXY());
+                            Text text = document.createTextNode(gp.getGame(i).returnXY());
                             step.appendChild(text);
                 }
 

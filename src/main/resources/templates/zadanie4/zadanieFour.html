@@ -9,7 +9,13 @@
     </head>
     <body>
         <h1>Загрузка файла c историей игры</h1>
+        <h3>Загрузка файла для воспроизведения на сервере</h3>
         <form action="/api" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button>отправить</button>
+        </form>
+        <h3>Загрузка файла дял получения json передставления объекта</h3>
+        <form action="/api/returnJSON" method="post" enctype="multipart/form-data">
             <input type="file" name="file">
             <button>отправить</button>
         </form>
