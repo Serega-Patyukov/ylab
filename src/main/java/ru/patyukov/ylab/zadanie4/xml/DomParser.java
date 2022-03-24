@@ -1,5 +1,6 @@
 package ru.patyukov.ylab.zadanie4.xml;
 
+import org.json.simple.JSONObject;
 import org.w3c.dom.*;
 import ru.patyukov.ylab.zadanie4.InterfaceParser;
 import ru.patyukov.ylab.zadanie4.model.GameResult;
@@ -82,9 +83,9 @@ public class DomParser implements InterfaceParser {
     }
 
     // Метод считывает данные из файла xml и инициализирут объект класса который хранит историю игры.
-    // На вход метот получает строку с именем и директорией файла xml.
+    // На вход метот получает строку с именем и директорией файла xml или объект JSONObject.
     @Override
-    public Gameplay read(String path) throws Exception {
+    public Gameplay read(String path, JSONObject object) throws Exception {
 
         Gameplay gameplay;   // Объект для хранения истории игры.
 

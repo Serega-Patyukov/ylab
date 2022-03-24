@@ -10,7 +10,7 @@ public class Test {
         String path = "src/main/resources/static/file/zadanie4/Артем_and_Сергей.xml";
 
         DomParser domParser = new DomParser();
-        Gameplay gameplay = domParser.read(path);
+        Gameplay gameplay = domParser.read(path, null);
         System.out.println(gameplay);
 
         System.out.println("==========================================================");
@@ -19,7 +19,7 @@ public class Test {
 
         jsonSimpleParser.write(gameplay, "src/main/resources/static/file/zadanie4/test.json");
 
-        gameplay = jsonSimpleParser.read("src/main/resources/static/file/zadanie4/test.json");
+        gameplay = jsonSimpleParser.read("src/main/resources/static/file/zadanie4/test.json", null);
         System.out.println(gameplay);
     }
 }

@@ -291,14 +291,14 @@ public class Main {
                             if (buffer.endsWith(".xml")) {
                                 System.out.println("\nИстория игры из файла xml");
                                 parser = domParser;
-                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer);
+                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer, null);
                                 gameplay.printGameplay();
                             }
 
                             if (buffer.endsWith(".json")) {
                                 System.out.println("\nИстория игры из файла json");
                                 parser = jsonSimpleParser;
-                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer);
+                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer, null);
                                 gameplay.printGameplay();
                             }
 
