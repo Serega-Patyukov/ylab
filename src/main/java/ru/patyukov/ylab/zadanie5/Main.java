@@ -1,19 +1,18 @@
-package ru.patyukov.ylab.zadanie4;
+package ru.patyukov.ylab.zadanie5;
 
-import ru.patyukov.ylab.zadanie4.json.JsonSimpleParser;
-import ru.patyukov.ylab.zadanie4.xml.DomParser;
-import ru.patyukov.ylab.zadanie4.model.GameResult;
-import ru.patyukov.ylab.zadanie4.model.Gameplay;
-import ru.patyukov.ylab.zadanie4.xo.Cell;
-import ru.patyukov.ylab.zadanie4.xo.Field;
-import ru.patyukov.ylab.zadanie4.xo.Player;
+import ru.patyukov.ylab.zadanie5.json.JsonSimpleParser;
+import ru.patyukov.ylab.zadanie5.model.GameResult;
+import ru.patyukov.ylab.zadanie5.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.xml.DomParser;
+import ru.patyukov.ylab.zadanie5.xo.Cell;
+import ru.patyukov.ylab.zadanie5.xo.Field;
+import ru.patyukov.ylab.zadanie5.xo.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
