@@ -18,6 +18,8 @@ public class Gameplay {
                                                     // ...
     private GameResult gameResult;   // Игрок победитель.
 
+    public Gameplay() {}
+
     // Конструктор.
     public Gameplay(Player player1, Player player2) {
         this.player1 = player1;
@@ -33,7 +35,7 @@ public class Gameplay {
         for (int i = 0; i < game.size(); i++) {
 
             // Получаем клетку поля по координатам.
-            Cell cell = field.getCell(game.get(i).getX(), game.get(i).getY());
+            Cell cell = field.cell(game.get(i).getX(), game.get(i).getY());
 
             // По id игрока устанавливаем значение клетки (Х или О).
             if (player1.getId().equals(game.get(i).getPlayerId())) cell.setValue(player1.getValue());

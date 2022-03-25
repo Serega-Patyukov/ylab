@@ -197,7 +197,15 @@ public class Field {
     }
 
     // Метод по координатам возвращает клетку.
-    public Cell getCell(int x, int y) {
+    public Cell cell(int x, int y) {
         return cells[y][x];
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public void setCells(Cell[][] cells) {
+        this.cells = cells;
     }
 }
