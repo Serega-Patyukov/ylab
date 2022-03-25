@@ -1,15 +1,14 @@
 package ru.patyukov.ylab.zadanie5.model;
 
-import ru.patyukov.ylab.zadanie5.xo.Cell;
-import ru.patyukov.ylab.zadanie5.xo.Field;
-import ru.patyukov.ylab.zadanie5.xo.Player;
+import ru.patyukov.ylab.zadanie5.field.Cell;
+import ru.patyukov.ylab.zadanie5.field.Field;
 
 import java.util.ArrayList;
 
 // Объект класса хранит историю игры. И есть метод для вывода на экран истории игры.
 public class Gameplay {
-    private Player player1;    // Игрок который ходит первым.
-    private Player player2;   // Игрок который ходит вторым.
+    private Player player1;    // Игрок, который ходит первым.
+    private Player player2;   // Игрок, который ходит вторым.
 
     private ArrayList<Step> game = new ArrayList<>();   // Список ходов.
                                                     // 0 элемент - ход первого игрока.
@@ -55,7 +54,7 @@ public class Gameplay {
 
     }
 
-    // Колличество ходов.
+    // Количество ходов.
     public int gameSize() {
         return game.size();
     }

@@ -4,9 +4,9 @@ import ru.patyukov.ylab.zadanie5.json.JsonSimpleParser;
 import ru.patyukov.ylab.zadanie5.model.GameResult;
 import ru.patyukov.ylab.zadanie5.model.Gameplay;
 import ru.patyukov.ylab.zadanie5.xml.DomParser;
-import ru.patyukov.ylab.zadanie5.xo.Cell;
-import ru.patyukov.ylab.zadanie5.xo.Field;
-import ru.patyukov.ylab.zadanie5.xo.Player;
+import ru.patyukov.ylab.zadanie5.field.Cell;
+import ru.patyukov.ylab.zadanie5.field.Field;
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class Main {
             queue();        // Определяем кто первым начнет.
 
             pathJSON = nameFile(player1.getName(), player2.getName(), jsonSimpleParser);   // Создаем имя файла json который хранит историю игры.
-            pathXML = nameFile(player1.getName(), player2.getName(), domParser);          // Создаем имя файлф xml который хранит историю игры.
+            pathXML = nameFile(player1.getName(), player2.getName(), domParser);          // Создаем имя файл xml который хранит историю игры.
 
             // ИГРА НАЧАЛАСЬ.
             for (i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бессконечного цикла !!!
@@ -236,7 +236,7 @@ public class Main {
 
         // Получаем список всех файлов из директории в которой хранится файлы с историей игр.
         try {
-            DirectoryStream<Path> paths = Files.newDirectoryStream(Path.of("src/main/resources/static/file/zadanie4"));
+            DirectoryStream<Path> paths = Files.newDirectoryStream(Path.of("src/main/resources/static/file/zadanie5"));
             for (Path paht : paths) {   // Получаем список всех файлов.
                 String strPaht = paht.getFileName().toString();   // Получаем имена файлов без директории.
                 // Сохраняем только файлы с расширением xml и json.
@@ -290,14 +290,14 @@ public class Main {
                             if (buffer.endsWith(".xml")) {
                                 System.out.println("\nИстория игры из файла xml");
                                 parser = domParser;
-                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer, null);
+                                gameplay = parser.read("src/main/resources/static/file/zadanie5/" + buffer, null);
                                 gameplay.printGameplay();
                             }
 
                             if (buffer.endsWith(".json")) {
                                 System.out.println("\nИстория игры из файла json");
                                 parser = jsonSimpleParser;
-                                gameplay = parser.read("src/main/resources/static/file/zadanie4/" + buffer, null);
+                                gameplay = parser.read("src/main/resources/static/file/zadanie5/" + buffer, null);
                                 gameplay.printGameplay();
                             }
 
@@ -320,7 +320,7 @@ public class Main {
     // Метод определяет имя файла для хранения истории.
     public static String nameFile(String namePlayer1, String namePlayer2, InterfaceParser parser) {
 
-        String pathResult = "src/main/resources/static/file/zadanie4/" + namePlayer1 + "_and_" + namePlayer2;   // Относительное имя файла.
+        String pathResult = "src/main/resources/static/file/zadanie5/" + namePlayer1 + "_and_" + namePlayer2;   // Относительное имя файла.
 
         while (true) {
 

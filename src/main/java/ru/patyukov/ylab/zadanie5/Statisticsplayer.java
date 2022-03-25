@@ -17,20 +17,20 @@ public class Statisticsplayer {
     public static void statisticsPlayer(String namePlayerWon, String namePlayerLost) {
 
         // Файл для хранения статистики игры.
-        Path file = Path.of("src/main/resources/static/file/zadanie4/statisticsplayer.txt");
+        Path file = Path.of("src/main/resources/static/file/zadanie5/statisticsplayer.txt");
 
-        boolean flagNamePlayerWon = true;    // Флаг. true - имя выигравшего игрока в файле не наденно.
-                                                  // false - имя выигравшего игрока в файле найденно.
-        boolean flagNamePlayerLost = true;   // Флаг. true - имя проигравшего игрока в файле не наденно.
-                                                  // false - имя проигравшего игрока в файле найденно.
+        boolean flagNamePlayerWon = true;    // Флаг. true - имя выигравшего игрока в файле не найдено.
+                                                  // false - имя выигравшего игрока в файле найдено.
+        boolean flagNamePlayerLost = true;   // Флаг. true - имя проигравшего игрока в файле не найдено.
+                                                  // false - имя проигравшего игрока в файле найдено.
 
         // Проверяем файл на существование.
         if (Files.exists(file)) {
 
-            // Буффер для хранения считанной информации из файла.
+            // Буфер для хранения считанной информации из файла.
             StringWriter stringWriter = new StringWriter();
 
-            // Считываем и редактируем содержимое файла в буффер stringWriter.
+            // Считываем и редактируем содержимое файла в буфер stringWriter.
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file.toFile()))) {
                 while (bufferedReader.ready()) {
                     // Получаем очередную строку из файла статистики игры.
@@ -40,7 +40,7 @@ public class Statisticsplayer {
 
                         char[] stringSplit = buf.toCharArray();   // Получаем массив из прочитанной строки.
                                                                  // С 0 элемента - имя.
-                                                                // С 10 элемента - количество попед.
+                                                                // С 10 элемента - количество побед.
                                                                // С 23 - количество поражений.
                         // Увеличиваем на 1 количество побед.
                         String temp = String.valueOf(stringSplit[33]);
@@ -60,7 +60,7 @@ public class Statisticsplayer {
                             temp += stringSplit[i];
                         }
                         buf = String.valueOf(stringSplit);   // Сохраняем изменения в строку.
-                        stringWriter.write(buf + "\n");   // Сохраняем строку в буффер.
+                        stringWriter.write(buf + "\n");   // Сохраняем строку в буфер.
                         flagNamePlayerWon = false;   // Переключаем флаг.
                     }
                     // Если строка в файле начинается с имени проигравшего игрока, то мы эту строку редактируем.
@@ -68,7 +68,7 @@ public class Statisticsplayer {
 
                         char[] stringSplit = buf.toCharArray();   // Получаем массив из прочитанной строки.
                                                                  // С 0 элемента - имя.
-                                                                // С 10 элемента - количество попед.
+                                                                // С 10 элемента - количество побед.
                                                                // С 23 - количество поражений.
 
                         // Увеличиваем на 1 количество поражений.
@@ -90,10 +90,10 @@ public class Statisticsplayer {
                         }
 
                         buf = String.valueOf(stringSplit);   // Сохраняем изменения в строку.
-                        stringWriter.write(buf + "\n");   // Сохраняем строку в буффер.
+                        stringWriter.write(buf + "\n");   // Сохраняем строку в буфер.
                         flagNamePlayerLost = false;   // Переключаем флаг.
                     }
-                    else stringWriter.write(buf + "\n");   // Сохраняем строку в буффер.
+                    else stringWriter.write(buf + "\n");   // Сохраняем строку в буфер.
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -138,7 +138,7 @@ public class Statisticsplayer {
                 stringWriter.write(String.valueOf(chars));
             }
 
-            // Сохраняем буффер stringWriter в файл статистики игры.
+            // Сохраняем буфер stringWriter в файл статистики игры.
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.toFile()))) {
                 bufferedWriter.write(stringWriter.toString());
             } catch (IOException e) {
@@ -158,7 +158,7 @@ public class Statisticsplayer {
     public static void printStatisticsPlayer() {
 
         // Файл для хранения статистики.
-        Path file = Path.of("src/main/resources/static/file/zadanie4/statisticsplayer.txt");
+        Path file = Path.of("src/main/resources/static/file/zadanie5/statisticsplayer.txt");
 
         // Проверяем файл на существование.
         if (Files.exists(file)) {

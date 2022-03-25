@@ -1,4 +1,6 @@
-package ru.patyukov.ylab.zadanie5.xo;
+package ru.patyukov.ylab.zadanie5.field;
+
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 import java.util.Scanner;
 
@@ -6,7 +8,7 @@ public class Cell {
 
     private int x;
     private int y;
-    private boolean ststus = true;//---------// Доступность клетки. true свободна. false занята.
+    private boolean status = true;//---------// Доступность клетки. true свободна. false занята.
     private String value = "-";//-----------// Отображение клетки. 1 из 3 символов '-', X, O.
     private String namePlayer = null;//----// Имя игрока, который владеет этой клеткой.
 
@@ -18,15 +20,15 @@ public class Cell {
 
     // Метод получает клетку от игрока.
     /*
-        На вход метод получает игрока player и размернось поля n.
+        На вход метод получает игрока player и размерность поля n.
         Если входные данные соответствуют требованиям (n >= 3) && (player != null),
-        то метод возвтрвщает клетку.
+        то метод возвращает клетку.
         Иначе метод возвращает null.
      */
     public static Cell xy(Player player, int n) {
         Scanner scanner = new Scanner(System.in);
 
-        // Вводимые играком координаты клетки.
+        // Вводимые игроком координаты клетки.
         int x;
         int y;
 
@@ -62,11 +64,11 @@ public class Cell {
         this.y = y;
     }
 
-    public boolean isStstus() {
-        return ststus;
+    public boolean isStatus() {
+        return status;
     }
-    public void setStstus(boolean ststus) {
-        this.ststus = ststus;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public String getValue() {

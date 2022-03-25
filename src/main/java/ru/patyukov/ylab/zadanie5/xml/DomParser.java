@@ -5,7 +5,7 @@ import org.w3c.dom.*;
 import ru.patyukov.ylab.zadanie5.InterfaceParser;
 import ru.patyukov.ylab.zadanie5.model.GameResult;
 import ru.patyukov.ylab.zadanie5.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.xo.Player;
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,8 +24,8 @@ public class DomParser implements InterfaceParser {
 
     // Метод записывает и сохраняет xml файл.
     /*
-        На вход метот получает строку с именем и директорией файла xml.
-        И объект который хранит историю игры.
+        На вход метод получает строку с именем и директорией файла xml.
+        И объект, который хранит историю игры.
      */
     @Override
     public void write(Gameplay gp, String path) throws Exception {
@@ -45,12 +45,12 @@ public class DomParser implements InterfaceParser {
 
         document.appendChild(gameplay);
 
-            gameplay.appendChild(player1);   // Игрок который ходит первым.
+            gameplay.appendChild(player1);   // Игрок, который ходит первым.
                 player1.setAttribute("id", gp.getPlayer1().getId());
                 player1.setAttribute("name", gp.getPlayer1().getName());
                 player1.setAttribute("symbol", gp.getPlayer1().getValue());
 
-            gameplay.appendChild(player2);   // Игрок который ходит вторым.
+            gameplay.appendChild(player2);   // Игрок, который ходит вторым.
                 player2.setAttribute("id", gp.getPlayer2().getId());
                 player2.setAttribute("name", gp.getPlayer2().getName());
                 player2.setAttribute("symbol", gp.getPlayer2().getValue());
@@ -82,8 +82,8 @@ public class DomParser implements InterfaceParser {
         transformer.transform(new DOMSource(document), new StreamResult(new FileOutputStream(path)));
     }
 
-    // Метод считывает данные из файла xml и инициализирут объект класса который хранит историю игры.
-    // На вход метот получает строку с именем и директорией файла xml или объект JSONObject.
+    // Метод считывает данные из файла xml и инициализирует объект класса который хранит историю игры.
+    // На вход метод получает строку с именем и директорией файла xml или объект JSONObject.
     @Override
     public Gameplay read(String path, JSONObject object) throws Exception {
 
@@ -268,7 +268,7 @@ public class DomParser implements InterfaceParser {
                     }
                 }
 
-                // Получаем координаиы х у.
+                // Получаем координаты х у.
                 String xy = nodeList.item(j).getTextContent();
                 int x = Integer.parseInt(String.valueOf(xy.charAt(0)));
                 int y = Integer.parseInt(String.valueOf(xy.charAt(1)));

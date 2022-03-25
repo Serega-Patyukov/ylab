@@ -1,4 +1,6 @@
-package ru.patyukov.ylab.zadanie5.xo;
+package ru.patyukov.ylab.zadanie5.field;
+
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 // Квадратное поле.
 public class Field {
@@ -9,7 +11,7 @@ public class Field {
     // Массив клеток.
     private Cell[][] cells;
 
-    // Крнструктор.
+    // Конструктор.
     public Field() {
         maine();
     }
@@ -46,7 +48,7 @@ public class Field {
         // Находим количество клеток в ряд по горизонтали.
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length - 1; j++) {
-                if (!cells[i][j].isStstus() && !cells[i][j + 1].isStstus()) {
+                if (!cells[i][j].isStatus() && !cells[i][j + 1].isStatus()) {
                     if (cells[i][j].getNamePlayer().equals(cells[i][j + 1].getNamePlayer())) {
                         result++;
                         if (result >= 3) return cells[i][j].getNamePlayer();
@@ -62,7 +64,7 @@ public class Field {
         // Находим количество клеток в ряд по вертикали.
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length - 1; j++) {
-                if (!cells[j][i].isStstus() && !cells[j + 1][i].isStstus()) {
+                if (!cells[j][i].isStatus() && !cells[j + 1][i].isStatus()) {
                     if (cells[j][i].getNamePlayer().equals(cells[j + 1][i].getNamePlayer())) {
                         result++;
                         if (result >= 3) return cells[j][i].getNamePlayer();
@@ -77,7 +79,7 @@ public class Field {
 
         // Находим количество клеток в ряд по диагонали слева на право вниз.
         for (int i = 0; i < cells.length - 1; i++) {
-            if (!cells[i][i].isStstus() && !cells[i + 1][i + 1].isStstus()) {
+            if (!cells[i][i].isStatus() && !cells[i + 1][i + 1].isStatus()) {
                 if (cells[i][i].getNamePlayer().equals(cells[i + 1][i + 1].getNamePlayer())) {
                     result++;
                     if (result >= 3) return cells[i][i].getNamePlayer();
@@ -90,7 +92,7 @@ public class Field {
 
         // Находим количество клеток в ряд по диагонали слева на право вверх.
         for (int i = cells.length - 1, j = 0; i > 0; i--, j++) {
-            if (!cells[i][j].isStstus() && !cells[i - 1][j + 1].isStstus()) {
+            if (!cells[i][j].isStatus() && !cells[i - 1][j + 1].isStatus()) {
                 if (cells[i][j].getNamePlayer().equals(cells[i - 1][j + 1].getNamePlayer())) {
                     result++;
                     if (result >= 3) return cells[i][j].getNamePlayer();
@@ -109,7 +111,7 @@ public class Field {
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                if (cells[i][j].isStstus()) return true;
+                if (cells[i][j].isStatus()) return true;
             }
         }
 
@@ -127,10 +129,10 @@ public class Field {
         if (cell == null || player == null) return false;
 
         // Проверяем клетку на поле. Свободна или нет.
-        if (cells[cell.getY()][cell.getX()].isStstus()) {
-            cells[cell.getY()][cell.getX()].setValue(player.getValue());   // Записывеем туда символ.
+        if (cells[cell.getY()][cell.getX()].isStatus()) {
+            cells[cell.getY()][cell.getX()].setValue(player.getValue());   // Записываем туда символ.
             cells[cell.getY()][cell.getX()].setNamePlayer(player.getName());   // Указываем имя игрока, который будет владеть этой клеткой.
-            cells[cell.getY()][cell.getX()].setStstus(false);   // И делаем клетку недоступной.
+            cells[cell.getY()][cell.getX()].setStatus(false);   // И делаем клетку недоступной.
             return true;
         }
 
@@ -139,7 +141,7 @@ public class Field {
 
     // Выводим поле на экран.
     /*
-        Метод корректно выводит поле на экран при условии что
+        Метод корректно выводит поле на экран при условии, что
         размерность поля от 3х3 до 10х10.
      */
     public void printFiled() {
@@ -194,7 +196,7 @@ public class Field {
         return n;
     }
 
-    // Метод по координатам возврвщвет клетку.
+    // Метод по координатам возвращает клетку.
     public Cell getCell(int x, int y) {
         return cells[y][x];
     }

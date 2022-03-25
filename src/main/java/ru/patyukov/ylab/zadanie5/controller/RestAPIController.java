@@ -47,7 +47,7 @@ public class RestAPIController {
     }
 
     @PostMapping("/returnJSON")
-    public Gameplay postJSON(@RequestPart MultipartFile file) {
+    public Gameplay postReturnJSON(@RequestPart MultipartFile file) {
 
         Gameplay gameplay = null;
 
@@ -65,7 +65,7 @@ public class RestAPIController {
             gameplay = jsonSimpleParser.read(null, jsonObject);   // Получаем объект, который хранит историю игры.
 
         } catch (Exception e) {
-            System.out.println("\nError in RestController postJSON()");   // Сообщение для сервера.
+            System.out.println("\nError in RestController postReturnJSON()");   // Сообщение для сервера.
             e.printStackTrace();
         }
 

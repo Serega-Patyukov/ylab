@@ -6,7 +6,7 @@ import org.json.simple.parser.JSONParser;
 import ru.patyukov.ylab.zadanie5.InterfaceParser;
 import ru.patyukov.ylab.zadanie5.model.GameResult;
 import ru.patyukov.ylab.zadanie5.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.xo.Player;
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,8 +16,8 @@ public class JsonSimpleParser implements InterfaceParser {
 
     // Метод записывает и сохраняет json файл.
     /*
-        На вход метот получает строку с именем и директорией файла json.
-        И объект который хранит историю игры.
+        На вход метод получает строку с именем и директорией файла json.
+        И объект, который хранит историю игры.
      */
     @Override
     public void write(Gameplay gp, String path) throws Exception {
@@ -73,8 +73,8 @@ public class JsonSimpleParser implements InterfaceParser {
         }
     }
 
-    // Метод считывает данные из файла json и инициализирут объект класса который хранит историю игры.
-    // На вход метот получает строку с именем и директорией файла json или объект JSONObject.
+    // Метод считывает данные из файла json и инициализирует объект класса который хранит историю игры.
+    // На вход метод получает строку с именем и директорией файла json или объект JSONObject.
     @Override
     public Gameplay read(String path, JSONObject object) throws Exception {
 

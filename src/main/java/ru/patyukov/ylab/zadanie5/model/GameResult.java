@@ -1,7 +1,5 @@
 package ru.patyukov.ylab.zadanie5.model;
 
-import ru.patyukov.ylab.zadanie5.xo.Player;
-
 // Объект класса хранит игрока победителя.
 public class GameResult {
     private Player player = null;   // Игрок победитель.

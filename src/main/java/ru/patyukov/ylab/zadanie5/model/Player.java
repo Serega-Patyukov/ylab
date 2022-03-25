@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.xo;
+package ru.patyukov.ylab.zadanie5.model;
 
 public class Player {
 
