@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.model;
+package ru.patyukov.ylab.zadanie5.game;
 
 public class Player {
 
@@ -7,11 +7,15 @@ public class Player {
     private String name;//---------------// Имя игрока.
     private String id;
 
-    // Конструктор.
+            // КОНСТРУКТОРЫ
+
+    public Player() {}
     public Player(String name, String value) {
         this.name = name;
         this.value = value;
     }
+
+            // GET SET
 
     public boolean isStartStop() {
         return startStop;
@@ -39,10 +43,5 @@ public class Player {
     }
     public void setId(String id) {
         this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "\t<Player id=\"" + id + "\" name=\"" + name + "\" symbol=\"" + value + "\"/>\n";
     }
 }

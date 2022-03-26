@@ -1,12 +1,12 @@
-package ru.patyukov.ylab.zadanie5.json;
+package ru.patyukov.ylab.zadanie5.game.parser.json;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import ru.patyukov.ylab.zadanie5.InterfaceParser;
-import ru.patyukov.ylab.zadanie5.model.GameResult;
-import ru.patyukov.ylab.zadanie5.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.model.Player;
+import ru.patyukov.ylab.zadanie5.game.parser.InterfaceParser;
+import ru.patyukov.ylab.zadanie5.game.GameResult;
+import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.game.Player;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,13 +14,17 @@ import java.io.FileWriter;
 // Класс по работе с json файлом.
 public class JsonSimpleParser implements InterfaceParser {
 
-    // Метод записывает и сохраняет json файл.
+    @Override
+    public int write(Gameplay gp, String path) throws Exception {
+
+        // Метод записывает и сохраняет json файл.
     /*
         На вход метод получает строку с именем и директорией файла json.
         И объект, который хранит историю игры.
+
+        Если в работе метода возникнет ошибка, то метод вернет -1.
+        Иначе 1.
      */
-    @Override
-    public void write(Gameplay gp, String path) throws Exception {
 
         JSONObject jsonObject = new JSONObject();
             JSONObject jsonGameplay = new JSONObject();
@@ -40,11 +44,11 @@ public class JsonSimpleParser implements InterfaceParser {
 
                 JSONObject jsonGame = new JSONObject();
                     JSONArray jsonArrayStep = new JSONArray();
-                        for (int i = 0; i < gp.gameSize(); i++) {
+                        for (int i = 0; i < gp.sizeGame(); i++) {
                             JSONObject jsonStep = new JSONObject();
-                            jsonStep.put("_num", gp.getGame(i).getNum());
-                            jsonStep.put("_playerId", gp.getGame(i).getPlayerId());
-                            jsonStep.put("__text", gp.getGame(i).returnXY());
+                            jsonStep.put("_num", gp.getStepGame(i).getNum());
+                            jsonStep.put("_playerId", gp.getStepGame(i).getPlayerId());
+                            jsonStep.put("__text", gp.getStepGame(i).returnXY());
                             jsonArrayStep.add(jsonStep);
                         }
                 jsonGame.put("Step", jsonArrayStep);
@@ -69,14 +73,21 @@ public class JsonSimpleParser implements InterfaceParser {
 
         try(FileWriter fileWriter = new FileWriter(path)) {
             jsonObject.writeJSONString(fileWriter);
-            //fileWriter.write(jsonObject.toJSONString());
+        } catch (Exception e) {
+            System.out.println("\nОШИБКА - не удалось сохранить json файл\n" +
+                    "метод write() класса JsonSimpleParser\n");
+            e.printStackTrace();
+            return -1;
         }
+
+        return 1;
     }
 
-    // Метод считывает данные из файла json и инициализирует объект класса который хранит историю игры.
-    // На вход метод получает строку с именем и директорией файла json или объект JSONObject.
     @Override
     public Gameplay read(String path, JSONObject object) throws Exception {
+
+        // Метод считывает данные из файла json и инициализирует объект класса который хранит историю игры.
+        // На вход метод получает строку с именем и директорией файла json или объект JSONObject.
 
         Gameplay gameplay;   // Объект для хранения истории игры.
 
@@ -92,8 +103,6 @@ public class JsonSimpleParser implements InterfaceParser {
         else {
             jsonObject = object;
         }
-
-
 
         JSONObject jsonGameplay = (JSONObject) jsonObject.get("Gameplay");
         JSONArray jsonArrayPlayer = (JSONArray) jsonGameplay.get("Player");
@@ -132,7 +141,7 @@ public class JsonSimpleParser implements InterfaceParser {
             String xy = (String) jsonStep.get("__text");
             int x = Integer.parseInt(String.valueOf(xy.charAt(0)));
             int y = Integer.parseInt(String.valueOf(xy.charAt(1)));
-            gameplay.setGame(playerId, num, x, y);
+            gameplay.addGame(playerId, num, x, y);
         }
 
         JSONObject jsonGameResult = (JSONObject) jsonGameplay.get("GameResult");

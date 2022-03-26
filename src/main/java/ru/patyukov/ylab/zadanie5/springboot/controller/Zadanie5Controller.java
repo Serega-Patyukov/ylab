@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.controller;
+package ru.patyukov.ylab.zadanie5.springboot.controller;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
-import ru.patyukov.ylab.zadanie5.Main;
-import ru.patyukov.ylab.zadanie5.field.Cell;
-import ru.patyukov.ylab.zadanie5.field.Field;
-import ru.patyukov.ylab.zadanie5.json.JsonSimpleParser;
-import ru.patyukov.ylab.zadanie5.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.model.Player;
+import ru.patyukov.ylab.zadanie5.game.GameXO;
+import ru.patyukov.ylab.zadanie5.game.Cell;
+import ru.patyukov.ylab.zadanie5.game.Field;
+import ru.patyukov.ylab.zadanie5.game.parser.json.JsonSimpleParser;
+import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.game.Player;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -94,7 +94,7 @@ public class Zadanie5Controller {
 
         // тут проверку нужно сделать
 
-        Main mainConsole = new Main();
+        GameXO mainConsole = new GameXO();
 
         if (gameplay.get(0).getPlayer1().isStartStop()) {
             gameplay.get(0).getPlayer1().setStartStop(false);
@@ -145,12 +145,12 @@ public class Zadanie5Controller {
         }
 
         // Заполняем список полей пустыми полями, количество которых равно количеству ходов.
-        for (int i = 0; i < gameplay.get(0).gameSize(); i++) fieldList.add(new Field());
+        for (int i = 0; i < gameplay.get(0).sizeGame(); i++) fieldList.add(new Field());
 
-        Cell[] temp = new Cell[gameplay.get(0).gameSize()];   // Массив всех клеток с ходами.
+        Cell[] temp = new Cell[gameplay.get(0).sizeGame()];   // Массив всех клеток с ходами.
 
         // Проходим по каждому ходу. И заполняем массив клеток с ходами.
-        for (int i = 0; i < gameplay.get(0).gameSize(); i++) {
+        for (int i = 0; i < gameplay.get(0).sizeGame(); i++) {
 
             Field buf = new Field();
 
@@ -163,7 +163,7 @@ public class Zadanie5Controller {
         }
 
         // Тут заполняется список полей. Каждое поле (каждый ход).
-        for (int i = 0; i < gameplay.get(0).gameSize(); i++) {   // Перебираем все поля из списка полей.
+        for (int i = 0; i < gameplay.get(0).sizeGame(); i++) {   // Перебираем все поля из списка полей.
             /*
                 Это описание к следующему циклу.
 

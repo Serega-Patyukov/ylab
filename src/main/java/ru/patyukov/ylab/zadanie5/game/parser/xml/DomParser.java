@@ -1,11 +1,11 @@
-package ru.patyukov.ylab.zadanie5.xml;
+package ru.patyukov.ylab.zadanie5.game.parser.xml;
 
 import org.json.simple.JSONObject;
 import org.w3c.dom.*;
-import ru.patyukov.ylab.zadanie5.InterfaceParser;
-import ru.patyukov.ylab.zadanie5.model.GameResult;
-import ru.patyukov.ylab.zadanie5.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.model.Player;
+import ru.patyukov.ylab.zadanie5.game.parser.InterfaceParser;
+import ru.patyukov.ylab.zadanie5.game.GameResult;
+import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.game.Player;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,13 +22,18 @@ import java.util.Arrays;
 // Класс по работе с xml файлом.
 public class DomParser implements InterfaceParser {
 
-    // Метод записывает и сохраняет xml файл.
+    @Override
+    public int write(Gameplay gp, String path) throws Exception {
+
+        // Метод записывает и сохраняет xml файл.
     /*
         На вход метод получает строку с именем и директорией файла xml.
         И объект, который хранит историю игры.
+
+        Если в работе метода возникнет ошибка, то метод вернет -1.
+        Иначе 1.
      */
-    @Override
-    public void write(Gameplay gp, String path) throws Exception {
+
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.newDocument();
@@ -56,12 +61,12 @@ public class DomParser implements InterfaceParser {
                 player2.setAttribute("symbol", gp.getPlayer2().getValue());
 
             gameplay.appendChild(game);
-                for (int i = 0; i < gp.gameSize(); i++) {
+                for (int i = 0; i < gp.sizeGame(); i++) {
                     Element step = document.createElement("Step");
                         game.appendChild(step);
-                            step.setAttribute("num", gp.getGame(i).getNum());
-                            step.setAttribute("playerId", gp.getGame(i).getPlayerId());
-                            Text text = document.createTextNode(gp.getGame(i).returnXY());
+                            step.setAttribute("num", gp.getStepGame(i).getNum());
+                            step.setAttribute("playerId", gp.getStepGame(i).getPlayerId());
+                            Text text = document.createTextNode(gp.getStepGame(i).returnXY());
                             step.appendChild(text);
                 }
 
@@ -80,12 +85,15 @@ public class DomParser implements InterfaceParser {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.transform(new DOMSource(document), new StreamResult(new FileOutputStream(path)));
+
+        return 1;
     }
 
-    // Метод считывает данные из файла xml и инициализирует объект класса который хранит историю игры.
-    // На вход метод получает строку с именем и директорией файла xml или объект JSONObject.
     @Override
     public Gameplay read(String path, JSONObject object) throws Exception {
+
+        // Метод считывает данные из файла xml и инициализирует объект класса который хранит историю игры.
+        // На вход метод получает строку с именем и директорией файла xml или объект JSONObject.
 
         Gameplay gameplay;   // Объект для хранения истории игры.
 
@@ -273,7 +281,7 @@ public class DomParser implements InterfaceParser {
                 int x = Integer.parseInt(String.valueOf(xy.charAt(0)));
                 int y = Integer.parseInt(String.valueOf(xy.charAt(1)));
 
-                gameplay.setGame(playerId, num, x, y);   // Добавляем очередной шаг.
+                gameplay.addGame(playerId, num, x, y);   // Добавляем очередной шаг.
 
                 // Тест.
                 // Выводим очередной объект Step.

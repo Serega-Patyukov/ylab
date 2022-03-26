@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.model;
+package ru.patyukov.ylab.zadanie5.game;
 
 // Объект класса хранит один ход.
 public class Step {
@@ -8,7 +8,9 @@ public class Step {
     private int x;          // Координата х.
     private int y;         // Координата у.
 
-    // Конструктор
+            // КОНСТРУКТОРЫ
+
+    public Step() {}
     public Step(String playerId, String num, int x, int y) {
         this.playerId = playerId;
         this.num = num;
@@ -16,8 +18,11 @@ public class Step {
         this.y = y;
     }
 
-    // Метод возвращает координаты х у в виде строки.
+            // МЕТОДЫ
+
     public String returnXY() {
+
+        // Метод возвращает координаты х у в виде строки.
 
             /*
             Метод возвращает координаты х у в виде строки.
@@ -28,23 +33,36 @@ public class Step {
             */
 
         return String.valueOf(x) + y;
+
+    }   // Метод возвращает координаты х у в виде строки.
+
+            // GET SET
+
+    public String getPlayerId() {
+        return playerId;
     }
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
     public String getNum() {
         return num;
     }
-    public String getPlayerId() {
-        return playerId;
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public int getX() {
         return x;
     }
+    public void setX(int x) {
+        this.x = x;
+    }
+
     public int getY() {
         return y;
     }
-
-    @Override
-    public String toString() {
-        return "\t\t<Step num=\"" + num + "\" playerId=\"" + playerId + "\">" + returnXY() + "</Step>\n";
+    public void setY(int y) {
+        this.y = y;
     }
 }

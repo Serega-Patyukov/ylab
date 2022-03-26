@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5;
+package ru.patyukov.ylab.zadanie5.game;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -6,18 +6,25 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 // Класс статистики игры.
-public class Statisticsplayer {
+public class StatisticsPlayer {
 
-    // Метод сохраняет статистику игры.
+    private static String path = "src/main/resources/static/file/zadanie5/statisticsplayer.txt";   // Относительное имя файла статистики игры.
+
+            // МЕТОДЫ
+
+    public static int statisticsPlayer(String namePlayerWon, String namePlayerLost) {
+
+        // Метод сохраняет статистику игры.
     /*
         Метод на вход получает имена:
             namePlayerWon - выигравшего игрока;
             namePlayerLost - проигравшего игрока.
-     */
-    public static void statisticsPlayer(String namePlayerWon, String namePlayerLost) {
 
-        // Файл для хранения статистики игры.
-        Path file = Path.of("src/main/resources/static/file/zadanie5/statisticsplayer.txt");
+            Если в работе метода возникнет ошибка, то метод вернет -1.
+            Иначе 1.
+     */
+
+        Path file = Path.of(path);   // Файл для хранения статистики игры.
 
         boolean flagNamePlayerWon = true;    // Флаг. true - имя выигравшего игрока в файле не найдено.
                                                   // false - имя выигравшего игрока в файле найдено.
@@ -96,10 +103,10 @@ public class Statisticsplayer {
                     else stringWriter.write(buf + "\n");   // Сохраняем строку в буфер.
                 }
             } catch (IOException e) {
+                System.out.println("\nОШИБКА - не удалось сохранить статистику игры (процесс чтения файла)\n" +
+                        "метод statisticsPlayer() класса StatisticsPlayer\n");
                 e.printStackTrace();
-                System.out.println("Файл для сохранения статистики не удалось прочитать (процесс чтения файла статистики игры).");
-                System.out.println("Не удалось сохранить статистику игры.");
-                return;
+                return -1;
             }
             if (flagNamePlayerWon) {
                 char[] chars = new char[58];
@@ -142,23 +149,30 @@ public class Statisticsplayer {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.toFile()))) {
                 bufferedWriter.write(stringWriter.toString());
             } catch (IOException e) {
+                System.out.println("\nОШИБКА - не удалось сохранить статистику игры (процесс записи файла)\n" +
+                        "метод statisticsPlayer() класса StatisticsPlayer\n");
                 e.printStackTrace();
-                System.out.println("Файл для сохранения статистики не удалось прочитать (процесс записи файла статистики игры).");
-                System.out.println("Не удалось сохранить статистику игры");
+                return -1;
             }
 
         }
         else {
-            System.out.println("Файл для сохранения статистики игры не найден.");
-            System.out.println("Не удалось сохранить статистику игры.");
+            System.out.println("\nОШИБКА - файл для сохранения статистики игры не найден\n" +
+                    "метод statisticsPlayer() класса StatisticsPlayer\n");
+            return -1;
         }
-    }
+        return 1;
 
-    // Метод выводит на экран статистику игры.
-    public static void printStatisticsPlayer() {
+    }   // Метод сохраняет статистику игры.
+    public static int printStatisticsPlayer() {
 
-        // Файл для хранения статистики.
-        Path file = Path.of("src/main/resources/static/file/zadanie5/statisticsplayer.txt");
+        // Метод выводит в консоль статистику игры.
+        /*
+            Если в работе метода возникнет ошибка, то метод вернет -1.
+            Иначе 1.
+         */
+
+        Path file = Path.of(path);   // Файл для хранения статистики.
 
         // Проверяем файл на существование.
         if (Files.exists(file)) {
@@ -168,14 +182,27 @@ public class Statisticsplayer {
                     System.out.println(bufferedReader.readLine());   // Вводим статистику на экран.
                 }
             } catch (IOException e) {
+                System.out.println("\nОШИБКА - не удалось вывести статистику игры\n" +
+                        "метод printStatisticsPlayer() класса StatisticsPlayer\n");
                 e.printStackTrace();
-                System.out.println("Файл для сохранения статистики не удалось прочитать (процесс вывода статистики на экран).");
-                System.out.println("Не удалось вывести на экран статистику игры.");
+                return -1;
             }
         }
         else {
-            System.out.println("Файл статистики не найден.");
-            System.out.println("Не удалось вывести на экран статистику игры.");
+            System.out.println("\nОШИБКА - файл статистики не найден\n" +
+                    "метод printStatisticsPlayer() класса StatisticsPlayer\n");
+            return -1;
         }
+        return 1;
+
+    }   // Метод выводит в консоль статистику игры.
+
+            // GET SET
+
+    public static String getPath() {
+        return path;
+    }
+    public static void setPath(String path) {
+        StatisticsPlayer.path = path;
     }
 }

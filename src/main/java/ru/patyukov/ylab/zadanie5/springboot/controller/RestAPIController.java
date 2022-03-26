@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.controller;
+package ru.patyukov.ylab.zadanie5.springboot.controller;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ru.patyukov.ylab.zadanie5.json.JsonSimpleParser;
-import ru.patyukov.ylab.zadanie5.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.game.parser.json.JsonSimpleParser;
+import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

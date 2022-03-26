@@ -1,33 +1,49 @@
-package ru.patyukov.ylab.zadanie5.model;
+package ru.patyukov.ylab.zadanie5.game.model;
 
-import ru.patyukov.ylab.zadanie5.field.Cell;
-import ru.patyukov.ylab.zadanie5.field.Field;
+import ru.patyukov.ylab.zadanie5.game.*;
 
 import java.util.ArrayList;
 
-// Объект класса хранит историю игры. И есть метод для вывода на экран истории игры.
+// Объект класса хранит историю игры. И тут есть метод для вывода в консоль истории игры.
 public class Gameplay {
     private Player player1;    // Игрок, который ходит первым.
     private Player player2;   // Игрок, который ходит вторым.
 
     private ArrayList<Step> game = new ArrayList<>();   // Список ходов.
-                                                    // 0 элемент - ход первого игрока.
-                                                    // 1 элемент - ход второго игрока.
-                                                    // 2 элемент - ход первого игрока.
+                                                       // 0 элемент - ход первого игрока.
+                                                      // 1 элемент - ход второго игрока.
+                                                     // 2 элемент - ход первого игрока.
                                                     // 3 элемент - ход второго игрока.
-                                                    // ...
+                                                   // ...
     private GameResult gameResult;   // Игрок победитель.
 
-    public Gameplay() {}
+            // КОНСТРУКТОРЫ
 
-    // Конструктор.
+    public Gameplay() {}
     public Gameplay(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+        this.player1 = player1;    // Игрок, который ходит первым.
+        this.player2 = player2;   // Игрок, который ходит вторым.
     }
 
-    // Метод выводит на экран историю игры.
+            // МЕТОДЫ
+
+    public void addGame(String playerId, String num, int x, int y) {
+
+        // Метод добавляет ход в список ходов.
+
+        game.add(new Step(playerId, num, x, y));
+
+    }   // Метод добавляет ход в список ходов.
+    public Step getStepGame(int i) {
+
+        // Метод возвращает один ход по индексу i.
+
+        return game.get(i);
+
+    }    // Метод возвращает один ход по индексу i.
     public void printGameplay() {
+
+        // Метод выводит в консоль историю игры.
 
         Field field = new Field();   // Создаем поле.
 
@@ -54,51 +70,29 @@ public class Gameplay {
 
         System.out.println("=========================================================\n\n");
 
-    }
+    }    // Метод выводит в консоль историю игры.
+    public int sizeGame() {
 
-    // Количество ходов.
-    public int gameSize() {
+        // Количество ходов.
+
         return game.size();
-    }
 
-    // Метод добавляет ход в список ходов.
-    public void setGame(String playerId, String num, int x, int y) {
-        game.add(new Step(playerId, num, x, y));
-    }
-    // Метод возвращает один ход по индексу i.
-    public Step getGame(int i) {
-        return game.get(i);
-    }
+    }       // Количество ходов.
 
-    // Метод написан для метода toString()
-    public String printgame() {
-        String s ="";
-        s = "\t<Game>\n";
-        for (int i = 0; i < gameSize(); i++) {
-            s += getGame(i);
-        }
-        s +="\t</Game>\n";
-        return s;
-    }
-
-    @Override
-    public String toString() {
-        return "\nВывод на экран объекта класса Gameplay\n" +
-                "Это сделано для тестирования !!!\n" +
-                "<Gameplay>\n" +
-                player1 +
-                player2 +
-                printgame() +
-                gameResult +
-                "\n</Gameplay>\n";
-    }
+            // GET SET
 
     public Player getPlayer1() {
         return player1;
     }
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
 
     public Player getPlayer2() {
         return player2;
+    }
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
 
     public ArrayList<Step> getGame() {
