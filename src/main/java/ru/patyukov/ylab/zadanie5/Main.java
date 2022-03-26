@@ -71,8 +71,8 @@ public class Main {
                     break;
                 }
 
-                if (player1.isStartStop()) goPlayer1();         // Первый игрок делат очередной ход.
-                else if (player2.isStartStop()) goPlayer2();   // Второй игрок делат очередной ход.
+                if (player1.isStartStop()) goPlayer1();         // Первый игрок делает очередной ход.
+                else if (player2.isStartStop()) goPlayer2();   // Второй игрок делает очередной ход.
             }
         }
         System.out.println("\nКОНЕЦ !!!");
@@ -221,8 +221,8 @@ public class Main {
                 System.out.println("\nОШИБКА - не правильный ввод");
                 continue;
             }
-            if (player1.getValue().equals("О")) player2 = new Player(namePlayer, "Х");   // Создаем первого игрока.
-            else player2 = new Player(namePlayer, "О");   // Создаем первого игрока.
+            if (player1.getValue().equals("О")) player2 = new Player(namePlayer, "Х");   // Создаем второго игрока.
+            else player2 = new Player(namePlayer, "О");   // Создаем второго игрока.
             break;
         }
 

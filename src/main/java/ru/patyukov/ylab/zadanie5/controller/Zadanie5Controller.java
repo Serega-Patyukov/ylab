@@ -6,10 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import ru.patyukov.ylab.zadanie5.Main;
 import ru.patyukov.ylab.zadanie5.field.Cell;
 import ru.patyukov.ylab.zadanie5.field.Field;
 import ru.patyukov.ylab.zadanie5.json.JsonSimpleParser;
 import ru.patyukov.ylab.zadanie5.model.Gameplay;
+import ru.patyukov.ylab.zadanie5.model.Player;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,31 +32,104 @@ public class Zadanie5Controller {
         return new ArrayList<>();
     }
 
+
+
+    // Главный метод.
+    /*
+        Начальная страница.
+        Этот метод аналог метода gameResult() класса Main из консольных крестиков ноликов.
+     */
     @GetMapping
-    public String getGameplay() {
+    public String gameplay(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
         return "zadanie5/gameplay";
     }
 
-    @GetMapping("/play")
-    public String getPlay() {
-        return "zadanie5/play";
+    @GetMapping("/createPlayer")
+    public String play() {
+        return "zadanie5/createPlayer";
     }
 
-    @GetMapping("/errorfile")
-    public String getErrorFile() {
-        return "zadanie5/errorfile";
+    @GetMapping("/playerSave")
+    public String playerSave(String namePlayer1,
+                             String value1,
+                             String namePlayer2,
+                             String value2,
+                             @ModelAttribute ArrayList<Gameplay> gameplay,
+                             @ModelAttribute ArrayList<Field> fieldList) {
+
+        // Тут нужно сделать проверку.
+
+        Player player1 = new Player(namePlayer1, value1);   // Создаем первого игрока.
+        Player player2 = new Player(namePlayer2, value2);   // Создаем второго игрока.
+
+        // Определяем кто первым начнет.
+        /*
+            Кто первый начнет у того id = "1".
+            Кто второй начнет у того id = "2".
+         */
+        if ( ((int) ((Math.random()) * 10)) < 5 ) {
+            player1.setStartStop(true);   // Начнет второй.
+            player1.setId("1");   // Задаем id первого игрока.
+            player2.setId("2");   // Задаем id второго игрока.
+        }
+        else {
+            player2.setStartStop(true);   // Начнет первый.
+            player2.setId("1");   // Задаем id второго игрока.
+            player1.setId("2");   // Задаем id первого игрока.
+        }
+
+        gameplay.add(new Gameplay(player1, player2));
+
+        // Добавляем пустое поле.
+        fieldList.add(new Field());
+
+        return "zadanie5/playNext";
     }
 
-    @GetMapping("/fileplay")
-    public String getFileplay(SessionStatus sessionStatus) {
+    // Этот метод аналог метода main() класса Main из консольных крестиков ноликов.
+    @GetMapping("/playNext")
+    public String playNext(@ModelAttribute ArrayList<Gameplay> gameplay,
+                           @ModelAttribute ArrayList<Field> fieldList) {
+
+        // тут проверку нужно сделать
+
+        Main mainConsole = new Main();
+
+        if (gameplay.get(0).getPlayer1().isStartStop()) {
+            gameplay.get(0).getPlayer1().setStartStop(false);
+            gameplay.get(0).getPlayer2().setStartStop(true);   // Второй игрок делает очередной ход.
+        }
+        else if (gameplay.get(0).getPlayer2().isStartStop()) {
+            gameplay.get(0).getPlayer1().setStartStop(true);
+            gameplay.get(0).getPlayer2().setStartStop(false);   // Первый игрок делает очередной ход.
+        }
+
+        // Добавляем пустое поле.
+        fieldList.add(new Field());
+
+        return "zadanie5/playNext";
+    }
+
+    @GetMapping("/errorFile")
+    public String errorFile(SessionStatus sessionStatus) {
         sessionStatus.setComplete();
-        return "zadanie5/fileplay";
+        return "zadanie5/errorFile";
     }
 
-    @PostMapping("/fileplay")
-    public String postFileplay(@RequestPart MultipartFile file,
-                               @ModelAttribute ArrayList<Field> fieldList,
-                               @ModelAttribute ArrayList<Gameplay> gameplay) {
+    @GetMapping("/filePlay")
+    public String fileplay(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "zadanie5/filePlay";
+    }
+
+
+
+
+    @PostMapping("/filePlay")
+    public String fileplay(@RequestPart MultipartFile file,
+                           @ModelAttribute ArrayList<Field> fieldList,
+                           @ModelAttribute ArrayList<Gameplay> gameplay) {
         try {
 
             JSONParser parser = new JSONParser();
@@ -64,9 +139,9 @@ public class Zadanie5Controller {
             gameplay.add(jsonSimpleParser.read(null, jsonObject));   // Получаем объект, который хранит историю игры.
 
         } catch (Exception e) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> postFileplay");   // Сообщение для сервера.
+            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay");   // Сообщение для сервера.
             e.printStackTrace();
-            return "redirect:/gameplay/errorfile";
+            return "redirect:/gameplay/errorFile";
         }
 
         // Заполняем список полей пустыми полями, количество которых равно количеству ходов.
@@ -110,6 +185,6 @@ public class Zadanie5Controller {
             }
         }
 
-        return "redirect:/gameplay/fileplay";
+        return "redirect:/gameplay/filePlay";
     }
 }
