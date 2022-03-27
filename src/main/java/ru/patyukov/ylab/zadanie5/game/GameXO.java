@@ -12,19 +12,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+// Движок игры.
 // Куча полезных методов.
 public class GameXO {
 
-    private static final JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();   // Объект класса, который сохраняет и читает файл json.
-    private static final DomParser domParser = new DomParser();                       // Объект класса, который сохраняет и читает файл xml.
-    private static InterfaceParser parser;                                           // Переменная которая может парсить json и xml.
-
-    private static String path = "src/main/resources/static/file/zadanie5/";  // Относительный путь к файлам хранения истории.
+    private JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();    // Объект класса, который сохраняет и читает файл json.
+    private DomParser domParser = new DomParser();                        // Объект класса, который сохраняет и читает файл xml.
+    private InterfaceParser parser;                                      // Переменная которая может парсить json и xml.
+    private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
+    private String path = "src/main/resources/static/file/zadanie5/";  // Относительный путь к файлам хранения истории.
 
     private ArrayList<String> strListPath = new ArrayList<>();   // Список имен файлов с историей игр, без директории и расширения.
 
-    private Gameplay gameplay;
-    private Field field;
+    private Gameplay gameplay = new Gameplay(new Player(), new Player());
+    private Field field = new Field();
 
             // КОНСТРУКТОРЫ
 
@@ -47,8 +48,8 @@ public class GameXO {
 
         int lengthNamePlayer = 3;   // Длина имени игрока.
 
-        Player player1;
-        Player player2;
+        Player player1 = null;
+        Player player2 = null;
 
         // Символы должны быть разными.
         if (value1.equals(value2)) {
@@ -76,14 +77,28 @@ public class GameXO {
                     "метод createPlayer() класса GameXO\n");
             return -1;
         }
-        if (value1.equals("О")) player2 = new Player(namePlayer2, "Х");   // Создаем второго игрока.
+        if (value1.equals("О"))
+            if (value2.equals("Х")) player2 = new Player(namePlayer2, "Х");   // Создаем второго игрока.
+            else {
+                System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
+                        "метод createPlayer() класса GameXO\n");
+                return -1;
+            }
+        else if (value1.equals("Х"))
+            if (value2.equals("О")) player2 = new Player(namePlayer2, "О");   // Создаем второго игрока.
+            else {
+                System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
+                        "метод createPlayer() класса GameXO\n");
+                return -1;
+            }
         else {
-            player2 = new Player(namePlayer2, "О");   // Создаем второго игрока.
+            System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
+                    "метод createPlayer() класса GameXO\n");
             return -1;
         }
 
         gameplay.setPlayer1(player1);
-        gameplay.setPlayer1(player2);
+        gameplay.setPlayer2(player2);
 
         return 1;
 
@@ -169,7 +184,7 @@ public class GameXO {
         }
         return 1;
 
-    }      // Первый игрок делает очередной ход.
+    }        // Первый игрок делает очередной ход.
     public int goPlayer2(int count, int x, int y) {
 
         // Второй игрок делает очередной ход.
@@ -194,10 +209,13 @@ public class GameXO {
             return -1;
         }
         return 1;
-    }   // Второй игрок делает очередной ход.
+    }     // Второй игрок делает очередной ход.
     public void finish(String namePlayer) {
 
         // Метод обрабатывает победителя.
+
+        System.out.println("\n" + namePlayer + " - ВЫИГРАЛ !!!");
+        System.out.println("=========================================================\n\n");
 
         // Сохраняем победителя в объект который хранит историю игры.
         if (gameplay.getPlayer1().getName().equals(namePlayer)) gameplay.setGameResult(new GameResult(gameplay.getPlayer1()));
@@ -217,10 +235,10 @@ public class GameXO {
         }
 
         // Сохраняем статистику.
-        if (namePlayer.equals(gameplay.getPlayer1().getName())) StatisticsPlayer.statisticsPlayer(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName());
-        else StatisticsPlayer.statisticsPlayer(gameplay.getPlayer2().getName(), gameplay.getPlayer1().getName());
+        if (namePlayer.equals(gameplay.getPlayer1().getName())) statisticsPlayer.statisticsPlayer(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName());
+        else statisticsPlayer.statisticsPlayer(gameplay.getPlayer2().getName(), gameplay.getPlayer1().getName());
 
-    }        // Метод обрабатывает победителя.
+    }          // Метод обрабатывает победителя.
     public int createGameList() {
 
         // Метод получает список имен предыдущих игр.
@@ -248,7 +266,7 @@ public class GameXO {
 
         return 1;
 
-    }               // Метод получает список имен предыдущих игр.
+    }                 // Метод получает список имен предыдущих игр.
     public void queue() {
 
         // Определяем кто первым начнет.
@@ -267,11 +285,21 @@ public class GameXO {
             gameplay.getPlayer2().setStartStop(true);   // Начнет второй.
             gameplay.getPlayer2().setId("1");   // Задаем id второго игрока.
             gameplay.getPlayer1().setId("2");   // Задаем id первого игрока.
+
+            // Меняем местами игроков в классе Gameplay.
+            // В поле Player player1 должен хранится игрок, который ходит первым.
+            Player player = new Player(gameplay.getPlayer1().getName(), gameplay.getPlayer1().getValue());
+            gameplay.setPlayer1(gameplay.getPlayer2());
+            gameplay.setPlayer2(player);
         }
-    }                    // Определяем кто первым начнет.
+    }                      // Определяем кто первым начнет.
     public void draw() {
 
         // Метод обрабатывает ничью.
+
+
+        System.out.println("\nНИЧЬЯ !!!");
+        System.out.println("=========================================================\n\n");
 
         GameResult gameResult = new GameResult();
         gameResult.setPlayer(null);
@@ -290,15 +318,15 @@ public class GameXO {
                     "метод draw() класса GameXO\n");
             e.printStackTrace();
         }
-    }                  // Метод обрабатывает ничью.
+    }                    // Метод обрабатывает ничью.
 
             // GET SET
 
-    public static String getPath() {
+    public String getPath() {
         return path;
     }
-    public static void setPath(String path) {
-        GameXO.path = path;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public ArrayList<String> getStrListPath() {
@@ -306,5 +334,47 @@ public class GameXO {
     }
     public void setStrListPath(ArrayList<String> strListPath) {
         this.strListPath = strListPath;
+    }
+
+    public Gameplay getGameplay() {
+        return gameplay;
+    }
+    public void setGameplay(Gameplay gameplay) {
+        this.gameplay = gameplay;
+    }
+
+    public Field getField() {
+        return field;
+    }
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public JsonSimpleParser getJsonSimpleParser() {
+        return jsonSimpleParser;
+    }
+    public void setJsonSimpleParser(JsonSimpleParser jsonSimpleParser) {
+        this.jsonSimpleParser = jsonSimpleParser;
+    }
+
+    public DomParser getDomParser() {
+        return domParser;
+    }
+    public void setDomParser(DomParser domParser) {
+        this.domParser = domParser;
+    }
+
+    public InterfaceParser getParser() {
+        return parser;
+    }
+    public void setParser(InterfaceParser parser) {
+        this.parser = parser;
+    }
+
+    public StatisticsPlayer getStatisticsPlayer() {
+        return statisticsPlayer;
+    }
+    public void setStatisticsPlayer(StatisticsPlayer statisticsPlayer) {
+        this.statisticsPlayer = statisticsPlayer;
     }
 }

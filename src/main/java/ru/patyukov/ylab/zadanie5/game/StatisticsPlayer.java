@@ -12,7 +12,7 @@ public class StatisticsPlayer {
 
             // МЕТОДЫ
 
-    public static int statisticsPlayer(String namePlayerWon, String namePlayerLost) {
+    public int statisticsPlayer(String namePlayerWon, String namePlayerLost) {
 
         // Метод сохраняет статистику игры.
     /*
@@ -164,7 +164,7 @@ public class StatisticsPlayer {
         return 1;
 
     }   // Метод сохраняет статистику игры.
-    public static int printStatisticsPlayer() {
+    public int printStatisticsPlayer() {
 
         // Метод выводит в консоль статистику игры.
         /*
@@ -199,10 +199,10 @@ public class StatisticsPlayer {
 
             // GET SET
 
-    public static String getPath() {
+    public String getPath() {
         return path;
     }
-    public static void setPath(String path) {
+    public void setPath(String path) {
         StatisticsPlayer.path = path;
     }
 }
