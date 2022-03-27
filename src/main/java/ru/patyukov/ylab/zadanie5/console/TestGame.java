@@ -18,14 +18,10 @@ public class TestGame {
         while (flag) {
             System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
-            GameXO gameXO = new GameXO();      // Движок игры.
-
-            gameResult(gameXO);   // Метод просмотра истории.
+            gameResult();   // Метод просмотра истории и управления.
             if (!flag) break;
 
-            gameXO = new GameXO();   // Обнуляемся. Так как только что в методе gameResult() объект gameXO был заполнен данными из файла.
-                                    // Но мы же далее будем сами играть и поэтому объект gameXO заполним сами.
-
+            GameXO gameXO = new GameXO();      // Движок игры.
             System.out.println("=========================================================\n\n");
 
             createPlayer(gameXO);   // Создаем игроков.
@@ -33,7 +29,7 @@ public class TestGame {
 
             // ИГРА НАЧАЛАСЬ.
             for (int i = 1; i > 0; i++) {    // Условие i > 0 написано с осознанием полной ответственности за результат работы бесконечного цикла !!!
-                // i - количество ходов. На последнем ходе будет break.
+                                            // i - количество ходов. На последнем ходе будет break.
                 gameXO.getField().printFiled();   // Выводим поле.
 
                 // ПОДВОДИМ ИТОГИ ОЧЕРЕДНОГО ХОДА.
@@ -143,9 +139,11 @@ public class TestGame {
             else break;
         }
     }      // Создаем игроков.
-    public static void gameResult(GameXO gameXO) {
+    public static void gameResult() {
 
-        // Метод просмотра истории.
+        // Метод просмотра истории и управления.
+
+        GameXO gameXO = new GameXO();      // Движок игры.
 
         // Получаем список имен файлов с историей игр, без директории и расширения.
         if (gameXO.createGameList() != 1) System.out.println("Не удалось получить список имен файлов с историей игр, без директории и расширения.");
@@ -221,5 +219,5 @@ public class TestGame {
                 }
             }
         }
-    }       // Метод просмотра истории.
+    }                    // Метод просмотра истории и управления.
 }
