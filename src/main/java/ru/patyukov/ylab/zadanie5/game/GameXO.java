@@ -178,10 +178,9 @@ public class GameXO {
                 gameplay.getPlayer1().setStartStop(false);
                 gameplay.getPlayer2().setStartStop(true);
             }
+            else return -1;
         }
-        else {
-            return -1;
-        }
+        else return -1;
         return 1;
 
     }        // Первый игрок делает очередной ход.
@@ -204,11 +203,11 @@ public class GameXO {
                 gameplay.getPlayer1().setStartStop(true);
                 gameplay.getPlayer2().setStartStop(false);
             }
+            else return -1;
         }
-        else {
-            return -1;
-        }
+        else return -1;
         return 1;
+
     }     // Второй игрок делает очередной ход.
     public void finish(String namePlayer) {
 
@@ -289,6 +288,7 @@ public class GameXO {
             // Меняем местами игроков в классе Gameplay.
             // В поле Player player1 должен хранится игрок, который ходит первым.
             Player player = new Player(gameplay.getPlayer1().getName(), gameplay.getPlayer1().getValue());
+            player.setId(gameplay.getPlayer1().getId());
             gameplay.setPlayer1(gameplay.getPlayer2());
             gameplay.setPlayer2(player);
         }

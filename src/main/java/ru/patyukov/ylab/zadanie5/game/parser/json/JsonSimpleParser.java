@@ -73,6 +73,7 @@ public class JsonSimpleParser implements InterfaceParser {
 
         try(FileWriter fileWriter = new FileWriter(path)) {
             jsonObject.writeJSONString(fileWriter);
+            fileWriter.flush();
         } catch (Exception e) {
             System.out.println("\nОШИБКА - не удалось сохранить json файл\n" +
                     "метод write() класса JsonSimpleParser\n");

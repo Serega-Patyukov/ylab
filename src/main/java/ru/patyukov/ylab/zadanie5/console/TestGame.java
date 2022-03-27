@@ -23,6 +23,9 @@ public class TestGame {
             gameResult(gameXO);   // Метод просмотра истории.
             if (!flag) break;
 
+            gameXO = new GameXO();   // Обнуляемся. Так как только что в методе gameResult() объект gameXO был заполнен данными из файла.
+                                    // Но мы же далее будем сами играть и поэтому объект gameXO заполним сами.
+
             System.out.println("=========================================================\n\n");
 
             createPlayer(gameXO);   // Создаем игроков.
@@ -177,6 +180,12 @@ public class TestGame {
             } else if (buffer.equals("NEXT"))  return;
             else {
                 System.out.println();
+
+                if (gameXO.getStrListPath().size() == 0) {
+                    System.out.println("\tВведенное имя не найдено. ПОВТОРИТЕ !!!");
+                    System.out.println("=========================================================\n\n");
+                    continue;
+                }
 
                 // Ищем введенное имя в списке имен файлов с историей игр, без директории и расширения.
                 for (int i = 0; i < gameXO.getStrListPath().size(); i++) {
