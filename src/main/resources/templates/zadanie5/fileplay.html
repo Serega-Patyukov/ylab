@@ -13,8 +13,8 @@
         <h1>Крестики нолики</h1>
         <hr>
         <h3>
-            История игры <span th:text="${gameplayList.get(0).getPlayer1().getName()}"></span> и
-                        <span th:text="${gameplayList.get(0).getPlayer2().getName()}"></span>
+            История игры <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span> и
+                        <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span>
         </h3>
         <div th:each="nums, i: ${fieldList}">
             Шаг - <span th:text="${i.count}"></span> <br>
@@ -33,12 +33,12 @@
             <br>
         </div>
         <h3>Выиграл -
-            <span th:if="${gameplayList.get(0).getGameResult().getPlayer()==null}"
+            <span th:if="${gameXO.getGameplay().getGameResult().getPlayer()==null}"
                   th:value="Ничья">
                 никто не выиграл. Ничья
             </span>
-            <span th:if="${gameplayList.get(0).getGameResult().getPlayer()!=null}"
-                  th:text="${gameplayList.get(0).getGameResult().getPlayer().getName()}">
+            <span th:if="${gameXO.getGameplay().getGameResult().getPlayer()!=null}"
+                  th:text="${gameXO.getGameplay().getGameResult().getPlayer().getName()}">
             </span> !!!
             <br>
         </h3>

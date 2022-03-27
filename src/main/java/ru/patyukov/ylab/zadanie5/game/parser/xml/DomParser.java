@@ -1,6 +1,5 @@
 package ru.patyukov.ylab.zadanie5.game.parser.xml;
 
-import org.json.simple.JSONObject;
 import org.w3c.dom.*;
 import ru.patyukov.ylab.zadanie5.game.parser.InterfaceParser;
 import ru.patyukov.ylab.zadanie5.game.GameResult;
@@ -14,8 +13,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -90,16 +90,25 @@ public class DomParser implements InterfaceParser {
     }
 
     @Override
-    public Gameplay read(String path, JSONObject object) throws Exception {
+    public Gameplay read(String path, Object object) throws Exception {
 
         // Метод считывает данные из файла xml и инициализирует объект класса который хранит историю игры.
         // На вход метод получает строку с именем и директорией файла xml или объект JSONObject.
 
         Gameplay gameplay;   // Объект для хранения истории игры.
 
-        File file = new File(path);
+        InputStream inputStream;
+
+        if (path == null) {
+            inputStream = (InputStream) object;
+        }
+        else {
+            inputStream = new FileInputStream(path);
+        }
+
+
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        Document document = documentBuilderFactory.newDocumentBuilder().parse(file);
+        Document document = documentBuilderFactory.newDocumentBuilder().parse(inputStream);
 
         Node nodeGameplay = document.getFirstChild();   // Получаем корневой node.
 

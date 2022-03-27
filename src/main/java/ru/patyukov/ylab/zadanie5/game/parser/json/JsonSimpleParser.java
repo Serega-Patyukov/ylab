@@ -85,7 +85,7 @@ public class JsonSimpleParser implements InterfaceParser {
     }
 
     @Override
-    public Gameplay read(String path, JSONObject object) throws Exception {
+    public Gameplay read(String path, Object object) throws Exception {
 
         // Метод считывает данные из файла json и инициализирует объект класса который хранит историю игры.
         // На вход метод получает строку с именем и директорией файла json или объект JSONObject.
@@ -102,7 +102,7 @@ public class JsonSimpleParser implements InterfaceParser {
             }
         }
         else {
-            jsonObject = object;
+            jsonObject = (JSONObject) object;
         }
 
         JSONObject jsonGameplay = (JSONObject) jsonObject.get("Gameplay");
