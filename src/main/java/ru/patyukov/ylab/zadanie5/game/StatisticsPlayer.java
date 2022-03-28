@@ -3,16 +3,18 @@ package ru.patyukov.ylab.zadanie5.game;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 // Класс статистики игры.
 public class StatisticsPlayer {
 
-    private static String path = "src/main/resources/static/file/zadanie5/statisticsplayer.txt";   // Относительное имя файла статистики игры.
+    private String path = "src/main/resources/static/file/zadanie5/statisticsplayer.txt";   // Относительное имя файла статистики игры.
+    private ArrayList<ArrayList<String>> statisticsArrayList = new ArrayList<>();         // Список для работы со статистикой.
 
             // МЕТОДЫ
 
-    public int statisticsPlayer(String namePlayerWon, String namePlayerLost) {
+    public int saveStatisticsPlayer(String namePlayerWon, String namePlayerLost) {
 
         // Метод сохраняет статистику игры.
     /*
@@ -46,9 +48,11 @@ public class StatisticsPlayer {
                     if (buf.startsWith(("| " + namePlayerWon))) {
 
                         char[] stringSplit = buf.toCharArray();   // Получаем массив из прочитанной строки.
-                                                                 // С 0 элемента - имя.
-                                                                // С 10 элемента - количество побед.
-                                                               // С 23 - количество поражений.
+                                                                 // С 2 элемента - имя.
+                                                                // С 33 элемента - количество побед.
+                                                               // С 46 элемента - количество поражений.
+                                                              // Если захочешь изменить эти параметры,
+                                                             // то измени их и в методе printStatisticsPlayer().
                         // Увеличиваем на 1 количество побед.
                         String temp = String.valueOf(stringSplit[33]);
                         for (int i = 34; i < 43; i++) {
@@ -74,10 +78,11 @@ public class StatisticsPlayer {
                     else if (buf.startsWith(("| " + namePlayerLost))) {
 
                         char[] stringSplit = buf.toCharArray();   // Получаем массив из прочитанной строки.
-                                                                 // С 0 элемента - имя.
-                                                                // С 10 элемента - количество побед.
-                                                               // С 23 - количество поражений.
-
+                                                                 // С 2 элемента - имя.
+                                                                // С 33 элемента - количество побед.
+                                                               // С 46 элемента - количество поражений.
+                                                              // Если захочешь изменить эти параметры,
+                                                             // то измени их и в методе printStatisticsPlayer().
                         // Увеличиваем на 1 количество поражений.
                         String temp = String.valueOf(stringSplit[46]);
                         for (int i = 47; i < 56; i++) {
@@ -164,10 +169,12 @@ public class StatisticsPlayer {
         return 1;
 
     }   // Метод сохраняет статистику игры.
-    public int printStatisticsPlayer() {
+    public int printStatisticsPlayer(boolean flag) {
 
-        // Метод выводит в консоль статистику игры.
+        // Метод выводит статистику игры в консоль или сохраняет в лис.
         /*
+            flag = true - метод выводит статистику в консоль.
+            flag = false - метод сохраняет статистику в лист.
             Если в работе метода возникнет ошибка, то метод вернет -1.
             Иначе 1.
          */
@@ -177,9 +184,40 @@ public class StatisticsPlayer {
         // Проверяем файл на существование.
         if (Files.exists(file)) {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file.toFile()))) {
-                System.out.println("\tСтатистика игры:\n");
-                while (bufferedReader.ready()) {
-                    System.out.println(bufferedReader.readLine());   // Вводим статистику на экран.
+                for (int j = 0; bufferedReader.ready(); j++) {
+                    String buf = bufferedReader.readLine();
+                    if (flag) System.out.println(buf);   // Вводим статистику в консоль.
+                    else {   // Сохраняем статистику в лист.
+                        /*
+                            В полученной строке согласно работе метода saveStatisticsPlayer()
+                                - С 2 символа - имя.
+                                - С 33 символа - количество побед.
+                                - С 46 - символа количество поражений.
+                                А после имени и количества побед и поражений стоит символ пробел ' '
+                         */
+                        String name = "";   // Имя игрока в статистике.
+                        String won = "";   // Количество побед.
+                        String lost = ""; // Количество поражений.
+
+                        if (j > 2) {   // Пропускаем первые 3 строчки в файле.
+                            for (int i = 2; i < buf.length(); i++) {
+                                if (buf.charAt(i) != ' ') name += buf.charAt(i);   // Получаем имя.
+                                else break;
+                            }
+
+                            for (int i = 33; i < buf.length(); i++) {
+                                if (buf.charAt(i) != ' ') won += buf.charAt(i);   // Получаем количество побед.
+                                else break;
+                            }
+
+                            for (int i = 46; i < buf.length(); i++) {
+                                if (buf.charAt(i) != ' ') lost += buf.charAt(i);   // Получаем количество поражений.
+                                else break;
+                            }
+
+                            statisticsArrayList.add(new ArrayList<>(Arrays.asList(name, won, lost)));
+                        }
+                    }
                 }
             } catch (IOException e) {
                 System.out.println("\nОШИБКА - не удалось вывести статистику игры\n" +
@@ -203,6 +241,13 @@ public class StatisticsPlayer {
         return path;
     }
     public void setPath(String path) {
-        StatisticsPlayer.path = path;
+        this.path = path;
+    }
+
+    public ArrayList<ArrayList<String>> getStatisticsArrayList() {
+        return statisticsArrayList;
+    }
+    public void setStatisticsArrayList(ArrayList<ArrayList<String>> statisticsArrayList) {
+        this.statisticsArrayList = statisticsArrayList;
     }
 }

@@ -5,26 +5,26 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>play</title>
+        <title>createPlayer</title>
     </head>
     <body>
         <h1>Крестики нолики</h1>
         <hr>
         <br>
-        <form action="/gameplay/playerSave" method="get">
+        <form action="/gameplay/playerSave" method="get" enctype="multipart/form-data">
             Введите имя первого игрока <input type="text" name="namePlayer1">
             Выберите символ
             <select name="value1">
-                <option value1="X">X</option>
-                <option value1="O">O</option>
+                <option value1="X">Х</option>
+                <option value1="O">О</option>
             </select>
             <br>
             <br>
             Введите имя второго игрока <input type="text" name="namePlayer2">
             Выберите символ
             <select name="value2">
-                <option value2="X">O</option>
-                <option value2="O">X</option>
+                <option value2="X">О</option>
+                <option value2="O">Х</option>
             </select>
             <br>
             <br>

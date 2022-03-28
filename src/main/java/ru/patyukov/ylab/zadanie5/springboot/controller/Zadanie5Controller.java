@@ -1,6 +1,5 @@
 package ru.patyukov.ylab.zadanie5.springboot.controller;
 
-import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
@@ -10,22 +9,21 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.patyukov.ylab.zadanie5.game.GameXO;
 import ru.patyukov.ylab.zadanie5.game.Cell;
 import ru.patyukov.ylab.zadanie5.game.Field;
-import ru.patyukov.ylab.zadanie5.game.parser.json.JsonSimpleParser;
-import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.game.Player;
-import ru.patyukov.ylab.zadanie5.game.parser.xml.DomParser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 @Controller
 @RequestMapping("/gameplay")
 @SessionAttributes({"fieldList", "gameXO"})
 public class Zadanie5Controller {
+
+
+            // МОДЕЛИ
+
 
     @ModelAttribute("fieldList")   // Список полей. Каждое поле очередной ход. Сколько было ходов, столько и будет полей в списке.
     public ArrayList<Field> modelField() {
@@ -37,19 +35,17 @@ public class Zadanie5Controller {
         return new GameXO();
     }
 
+
+            // МЕТОДЫ
+
+
     @GetMapping
     public String gameplay(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
-
-        // Главный метод.
-    /*
-        Начальная страница.
-        Этот метод аналог метода gameResult() класса TestGame из консольных крестиков ноликов.
-     */
-
         if (gameXO.createGameList() != 1) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Не удалось вывеси список игр")));
         sessionStatus.setComplete();
+        if (gameXO.getStrListPath().size() == 0) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Список игр, хранящихся на сервере, пуст")));
         return "zadanie5/gameplay";
-    }   // Главный метод.
+    }
 
     @GetMapping("/errorFile")
     public String errorFile(SessionStatus sessionStatus) {
@@ -115,6 +111,95 @@ public class Zadanie5Controller {
         return "zadanie5/filePlay";
     }
 
+    @GetMapping("/filePlay")
+    public String fileplay(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "zadanie5/filePlay";
+    }
+
+    @GetMapping("/createPlayer")
+    public String play() {
+        return "zadanie5/createPlayer";
+    }
+
+    @GetMapping("/playerSave")
+    public String playerSave(String namePlayer1,
+                             String value1,
+                             String namePlayer2,
+                             String value2,
+                             @ModelAttribute GameXO gameXO,
+                             @ModelAttribute ArrayList<Field> fieldList) {
+
+        // Создаем игроков.
+        if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
+            return "zadanie5/createPlayer";
+        }
+
+        gameXO.queue();   // Определяем кто первым начнет.
+
+        return "zadanie5/playNext";
+    }
+
+    @GetMapping("/playNext")
+    public String playNext(@ModelAttribute GameXO gameXO,
+                           @ModelAttribute ArrayList<Field> fieldList,
+                           String x,
+                           String y) {
+        int xNumber;
+        int yNumber;
+
+        try {
+            xNumber = Integer.parseInt(x);
+            yNumber = Integer.parseInt(y);
+        } catch (Exception e) {
+            return "zadanie5/playNext";
+        }
+
+        // ИГРА НАЧАЛАСЬ.
+
+        if (gameXO.getGameplay().getPlayer1().isStartStop()) {
+            if (gameXO.goPlayer1(gameXO.getCount(), xNumber, yNumber) != 1) {  // Первый игрок делает очередной ход.
+                return "zadanie5/playNext";
+            }
+        }
+        else if (gameXO.getGameplay().getPlayer2().isStartStop()) {
+            if (gameXO.goPlayer2(gameXO.getCount(), xNumber, yNumber) != 1) {   // Второй игрок делает очередной ход.
+                return "zadanie5/playNext";
+            }
+        }
+
+        // ПОДВОДИМ ИТОГИ ОЧЕРЕДНОГО ХОДА.
+        String namePlayer = gameXO.getField().gameOverFinish();   // Получаем имя победителя, если такой есть. Иначе пустую строку.
+
+        // Обрабатываем победителя, если он есть.
+        if (!namePlayer.equals("")) {
+            gameXO.finish(namePlayer);   // Обрабатываем победителя.
+            GameXO.setFlag(false);
+        }
+        // Проверяем на ничью.
+        if (!gameXO.getField().gameOver()) {
+            gameXO.draw();   // Обрабатываем ничью.
+            GameXO.setFlag(false);
+        }
+
+        gameXO.setCount(gameXO.getCount() + 1);
+
+        return "zadanie5/playNext";
+    }
+
+    @GetMapping("/statisticsplayer")
+    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
+
+        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
+        gameXO.getStatisticsPlayer().printStatisticsPlayer(false);           // Записываем статистику в список.
+
+        return "zadanie5/statisticsplayer";
+    }
+
+
+    // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
+
+
     private void addFieldList(@ModelAttribute ArrayList<Field> fieldList,
                               @ModelAttribute GameXO gameXO) {
         // Заполняем список полей пустыми полями, количество которых равно количеству ходов.
@@ -157,83 +242,5 @@ public class Zadanie5Controller {
                 }
             }
         }
-    }
-
-    @GetMapping("/filePlay")
-    public String fileplay(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "zadanie5/filePlay";
-    }
-
-
-
-
-
-
-
-    @GetMapping("/createPlayer")
-    public String play() {
-        return "zadanie5/createPlayer";
-    }
-
-    @GetMapping("/playerSave")
-    public String playerSave(String namePlayer1,
-                             String value1,
-                             String namePlayer2,
-                             String value2,
-                             @ModelAttribute ArrayList<Gameplay> gameplay,
-                             @ModelAttribute ArrayList<Field> fieldList) {
-
-        // Тут нужно сделать проверку.
-
-        Player player1 = new Player(namePlayer1, value1);   // Создаем первого игрока.
-        Player player2 = new Player(namePlayer2, value2);   // Создаем второго игрока.
-
-        // Определяем кто первым начнет.
-        /*
-            Кто первый начнет у того id = "1".
-            Кто второй начнет у того id = "2".
-         */
-        if ( ((int) ((Math.random()) * 10)) < 5 ) {
-            player1.setStartStop(true);   // Начнет второй.
-            player1.setId("1");   // Задаем id первого игрока.
-            player2.setId("2");   // Задаем id второго игрока.
-        }
-        else {
-            player2.setStartStop(true);   // Начнет первый.
-            player2.setId("1");   // Задаем id второго игрока.
-            player1.setId("2");   // Задаем id первого игрока.
-        }
-
-        gameplay.add(new Gameplay(player1, player2));
-
-        // Добавляем пустое поле.
-        fieldList.add(new Field());
-
-        return "zadanie5/playNext";
-    }
-
-    // Этот метод аналог метода main() класса Main из консольных крестиков ноликов.
-    @GetMapping("/playNext")
-    public String playNext(@ModelAttribute ArrayList<Gameplay> gameplay,
-                           @ModelAttribute ArrayList<Field> fieldList) {
-
-        // тут проверку нужно сделать
-
-        GameXO mainConsole = new GameXO();
-
-        if (gameplay.get(0).getPlayer1().isStartStop()) {
-            gameplay.get(0).getPlayer1().setStartStop(false);
-            gameplay.get(0).getPlayer2().setStartStop(true);   // Второй игрок делает очередной ход.
-        }
-        else if (gameplay.get(0).getPlayer2().isStartStop()) {
-            gameplay.get(0).getPlayer1().setStartStop(true);
-            gameplay.get(0).getPlayer2().setStartStop(false);   // Первый игрок делает очередной ход.
-        }
-
-        // Добавляем пустое поле.
-        fieldList.add(new Field());
-
-        return "zadanie5/playNext";
     }
 }

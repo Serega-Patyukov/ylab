@@ -21,11 +21,14 @@ public class GameXO {
     private InterfaceParser parser;                                      // Переменная которая может парсить json и xml.
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
     private String path = "src/main/resources/static/file/zadanie5/";  // Относительный путь к файлам хранения истории.
-
-    private ArrayList<String> strListPath = new ArrayList<>();   // Список имен файлов с историей игр, без директории и расширения.
+    private ArrayList<String> strListPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
 
     private Gameplay gameplay = new Gameplay(new Player(), new Player());
-    private Field field = new Field();
+    private static boolean flag = true;      // Флаг победы. true - игра продолжается.
+    private Field field = new Field();    // создаем поле
+    private int count = 0;             // Номер хода.
+    public String pathJSON;        // Файл, который хранит историю игры в json.
+    public String pathXML;      // Файл, который хранит историю игры в xml.
 
             // КОНСТРУКТОРЫ
 
@@ -222,11 +225,13 @@ public class GameXO {
 
         // Сохраняем объект, который хранит историю игры в файл xml.
         try {
+            pathXML = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), domParser);
             parser = domParser;
-            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), domParser));
+            parser.write(gameplay, pathXML);
 
+            pathJSON = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser);
             parser = jsonSimpleParser;
-            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser));
+            parser.write(gameplay, pathJSON);
         } catch (Exception e) {
             System.out.println("\nОШИБКА - не удалось сохранить историю игры\n" +
                     "метод finish() класса GameXO\n");
@@ -234,8 +239,8 @@ public class GameXO {
         }
 
         // Сохраняем статистику.
-        if (namePlayer.equals(gameplay.getPlayer1().getName())) statisticsPlayer.statisticsPlayer(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName());
-        else statisticsPlayer.statisticsPlayer(gameplay.getPlayer2().getName(), gameplay.getPlayer1().getName());
+        if (namePlayer.equals(gameplay.getPlayer1().getName())) statisticsPlayer.saveStatisticsPlayer(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName());
+        else statisticsPlayer.saveStatisticsPlayer(gameplay.getPlayer2().getName(), gameplay.getPlayer1().getName());
 
     }          // Метод обрабатывает победителя.
     public int createGameList() {
@@ -376,5 +381,33 @@ public class GameXO {
     }
     public void setStatisticsPlayer(StatisticsPlayer statisticsPlayer) {
         this.statisticsPlayer = statisticsPlayer;
+    }
+
+    public int getCount() {
+        return count;
+    }
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public static boolean isFlag() {
+        return flag;
+    }
+    public static void setFlag(boolean flag) {
+        GameXO.flag = flag;
+    }
+
+    public String getPathJSON() {
+        return pathJSON;
+    }
+    public void setPathJSON(String pathJSON) {
+        this.pathJSON = pathJSON;
+    }
+
+    public String getPathXML() {
+        return pathXML;
+    }
+    public void setPathXML(String pathXML) {
+        this.pathXML = pathXML;
     }
 }

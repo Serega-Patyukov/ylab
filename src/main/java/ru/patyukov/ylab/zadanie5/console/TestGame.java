@@ -12,14 +12,13 @@ import java.util.Scanner;
 public class TestGame {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static boolean flag = true;            // Флаг завершения работы приложения.
 
     public static void main(String[] args) {
-        while (flag) {
+        while (GameXO.isFlag()) {
             System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
             gameResult();   // Метод просмотра истории и управления.
-            if (!flag) break;
+            if (!GameXO.isFlag()) break;
 
             GameXO gameXO = new GameXO();      // Движок игры.
             System.out.println("=========================================================\n\n");
@@ -167,12 +166,13 @@ public class TestGame {
 
             // Обработка ввода.
             if (buffer.equals("EXIT")) {
-                flag = false;
+                GameXO.setFlag(false);
                 return;
             }
             else if (buffer.equals("STAT")) {
                 System.out.println();
-                if (gameXO.getStatisticsPlayer().printStatisticsPlayer() != 1) System.out.println("Не удалось вывести статистику игры");
+                System.out.println("\tСтатистика игры:\n");
+                if (gameXO.getStatisticsPlayer().printStatisticsPlayer(true) != 1) System.out.println("Не удалось вывести статистику игры");
                 System.out.println("*********************************************************");
                 System.out.println("=========================================================\n\n");
             } else if (buffer.equals("NEXT"))  return;
