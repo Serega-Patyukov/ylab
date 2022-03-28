@@ -1,5 +1,8 @@
 package ru.patyukov.ylab.zadanie5.springboot.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
@@ -11,10 +14,8 @@ import ru.patyukov.ylab.zadanie5.game.Cell;
 import ru.patyukov.ylab.zadanie5.game.Field;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 @Controller
 @RequestMapping("/gameplay")
@@ -39,20 +40,25 @@ public class Zadanie5Controller {
             // МЕТОДЫ
 
 
+    // Главная страница.
     @GetMapping
-    public String gameplay(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
-        if (gameXO.createGameList() != 1) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Не удалось вывеси список игр")));
+    public String gameplay(@ModelAttribute GameXO gameXO,
+                           SessionStatus sessionStatus,
+                           @ModelAttribute ArrayList<Field> fieldList) {
+
         sessionStatus.setComplete();
-        if (gameXO.getStrListPath().size() == 0) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Список игр, хранящихся на сервере, пуст")));
+
+        if (gameXO.createGameList() != 1) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Не удалось получить список")));
+        if (gameXO.getStrListPath().size() == 0) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("пусто")));
+
         return "zadanie5/gameplay";
     }
 
     @GetMapping("/errorFile")
     public String errorFile(SessionStatus sessionStatus) {
-        // Страница ошибок.
         sessionStatus.setComplete();
         return "zadanie5/errorFile";
-    }   // Страница ошибок.
+    }
 
     @PostMapping("/filePlay")
     public String fileplay(@RequestPart MultipartFile file,
@@ -117,8 +123,18 @@ public class Zadanie5Controller {
         return "zadanie5/filePlay";
     }
 
+    @GetMapping("/statisticsplayer")
+    public String statisticsPlayer(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
+
+        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
+        gameXO.getStatisticsPlayer().printStatisticsPlayer(false);           // Записываем статистику в список.
+        sessionStatus.setComplete();
+
+        return "zadanie5/statisticsplayer";
+    }
+
     @GetMapping("/createPlayer")
-    public String play() {
+    public String createPlayer() {
         return "zadanie5/createPlayer";
     }
 
@@ -157,6 +173,8 @@ public class Zadanie5Controller {
 
         // ИГРА НАЧАЛАСЬ.
 
+        gameXO.setCount(gameXO.getCount() + 1);
+
         if (gameXO.getGameplay().getPlayer1().isStartStop()) {
             if (gameXO.goPlayer1(gameXO.getCount(), xNumber, yNumber) != 1) {  // Первый игрок делает очередной ход.
                 return "zadanie5/playNext";
@@ -174,26 +192,15 @@ public class Zadanie5Controller {
         // Обрабатываем победителя, если он есть.
         if (!namePlayer.equals("")) {
             gameXO.finish(namePlayer);   // Обрабатываем победителя.
-            GameXO.setFlag(false);
+            gameXO.setFlag(false);
         }
         // Проверяем на ничью.
         if (!gameXO.getField().gameOver()) {
             gameXO.draw();   // Обрабатываем ничью.
-            GameXO.setFlag(false);
+            gameXO.setFlag(false);
         }
 
-        gameXO.setCount(gameXO.getCount() + 1);
-
         return "zadanie5/playNext";
-    }
-
-    @GetMapping("/statisticsplayer")
-    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
-
-        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
-        gameXO.getStatisticsPlayer().printStatisticsPlayer(false);           // Записываем статистику в список.
-
-        return "zadanie5/statisticsplayer";
     }
 
 

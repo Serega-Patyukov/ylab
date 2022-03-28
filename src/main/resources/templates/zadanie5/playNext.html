@@ -37,24 +37,19 @@
                     <button class="my-btn" th:text="${cell.getValue()}">#</button>
                 </span>
             </div>
-            <br>
         </div>
         <form action="/gameplay/playNext" method="get">
             <div th:if="${gameXO.isFlag()}">
                 <div th:if="${gameXO.getGameplay().getPlayer1().isStartStop()}">
-                    <h3>
-                        Игрок -  <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span> <br>
-                        Введите x - <input type="number" min="0" max="2" name="x"/> <br>
-                        Введите x - <input type="number" min="0" max="2" name="y"/> <br>
-                    </h3>
+                    <h3> Игрок -  <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span> <br></h3>
                 </div>
                 <div th:if="${gameXO.getGameplay().getPlayer2().isStartStop()}">
-                    <h3>
-                        Игрок -  <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span> <br>
-                        Введите x - <input type="number" min="0" max="2" name="x" /><br>
-                        Введите x - <input type="number" min="0" max="2" name="y" /><br>
-                    </h3>
+                    <h3>Игрок -  <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span> <br></h3>
                 </div>
+                <h3>
+                    Введите x - <input type="number" min="0" max="2" name="x" /><br>
+                    Введите y - <input type="number" min="0" max="2" name="y" /><br>
+                </h3>
                 <button>Сохранить</button>
             </div>
         </form>

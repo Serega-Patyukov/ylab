@@ -14,13 +14,16 @@ public class TestGame {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        while (GameXO.isFlag()) {
+
+        GameXO gameXO = new GameXO();      // Движок игры.
+
+        while (gameXO.isFlag()) {
             System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
-            gameResult();   // Метод просмотра истории и управления.
-            if (!GameXO.isFlag()) break;
+            gameResult(gameXO);   // Метод просмотра истории и управления.
+            if (!gameXO.isFlag()) break;
 
-            GameXO gameXO = new GameXO();      // Движок игры.
+            gameXO = new GameXO();      // Движок игры. Нужно обнулится.
             System.out.println("=========================================================\n\n");
 
             createPlayer(gameXO);   // Создаем игроков.
@@ -36,11 +39,15 @@ public class TestGame {
 
                 // Обрабатываем победителя, если он есть.
                 if (!namePlayer.equals("")) {
+                    System.out.println("\n" + namePlayer + " - ВЫИГРАЛ !!!");
+                    System.out.println("=========================================================\n\n");
                     gameXO.finish(namePlayer);   // Обрабатываем победителя.
                     break;
                 }
                 // Проверяем на ничью.
                 if (!gameXO.getField().gameOver()) {
+                    System.out.println("\nНИЧЬЯ !!!");
+                    System.out.println("=========================================================\n\n");
                     gameXO.draw();   // Обрабатываем ничью.
                     break;
                 }
@@ -138,11 +145,9 @@ public class TestGame {
             else break;
         }
     }      // Создаем игроков.
-    public static void gameResult() {
+    public static void gameResult(GameXO gameXO) {
 
         // Метод просмотра истории и управления.
-
-        GameXO gameXO = new GameXO();      // Движок игры.
 
         // Получаем список имен файлов с историей игр, без директории и расширения.
         if (gameXO.createGameList() != 1) System.out.println("Не удалось получить список имен файлов с историей игр, без директории и расширения.");
@@ -166,7 +171,7 @@ public class TestGame {
 
             // Обработка ввода.
             if (buffer.equals("EXIT")) {
-                GameXO.setFlag(false);
+                gameXO.setFlag(false);
                 return;
             }
             else if (buffer.equals("STAT")) {
@@ -219,5 +224,5 @@ public class TestGame {
                 }
             }
         }
-    }                    // Метод просмотра истории и управления.
+    }       // Метод просмотра истории и управления.
 }

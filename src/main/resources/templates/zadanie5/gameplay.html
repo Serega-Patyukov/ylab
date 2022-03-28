@@ -28,6 +28,7 @@
                 <span><input type="text" name="namefile"><button>Воспроизвести</button></span>
             </h3>
         </form>
+        <h4>Список игр, хранящихся на сервере:</h4>
         <div th:each="path : ${gameXO.getStrListPath()}">
             <ul>
                 <li th:text="${path}"></li>

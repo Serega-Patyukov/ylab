@@ -24,7 +24,7 @@ public class GameXO {
     private ArrayList<String> strListPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
 
     private Gameplay gameplay = new Gameplay(new Player(), new Player());
-    private static boolean flag = true;      // Флаг победы. true - игра продолжается.
+    private boolean flag = true;             // Флаг победы. true - игра продолжается.
     private Field field = new Field();    // создаем поле
     private int count = 0;             // Номер хода.
     public String pathJSON;        // Файл, который хранит историю игры в json.
@@ -216,9 +216,6 @@ public class GameXO {
 
         // Метод обрабатывает победителя.
 
-        System.out.println("\n" + namePlayer + " - ВЫИГРАЛ !!!");
-        System.out.println("=========================================================\n\n");
-
         // Сохраняем победителя в объект который хранит историю игры.
         if (gameplay.getPlayer1().getName().equals(namePlayer)) gameplay.setGameResult(new GameResult(gameplay.getPlayer1()));
         else gameplay.setGameResult(new GameResult(gameplay.getPlayer2()));
@@ -301,10 +298,6 @@ public class GameXO {
     public void draw() {
 
         // Метод обрабатывает ничью.
-
-
-        System.out.println("\nНИЧЬЯ !!!");
-        System.out.println("=========================================================\n\n");
 
         GameResult gameResult = new GameResult();
         gameResult.setPlayer(null);
@@ -390,11 +383,11 @@ public class GameXO {
         this.count = count;
     }
 
-    public static boolean isFlag() {
+    public boolean isFlag() {
         return flag;
     }
-    public static void setFlag(boolean flag) {
-        GameXO.flag = flag;
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
     public String getPathJSON() {
