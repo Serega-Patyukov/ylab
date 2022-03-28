@@ -78,13 +78,13 @@ public class Zadanie5Controller {
 
 
     @PostMapping("/playNext")
-    public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String x, String y) {
+    public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String xy) {
         int xNumber;
         int yNumber;
 
         try {
-            xNumber = Integer.parseInt(x);
-            yNumber = Integer.parseInt(y);
+            xNumber = Integer.parseInt(String.valueOf(xy.charAt(0)));
+            yNumber = Integer.parseInt(String.valueOf(xy.charAt(1)));
         } catch (Exception e) {
             return "zadanie5/playNext";
         }
