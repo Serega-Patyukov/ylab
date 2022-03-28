@@ -68,6 +68,22 @@ public class GameXO {
             return -1;
         }
 
+        // Проверяем пробелы
+        for (int i = 0; i < namePlayer1.length(); i++) {
+            if (namePlayer1.charAt(i) == ' ') {
+                System.out.println("\nОШИБКА - в имени первого игрока есть пробел\n" +
+                        "метод createPlayer() класса GameXO\n");
+                return -1;
+            }
+        }
+        for (int i = 0; i < namePlayer2.length(); i++) {
+            if (namePlayer2.charAt(i) == ' ') {
+                System.out.println("\nОШИБКА - в имени второго игрока есть пробел\n" +
+                        "метод createPlayer() класса GameXO\n");
+                return -1;
+            }
+        }
+
         // Первый игрок.
         if (namePlayer1.length() < lengthNamePlayer) {
             System.out.println("\nОШИБКА - имя первого игрока < 3 символов\n" +
