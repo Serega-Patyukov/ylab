@@ -8,7 +8,7 @@ import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
 @RequestMapping("/api")
 @SessionAttributes("gameXO")
 public class RestAPIController {
-    @PostMapping("/returnJSON")
+    @GetMapping("/returnJSON")
     public Gameplay postReturnJSON(@ModelAttribute GameXO gameXO) {
         return gameXO.getGameplay();
     }

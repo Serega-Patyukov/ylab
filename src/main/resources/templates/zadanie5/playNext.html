@@ -12,18 +12,19 @@
     <body>
         <h1>Крестики нолики</h1>
         <hr>
-        <h3>
-            Первый игрок:
-            <ul>
-                <li>имя - <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span>;</li>
-                <li>символ - <span th:text="${gameXO.getGameplay().getPlayer1().getValue()}"></span>. <br></li>
-            </ul>
-            Второй игрок:
-            <ul>
-                <li>имя - <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span>;</li>
-                <li>символ - <span th:text="${gameXO.getGameplay().getPlayer2().getValue()}"></span>. <br></li>
-            </ul>
-        </h3>
+        <div>
+            <h3>
+                Первый игрок: имя - <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span>;
+                символ - <span th:text="${gameXO.getGameplay().getPlayer1().getValue()}"></span>.
+            </h3>
+        </div>
+        <div>
+            <h3>
+                Второй игрок: имя - <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span>;
+                символ - <span th:text="${gameXO.getGameplay().getPlayer2().getValue()}"></span>.
+            </h3>
+        </div>
+
         <div>
             <button disabled class="my-btn">y\x</button>
             <button disabled class="my-btn">0</button>
@@ -38,19 +39,25 @@
                 </span>
             </div>
         </div>
-        <form action="/gameplay/playNext" method="get">
+        <form action="/gameplay/playNext" method="post">
             <div th:if="${gameXO.isFlag()}">
                 <div th:if="${gameXO.getGameplay().getPlayer1().isStartStop()}">
-                    <h3> Игрок -  <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span> <br></h3>
+                    <h3> Игрок -  <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span><br></h3>
                 </div>
                 <div th:if="${gameXO.getGameplay().getPlayer2().isStartStop()}">
-                    <h3>Игрок -  <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span> <br></h3>
+                    <h3>Игрок -  <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span></h3>
                 </div>
                 <h3>
-                    Введите x - <input type="number" min="0" max="2" name="x" /><br>
-                    Введите y - <input type="number" min="0" max="2" name="y" /><br>
+                    <ul>
+                        <li>введите x - <input type="number" min="0" max="2" name="x"></li>
+                        <li>введите y - <input type="number" min="0" max="2" name="y"></li>
+                    </ul>
                 </h3>
                 <button>Сохранить</button>
+                <ul>
+                    <li>Если после нажатия кнопки сохранить открылась эта же страничка без изменений,</li>
+                    <li>то вы ввели не правильные данные</li>
+                </ul>
             </div>
         </form>
         <div th:if="${!gameXO.isFlag()}">
@@ -61,7 +68,7 @@
                     <span th:if="${gameXO.getGameplay().getGameResult().getPlayer() == null }"
                           th:text="${'никто не выиграл. Ничья'}"></span> !!!
             </h3>
-            <form action="/api/returnJSON" method="post">
+            <form action="/api/returnJSON" method="get">
                 <button>Получить файл с историей игры в формате json</button>
             </form>
         </div>

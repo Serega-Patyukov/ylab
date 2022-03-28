@@ -10,26 +10,34 @@
     <body>
         <h1>Крестики нолики</h1>
         <hr>
-        <br>
-        <form action="/gameplay/playerSave" method="get" enctype="multipart/form-data">
-            Введите имя первого игрока <input type="text" name="namePlayer1">
-            Выберите символ
-            <select name="value1">
-                <option value1="X">Х</option>
-                <option value1="O">О</option>
-            </select>
-            <br>
-            <br>
-            Введите имя второго игрока <input type="text" name="namePlayer2">
-            Выберите символ
-            <select name="value2">
-                <option value2="X">О</option>
-                <option value2="O">Х</option>
-            </select>
-            <br>
-            <br>
-            <button>Сохранить</button>
-        </form>
+        <ul>
+            <li>Длины имен игроков должна быть больше 2 символов</li>
+            <li>Имена игроков должны быть разными</li>
+            <li>Символы игроков должны быть разными</li>
+            <li>Если после нажатия кнопки сохранить открылась эта же страничка,</li>
+            <li>то вы ввели не правильные данные</li>
+        </ul>
+        <h3>
+            <form action="/gameplay/playerSave" method="post" enctype="multipart/form-data">
+                Введите имя первого игрока <input type="text" name="namePlayer1">
+                Выберите символ
+                <select name="value1">
+                    <option value1="X">Х</option>
+                    <option value1="O">О</option>
+                </select>
+                <br>
+                <br>
+                Введите имя второго игрока <input type="text" name="namePlayer2">
+                Выберите символ
+                <select name="value2">
+                    <option value2="X">О</option>
+                    <option value2="O">Х</option>
+                </select>
+                <br>
+                <br>
+                <button>Сохранить</button>
+            </form>
+        </h3>
         <br>
         <form action="/gameplay" method="get">
             <button>Главная</button>

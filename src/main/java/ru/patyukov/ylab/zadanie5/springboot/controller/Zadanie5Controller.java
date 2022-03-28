@@ -1,8 +1,5 @@
 package ru.patyukov.ylab.zadanie5.springboot.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
@@ -37,14 +34,12 @@ public class Zadanie5Controller {
     }
 
 
-            // МЕТОДЫ
+            // МЕТОДЫ GET
 
 
     // Главная страница.
     @GetMapping
-    public String gameplay(@ModelAttribute GameXO gameXO,
-                           SessionStatus sessionStatus,
-                           @ModelAttribute ArrayList<Field> fieldList) {
+    public String gameplay(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus, @ModelAttribute ArrayList<Field> fieldList) {
 
         sessionStatus.setComplete();
 
@@ -55,80 +50,15 @@ public class Zadanie5Controller {
     }
 
     @GetMapping("/errorFile")
-    public String errorFile(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
+    public String errorFile() {
         return "zadanie5/errorFile";
     }
 
-    @PostMapping("/filePlay")
-    public String fileplay(@RequestPart MultipartFile file,
-                           @ModelAttribute ArrayList<Field> fieldList,
-                           @ModelAttribute GameXO gameXO) {
-
-        if (file.getOriginalFilename().equals("")) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
-        }
-        else if ( !((file.getOriginalFilename().endsWith(".xml")) || (file.getOriginalFilename().endsWith(".json"))) ) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
-        }
-
-        try {
-            InputStream inputStream = file.getInputStream();
-            JSONParser parser = new JSONParser();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));   // Получаем буфер из полученного файла.
-            JSONObject object = null;
-            try {
-                object = (JSONObject) parser.parse(bufferedReader);   // Получаем объект object из полученного буфера.
-                gameXO.setGameplay(gameXO.getJsonSimpleParser().read(null, object));   // Получаем объект, который хранит историю игры.
-            } catch (Exception e) {
-                gameXO.setGameplay(gameXO.getDomParser().read(null, file.getInputStream()));   // Получаем объект, который хранит историю игры.
-            }
-        } catch (Exception e) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
-        }
-
-        addFieldList(fieldList, gameXO);
-
-        return "redirect:/gameplay/filePlay";
-    }
-
-    @GetMapping("/nameFilePlay")
-    public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList,
-                               @ModelAttribute GameXO gameXO,
-                               String namefile) {
-
-        try {
-            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getDomParser().read((gameXO.getPath() + namefile), null));
-            else if (namefile.endsWith(".json")) gameXO.setGameplay(gameXO.getJsonSimpleParser().read((gameXO.getPath() + namefile), null));
-            else {
-                System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
-                return "zadanie5/errorFile";
-            }
-        } catch (Exception e) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
-            return "zadanie5/errorFile";
-        }
-
-        addFieldList(fieldList, gameXO);
-
-        return "zadanie5/filePlay";
-    }
-
-    @GetMapping("/filePlay")
-    public String fileplay(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "zadanie5/filePlay";
-    }
-
     @GetMapping("/statisticsplayer")
-    public String statisticsPlayer(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
+    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
 
         gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
         gameXO.getStatisticsPlayer().printStatisticsPlayer(false);           // Записываем статистику в список.
-        sessionStatus.setComplete();
 
         return "zadanie5/statisticsplayer";
     }
@@ -138,29 +68,17 @@ public class Zadanie5Controller {
         return "zadanie5/createPlayer";
     }
 
-    @GetMapping("/playerSave")
-    public String playerSave(String namePlayer1,
-                             String value1,
-                             String namePlayer2,
-                             String value2,
-                             @ModelAttribute GameXO gameXO,
-                             @ModelAttribute ArrayList<Field> fieldList) {
-
-        // Создаем игроков.
-        if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
-            return "zadanie5/createPlayer";
-        }
-
-        gameXO.queue();   // Определяем кто первым начнет.
-
+    @GetMapping("/playNext")
+    public String playNext() {
         return "zadanie5/playNext";
     }
 
-    @GetMapping("/playNext")
-    public String playNext(@ModelAttribute GameXO gameXO,
-                           @ModelAttribute ArrayList<Field> fieldList,
-                           String x,
-                           String y) {
+
+            // МЕТОДЫ POST
+
+
+    @PostMapping("/playNext")
+    public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String x, String y) {
         int xNumber;
         int yNumber;
 
@@ -203,12 +121,77 @@ public class Zadanie5Controller {
         return "zadanie5/playNext";
     }
 
+    @PostMapping("/playerSave")
+    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, @ModelAttribute GameXO gameXO,                             @ModelAttribute ArrayList<Field> fieldList) {
+
+        // Создаем игроков.
+        if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
+            return "zadanie5/createPlayer";
+        }
+
+        gameXO.queue();   // Определяем кто первым начнет.
+
+        return "zadanie5/playNext";
+    }
+
+    @PostMapping("/filePlay")
+    public String fileplay(@RequestPart MultipartFile file, @ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
+
+        if (file.getOriginalFilename().equals("")) {
+            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
+            return "redirect:/gameplay/errorFile";
+        }
+        else if ( !((file.getOriginalFilename().endsWith(".xml")) || (file.getOriginalFilename().endsWith(".json"))) ) {
+            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
+            return "redirect:/gameplay/errorFile";
+        }
+
+        try {
+            InputStream inputStream = file.getInputStream();
+            JSONParser parser = new JSONParser();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));   // Получаем буфер из полученного файла.
+            JSONObject object = null;
+            try {
+                object = (JSONObject) parser.parse(bufferedReader);   // Получаем объект object из полученного буфера.
+                gameXO.setGameplay(gameXO.getJsonSimpleParser().read(null, object));   // Получаем объект, который хранит историю игры.
+            } catch (Exception e) {
+                gameXO.setGameplay(gameXO.getDomParser().read(null, file.getInputStream()));   // Получаем объект, который хранит историю игры.
+            }
+        } catch (Exception e) {
+            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
+            return "redirect:/gameplay/errorFile";
+        }
+
+        addFieldList(fieldList, gameXO);
+
+        return "zadanie5/filePlay";
+    }
+
+    @PostMapping("/nameFilePlay")
+    public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
+
+        try {
+            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getDomParser().read((gameXO.getPath() + namefile), null));
+            else if (namefile.endsWith(".json")) gameXO.setGameplay(gameXO.getJsonSimpleParser().read((gameXO.getPath() + namefile), null));
+            else {
+                System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
+                return "zadanie5/errorFile";
+            }
+        } catch (Exception e) {
+            System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
+            return "zadanie5/errorFile";
+        }
+
+        addFieldList(fieldList, gameXO);
+
+        return "zadanie5/filePlay";
+    }
+
 
     // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
 
 
-    private void addFieldList(@ModelAttribute ArrayList<Field> fieldList,
-                              @ModelAttribute GameXO gameXO) {
+    private void addFieldList(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
         // Заполняем список полей пустыми полями, количество которых равно количеству ходов.
         for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) fieldList.add(new Field());
 

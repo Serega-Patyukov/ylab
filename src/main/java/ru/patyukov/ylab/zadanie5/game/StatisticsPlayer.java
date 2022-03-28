@@ -200,21 +200,9 @@ public class StatisticsPlayer {
                         String lost = ""; // Количество поражений.
 
                         if (j > 2) {   // Пропускаем первые 3 строчки в файле.
-                            for (int i = 2; i < 30; i++) {
-                                if (buf.charAt(i) != ' ') name += buf.charAt(i);   // Получаем имя.
-                                else break;
-                            }
-
-                            for (int i = 33; i < 43; i++) {
-                                if (buf.charAt(i) != ' ') won += buf.charAt(i);   // Получаем количество побед.
-                                else break;
-                            }
-
-                            for (int i = 46; i < 56; i++) {
-                                if (buf.charAt(i) != ' ') lost += buf.charAt(i);   // Получаем количество поражений.
-                                else break;
-                            }
-
+                            for (int i = 2; i < 30; i++) name += buf.charAt(i);   // Получаем имя.
+                            for (int i = 33; i < 43; i++) won += buf.charAt(i);   // Получаем количество побед.
+                            for (int i = 46; i < 56; i++) lost += buf.charAt(i);   // Получаем количество поражений.
                             statisticsArrayList.add(new ArrayList<>(Arrays.asList(name, won, lost)));
                         }
                     }

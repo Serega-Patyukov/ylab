@@ -16,7 +16,7 @@
             История игры <span th:text="${gameXO.getGameplay().getPlayer1().getName()}"></span> и
                         <span th:text="${gameXO.getGameplay().getPlayer2().getName()}"></span>
         </h3>
-        <div th:each="nums, i: ${fieldList}">
+        <span th:each="nums, i: ${fieldList}">
             Шаг - <span th:text="${i.count}"></span> <br>
             <button disabled class="my-btn">y\x</button>
             <button disabled class="my-btn">0</button>
@@ -31,7 +31,7 @@
                 </span>
             </div>
             <br>
-        </div>
+        </span>
         <h3>Выиграл -
             <span th:if="${gameXO.getGameplay().getGameResult().getPlayer()==null}"
                   th:value="Ничья">

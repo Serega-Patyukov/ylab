@@ -61,6 +61,13 @@ public class GameXO {
             return -1;
         }
 
+        // Имена должны быть разными
+        if (namePlayer1.equals(namePlayer2)) {
+            System.out.println("\nОШИБКА - имена игроков должны быть разными\n" +
+                    "метод createPlayer() класса GameXO\n");
+            return -1;
+        }
+
         // Первый игрок.
         if (namePlayer1.length() < lengthNamePlayer) {
             System.out.println("\nОШИБКА - имя первого игрока < 3 символов\n" +
