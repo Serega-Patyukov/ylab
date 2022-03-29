@@ -43,34 +43,51 @@ public class Zadanie5Controller {
 
         sessionStatus.setComplete();
 
+        //  Записываем в переменную strListPath класса gameXO список файлов с историей игры.
+        /*
+            Если возникнет ошибка при записи, то сохраняем в переменную строку "Не удалось получить список".
+            Если файлов нет, то сохраним в переменную строку "пусто".
+         */
         if (gameXO.createGameList() != 1) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Не удалось получить список")));
         if (gameXO.getStrListPath().size() == 0) gameXO.setStrListPath(new ArrayList<>(Arrays.asList("пусто")));
 
         return "zadanie5/gameplay";
     }
 
+    // Страница ошибок.
     @GetMapping("/errorFile")
     public String errorFile() {
         return "zadanie5/errorFile";
     }
 
-    @GetMapping("/statisticsplayer")
-    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
-
-        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
-        gameXO.getStatisticsPlayer().printStatisticsPlayer(false);           // Записываем статистику в список.
-
-        return "zadanie5/statisticsplayer";
-    }
-
+    // Страница добавления игроков.
     @GetMapping("/createPlayer")
     public String createPlayer() {
         return "zadanie5/createPlayer";
     }
 
+    // Страница хода.
     @GetMapping("/playNext")
     public String playNext() {
         return "zadanie5/playNext";
+    }
+
+    // Страница статистики.
+    @GetMapping("/statisticsplayer")
+    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
+
+        // Записываем статистику в переменную statisticsArrayList класса StatisticsPlayer
+        /*
+            Если возникнет ошибка при записи, то сохраняем в переменную строку "Не удалось получить статистику".
+         */
+
+        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
+        if (gameXO.getStatisticsPlayer().printStatisticsPlayer(false) != 1) {   // Записываем статистику в список.
+            gameXO.getStatisticsPlayer().setStatisticsArrayList((
+                    new ArrayList<>(Arrays.asList(new ArrayList<>(Arrays.asList("Не удалось получить статистику"))))));
+        }
+
+        return "zadanie5/statisticsplayer";
     }
 
 
@@ -81,6 +98,8 @@ public class Zadanie5Controller {
     public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String xy) {
         int xNumber;
         int yNumber;
+
+        if (xy.length() != 2) return "zadanie5/playNext";
 
         try {
             xNumber = Integer.parseInt(String.valueOf(xy.charAt(0)));
