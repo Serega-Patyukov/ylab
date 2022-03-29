@@ -94,6 +94,7 @@ public class Zadanie5Controller {
             // МЕТОДЫ POST
 
 
+    // Обработка страницы хода.
     @PostMapping("/playNext")
     public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String xy) {
         int xNumber;

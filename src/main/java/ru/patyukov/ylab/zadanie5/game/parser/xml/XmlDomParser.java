@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // Класс по работе с xml файлом.
-public class DomParser implements InterfaceParser {
+public class XmlDomParser implements InterfaceParser {
 
     @Override
     public int write(Gameplay gp, String path) throws Exception {

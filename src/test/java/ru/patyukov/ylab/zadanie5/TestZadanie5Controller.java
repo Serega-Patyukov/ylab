@@ -65,7 +65,7 @@ public class TestZadanie5Controller {
     }
 
     @Test   // Страница хода.
-    public void testPlayNext() throws Exception {
+    public void testGetPlayNext() throws Exception {
         mockMvc.perform(get("/gameplay/playNext"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("zadanie5/playNext"))
@@ -89,8 +89,9 @@ public class TestZadanie5Controller {
                 .andExpect(content().string(containsString("Главная")));
     }
 
-    @Test   // Получаем представление объекта в json файле.
+    @Test   // Получаем представление объекта в json формате.
     public void testReturnJSON() throws Exception {
         mockMvc.perform(get("/api/returnJSON"));
     }
+
 }

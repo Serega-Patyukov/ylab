@@ -10,7 +10,7 @@ import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
 @SessionAttributes("gameXO")
 public class RestAPIController {
 
-    // Получаем представление объекта в json файле.
+    // Получаем представление объекта в json формате.
     @GetMapping("/returnJSON")
     public Gameplay returnJSON(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
         sessionStatus.setComplete();

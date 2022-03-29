@@ -3,7 +3,7 @@ package ru.patyukov.ylab.zadanie5.game;
 import ru.patyukov.ylab.zadanie5.game.parser.InterfaceParser;
 import ru.patyukov.ylab.zadanie5.game.parser.json.JsonSimpleParser;
 import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.game.parser.xml.DomParser;
+import ru.patyukov.ylab.zadanie5.game.parser.xml.XmlDomParser;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class GameXO {
 
     private JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();    // Объект класса, который сохраняет и читает файл json.
-    private DomParser domParser = new DomParser();                        // Объект класса, который сохраняет и читает файл xml.
+    private XmlDomParser xmlDomParser = new XmlDomParser();                        // Объект класса, который сохраняет и читает файл xml.
     private InterfaceParser parser;                                      // Переменная которая может парсить json и xml.
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
     private String path = "src/main/resources/static/file/zadanie5/";  // Относительный путь к файлам хранения истории.
@@ -138,7 +138,7 @@ public class GameXO {
         while (true) {
 
             // Для файлов .xml
-            if (parser instanceof DomParser) {
+            if (parser instanceof XmlDomParser) {
                 if (!Files.exists(Path.of(pathResult))) {
                     pathResult =  pathResult + "_0" + ".xml";
                     if (!Files.exists(Path.of(pathResult))) {
@@ -245,8 +245,8 @@ public class GameXO {
 
         // Сохраняем объект, который хранит историю игры в файл xml.
         try {
-            pathXML = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), domParser);
-            parser = domParser;
+            pathXML = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), xmlDomParser);
+            parser = xmlDomParser;
             parser.write(gameplay, pathXML);
 
             pathJSON = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser);
@@ -329,8 +329,8 @@ public class GameXO {
 
         // Сохраняем объект, который хранит историю игры в файл xml.
         try {
-            parser = domParser;
-            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), domParser));
+            parser = xmlDomParser;
+            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), xmlDomParser));
 
             parser = jsonSimpleParser;
             parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser));
@@ -378,11 +378,11 @@ public class GameXO {
         this.jsonSimpleParser = jsonSimpleParser;
     }
 
-    public DomParser getDomParser() {
-        return domParser;
+    public XmlDomParser getDomParser() {
+        return xmlDomParser;
     }
-    public void setDomParser(DomParser domParser) {
-        this.domParser = domParser;
+    public void setDomParser(XmlDomParser xmlDomParser) {
+        this.xmlDomParser = xmlDomParser;
     }
 
     public InterfaceParser getParser() {
