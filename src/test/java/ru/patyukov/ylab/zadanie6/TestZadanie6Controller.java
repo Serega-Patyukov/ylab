@@ -1,15 +1,13 @@
-package ru.patyukov.ylab.zadanie5;
+package ru.patyukov.ylab.zadanie6;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.bind.support.SimpleSessionStatus;
-import ru.patyukov.ylab.zadanie5.game.Field;
 import ru.patyukov.ylab.zadanie5.game.GameXO;
 import ru.patyukov.ylab.zadanie5.springboot.controller.Zadanie5Controller;
+import ru.patyukov.ylab.zadanie6.controller.Zadanie6Controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +17,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(Zadanie5Controller.class)
-public class TestZadanie5Controller {
+public class TestZadanie6Controller {
 
-    Zadanie5Controller zadanie5Controller = new Zadanie5Controller();
+    Zadanie6Controller zadanie6Controller = new Zadanie6Controller();
 
     @Autowired
     private MockMvc mockMvc;

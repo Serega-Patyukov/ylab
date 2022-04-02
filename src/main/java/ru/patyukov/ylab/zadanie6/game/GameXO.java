@@ -1,9 +1,9 @@
-package ru.patyukov.ylab.zadanie5.game;
+package ru.patyukov.ylab.zadanie6.game;
 
-import ru.patyukov.ylab.zadanie5.game.parser.InterfaceParser;
-import ru.patyukov.ylab.zadanie5.game.parser.json.JsonSimpleParser;
-import ru.patyukov.ylab.zadanie5.game.model.Gameplay;
-import ru.patyukov.ylab.zadanie5.game.parser.xml.XmlDomParser;
+import ru.patyukov.ylab.zadanie6.game.model.Gameplay;
+import ru.patyukov.ylab.zadanie6.game.parser.InterfaceParser;
+import ru.patyukov.ylab.zadanie6.game.parser.json.JsonSimpleParser;
+import ru.patyukov.ylab.zadanie6.game.parser.xml.XmlDomParser;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class GameXO {
     private XmlDomParser xmlDomParser = new XmlDomParser();                        // Объект класса, который сохраняет и читает файл xml.
     private InterfaceParser parser;                                      // Переменная которая может парсить json и xml.
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
-    private String path = "src/main/resources/static/file/zadanie5/";  // Относительный путь к файлам хранения истории.
+    private String path = "src/main/resources/static/file/zadanie6/";  // Относительный путь к файлам хранения истории.
     private ArrayList<String> strListPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
 
     private Gameplay gameplay = new Gameplay(new Player(), new Player());

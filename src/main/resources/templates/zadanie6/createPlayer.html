@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>createPlayer</title>
+    </head>
+    <body>
+        <h1>Крестики нолики</h1>
+        <hr>
+        <ul>
+            <li>Длины имен игроков должна быть больше 2 символов</li>
+            <li>Имена игроков должны быть разными</li>
+            <li>Символы игроков должны быть разными</li>
+            <li>В имени игрока не должно быть пробелов</li>
+            <li>Если после нажатия кнопки сохранить открылась эта же страничка,</li>
+            <li>то вы ввели не правильные данные</li>
+        </ul>
+        <h3>
+            <form action="/gameplay/playerSave" method="post" enctype="multipart/form-data">
+                Введите имя первого игрока <input type="text" name="namePlayer1">
+                Выберите символ
+                <select name="value1">
+                    <option value1="X">Х</option>
+                    <option value1="O">О</option>
+                </select>
+                <br>
+                <br>
+                Введите имя второго игрока <input type="text" name="namePlayer2">
+                Выберите символ
+                <select name="value2">
+                    <option value2="X">О</option>
+                    <option value2="O">Х</option>
+                </select>
+                <br>
+                <br>
+                <button>Сохранить</button>
+            </form>
+        </h3>
+        <br>
+        <form action="/gameplay" method="get">
+            <button>Главная</button>
+        </form>
+    </body>
+</html>

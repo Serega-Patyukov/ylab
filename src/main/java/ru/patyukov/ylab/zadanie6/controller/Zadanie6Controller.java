@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie5.springboot.controller;
+package ru.patyukov.ylab.zadanie6.controller;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -6,18 +6,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
-import ru.patyukov.ylab.zadanie5.game.GameXO;
-import ru.patyukov.ylab.zadanie5.game.Cell;
-import ru.patyukov.ylab.zadanie5.game.Field;
+import ru.patyukov.ylab.zadanie6.game.Cell;
+import ru.patyukov.ylab.zadanie6.game.Field;
+import ru.patyukov.ylab.zadanie6.game.GameXO;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Controller
 @RequestMapping("/gameplay")
 @SessionAttributes({"fieldList", "gameXO"})
-public class Zadanie5Controller {
+public class Zadanie6Controller {
 
 
             // МОДЕЛИ
@@ -148,7 +150,7 @@ public class Zadanie5Controller {
     }
 
     @PostMapping("/playerSave")
-    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, @ModelAttribute GameXO gameXO,                             @ModelAttribute ArrayList<Field> fieldList) {
+    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, @ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList) {
 
         // Создаем игроков.
         if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
