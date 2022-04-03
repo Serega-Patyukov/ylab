@@ -8,17 +8,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Cell;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
 import ru.patyukov.ylab.zadanie6.model.game.GameXO;
+import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
 import ru.patyukov.ylab.zadanie6.repository.XoRepository;
-import ru.patyukov.ylab.zadanie6.model.game.ModelStatisticsPlayer;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -116,21 +119,22 @@ public class XoServices {
             gameXO.finish(namePlayer);   // Обрабатываем победителя.
             gameXO.setFlag(false);
 
-            // Сохраняем историю в БД.
-            xoRepository.saveHistory(gameXO.getGameplay());
-
-            // Тест.
-            // Получаем объект nameplay из бд.
-            //Optional<Gameplay> gameplayTest = xoRepository.findByHistoryId(2L);
-
             // Сохраняем статистику в БД.
             if (namePlayer.equals(gameXO.getGameplay().getPlayer1().getName())) saveStatisticsPlayer(gameXO.getGameplay().getPlayer1().getName(), gameXO.getGameplay().getPlayer2().getName());
             else saveStatisticsPlayer(gameXO.getGameplay().getPlayer2().getName(), gameXO.getGameplay().getPlayer1().getName());
+
+
+            xoRepository.saveHistory(gameXO.getGameplay());   // Сохраняем историю в БД.
+            Optional<Gameplay> gameplayTest = xoRepository.findByHistoryId(4L);   // Получаем объект истории nameplay из бд.
+
+            List<NameHistory> nameHistories = xoRepository.findByHistory();   // Получаем идентификатор истории и имена игроков.
         }
         // Проверяем на ничью.
         if (!gameXO.getField().gameOver()) {
             gameXO.draw();   // Обрабатываем ничью.
             gameXO.setFlag(false);
+
+            xoRepository.saveHistory(gameXO.getGameplay());   // Сохраняем историю в БД.
         }
 
         return "zadanie6/playNext";

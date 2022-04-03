@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie6.model.game;
+package ru.patyukov.ylab.zadanie6.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

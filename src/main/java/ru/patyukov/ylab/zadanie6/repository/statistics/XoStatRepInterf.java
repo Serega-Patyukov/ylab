@@ -1,6 +1,6 @@
 package ru.patyukov.ylab.zadanie6.repository.statistics;
 
-import ru.patyukov.ylab.zadanie6.model.game.ModelStatisticsPlayer;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,5 +1,6 @@
 package ru.patyukov.ylab.zadanie6.repository.history;
 
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
 
 import java.util.List;
@@ -13,6 +14,6 @@ public interface XoHistRepInterf {
     // Получаем историю игры по historyID.
     Optional<Gameplay> findByHistoryId(Long historyID);
 
-//    // Получаем номер истории и имена игроков.
-//    List<String> findByHistory();
+    // Получаем идентификатор истории игры и имена игроков.
+    List<NameHistory> findByHistory();
 }

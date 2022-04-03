@@ -3,7 +3,7 @@ package ru.patyukov.ylab.zadanie6.repository.statistics;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.patyukov.ylab.zadanie6.model.game.ModelStatisticsPlayer;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

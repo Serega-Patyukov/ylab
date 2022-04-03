@@ -3,16 +3,20 @@ package ru.patyukov.ylab.zadanie6.repository.history;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.GameResult;
 import ru.patyukov.ylab.zadanie6.model.game.Player;
 import ru.patyukov.ylab.zadanie6.model.game.Step;
 import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +28,7 @@ import java.util.Optional;
 public class XoHistRep implements XoHistRepInterf {
 
     private JdbcOperations jdbcOperations;
+    private JdbcTemplate jdbcTemplate;
 
     // Сохраняем историю игры.
     @Override
@@ -152,5 +157,18 @@ public class XoHistRep implements XoHistRepInterf {
                     step.setY(Integer.parseInt(String.valueOf(xy.charAt(1))));
                     return step;
                 }, history_id);
+    }
+
+    // Получаем идентификатор истории игры и имена игроков.
+    @Override
+    public List<NameHistory> findByHistory() {
+        return jdbcTemplate.query("select history_id, name_player_1, name_player_2 from historygame", this::rowMap);
+    }
+
+    private NameHistory rowMap(ResultSet row, int rowNum) throws SQLException {
+        return new NameHistory(
+                row.getLong("history_id"),
+                row.getString("name_player_1"),
+                row.getString("name_player_2"));
     }
 }

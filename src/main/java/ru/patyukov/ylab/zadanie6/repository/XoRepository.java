@@ -2,10 +2,11 @@ package ru.patyukov.ylab.zadanie6.repository;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
 import ru.patyukov.ylab.zadanie6.repository.history.XoHistRepInterf;
 import ru.patyukov.ylab.zadanie6.repository.statistics.XoStatRepInterf;
-import ru.patyukov.ylab.zadanie6.model.game.ModelStatisticsPlayer;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,4 +53,8 @@ public class XoRepository {
         return xoHistRepInterf.findByHistoryId(historyID);
     }
 
+    // Получаем идентификатор истории игры и имена игроков.
+    public List<NameHistory> findByHistory() {
+        return xoHistRepInterf.findByHistory();
+    }
 }

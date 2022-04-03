@@ -29,4 +29,9 @@ public class HomeController {
         return "redirect:/gameplay";
     }
 
+    @PostMapping("/zadanie6")
+    public String gettZadanie6() {
+        return "redirect:/gameplay";
+    }
+
 }
