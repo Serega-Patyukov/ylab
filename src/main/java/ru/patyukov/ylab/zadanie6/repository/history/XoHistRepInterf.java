@@ -13,6 +13,6 @@ public interface XoHistRepInterf {
     // Получаем историю игры по historyID.
     Optional<Gameplay> findByHistoryId(Long historyID);
 
-    // Получаем номер истории и имена игроков.
-    List<String> findByHistory();
+//    // Получаем номер истории и имена игроков.
+//    List<String> findByHistory();
 }
