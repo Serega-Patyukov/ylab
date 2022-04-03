@@ -1,13 +1,13 @@
 package ru.patyukov.ylab.zadanie6.console;
 
-import ru.patyukov.ylab.zadanie6.game.GameXO;
+import ru.patyukov.ylab.zadanie6.model.game.GameXO;
 
 import java.util.Scanner;
 
 // Консольная игра в крестики нолики.
 /*
     В этом классе используется игровой движок, который находится в пакете
-        src/main/java/ru/patyukov/ylab/zadanie5/game
+        src/main/java/ru/patyukov/ylab/zadanie6/game
  */
 public class TestGame {
 

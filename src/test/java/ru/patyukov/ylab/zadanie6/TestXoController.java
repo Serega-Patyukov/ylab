@@ -1,27 +1,24 @@
-//package ru.patyukov.ylab.zadanie5;
-//
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.web.bind.support.SessionStatus;
-//import org.springframework.web.bind.support.SimpleSessionStatus;
-//import ru.patyukov.ylab.zadanie5.game.Field;
-//import ru.patyukov.ylab.zadanie5.game.GameXO;
-//import ru.patyukov.ylab.zadanie5.springboot.controller.Zadanie5Controller;
-//
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//
-//import static org.hamcrest.Matchers.containsString;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-//
-//@WebMvcTest(Zadanie5Controller.class)
-//public class TestZadanie5Controller {
-//
-//    Zadanie5Controller zadanie5Controller = new Zadanie5Controller();
+package ru.patyukov.ylab.zadanie6;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+import ru.patyukov.ylab.zadanie5.game.GameXO;
+import ru.patyukov.ylab.zadanie6.controller.XoController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(XoController.class)
+public class TestXoController {
+
+//    XoController xoController = new XoController();
 //
 //    @Autowired
 //    private MockMvc mockMvc;
@@ -30,7 +27,7 @@
 //    public void test0Gameplay() throws Exception {
 //        mockMvc.perform(get("/gameplay"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/gameplay"))
+//                .andExpect(view().name("zadanie6/gameplay"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Человек против человека")))
 //                .andExpect(content().string(containsString("Играть")))
@@ -56,7 +53,7 @@
 //    public void test1Gameplay() throws Exception {
 //        mockMvc.perform(get("/gameplay"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/gameplay"))
+//                .andExpect(view().name("zadanie6/gameplay"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Человек против человека")))
 //                .andExpect(content().string(containsString("Играть")))
@@ -85,7 +82,7 @@
 //    public void testErrorFile() throws Exception {
 //        mockMvc.perform(get("/gameplay/errorFile"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/errorFile"))
+//                .andExpect(view().name("zadanie6/errorFile"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Что-то пошло не так !!!")))
 //                .andExpect(content().string(containsString("Главная")));
@@ -95,7 +92,7 @@
 //    public void testCreatePlayer() throws Exception {
 //        mockMvc.perform(get("/gameplay/createPlayer"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/createPlayer"))
+//                .andExpect(view().name("zadanie6/createPlayer"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Длины имен игроков должна быть больше 2 символов")))
 //                .andExpect(content().string(containsString("Имена игроков должны быть разными")))
@@ -115,7 +112,7 @@
 //    public void testGetPlayNext() throws Exception {
 //        mockMvc.perform(get("/gameplay/playNext"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/playNext"))
+//                .andExpect(view().name("zadanie6/playNext"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Первый игрок:")))
 //                .andExpect(content().string(containsString("имя -")))
@@ -130,7 +127,7 @@
 //    public void testStatisticsPlayer() throws Exception {
 //        mockMvc.perform(get("/gameplay/statisticsplayer"))
 //                .andExpect(status().isOk())
-//                .andExpect(view().name("zadanie5/statisticsplayer"))
+//                .andExpect(view().name("zadanie6/statisticsplayer"))
 //                .andExpect(content().string(containsString("Крестики нолики")))
 //                .andExpect(content().string(containsString("Статистика игроков")))
 //                .andExpect(content().string(containsString("Главная")));
@@ -140,5 +137,5 @@
 //    public void testReturnJSON() throws Exception {
 //        mockMvc.perform(get("/api/returnJSON"));
 //    }
-//
-//}
+
+}
