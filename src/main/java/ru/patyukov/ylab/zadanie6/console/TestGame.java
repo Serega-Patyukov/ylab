@@ -5,10 +5,6 @@ import ru.patyukov.ylab.zadanie6.services.GameXO;
 import java.util.Scanner;
 
 // Консольная игра в крестики нолики.
-/*
-    В этом классе используется игровой движок, который находится в пакете
-        src/main/java/ru/patyukov/ylab/zadanie6/game
- */
 public class TestGame {
 
     private static Scanner scanner = new Scanner(System.in);

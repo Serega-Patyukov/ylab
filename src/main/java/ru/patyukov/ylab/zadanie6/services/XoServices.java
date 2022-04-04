@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import ru.patyukov.ylab.zadanie6.exceptions.XoException;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.model.game.Cell;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
 import ru.patyukov.ylab.zadanie6.repository.XoRepository;
@@ -28,7 +27,7 @@ public class XoServices {
     private final XoRepository xoRepository;   // Объект по работе со слоем Repository.
 
     // Главная страница.
-    public String gameplay(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
+    public String gameplay(GameXO gameXO, SessionStatus sessionStatus) {
 
         sessionStatus.setComplete();
 
@@ -53,7 +52,7 @@ public class XoServices {
     }
 
     // Страница статистики.
-    public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
+    public String statisticsPlayer(GameXO gameXO) {
 
         // Записываем статистику в переменную statisticsArrayList класса StatisticsPlayer
         /*
@@ -73,7 +72,7 @@ public class XoServices {
     }
 
     // Создаем игроков.
-    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, @ModelAttribute GameXO gameXO) {
+    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, GameXO gameXO) {
 
         // Создаем игроков.
         if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
@@ -86,7 +85,7 @@ public class XoServices {
     }
 
     // Очередной ход.
-    public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String xy) {
+    public String playNext(GameXO gameXO, ArrayList<Field> fieldList, String xy) {
         int xNumber;
         int yNumber;
 
@@ -142,7 +141,7 @@ public class XoServices {
     }
 
     // Воспроизводим игру из файла.
-    public String fileplay(@RequestPart MultipartFile file, @ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
+    public String fileplay(MultipartFile file, ArrayList<Field> fieldList, GameXO gameXO) {
         if (file.getOriginalFilename().equals("")) {
             throw new XoException("Имя файла не введено");
         }
@@ -171,7 +170,7 @@ public class XoServices {
     }
 
     // Воспроизводим игру из файла по имении файла.
-    public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
+    public String nameFilePlay(ArrayList<Field> fieldList, GameXO gameXO, String namefile) {
 
         try {
             if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getXmlDomParser().read((gameXO.getPath() + namefile), null));
@@ -183,6 +182,29 @@ public class XoServices {
             if (e.getMessage().equals("Имя файла не введено")) throw new XoException("Имя файла не введено");
             if (e.getMessage().equals("Расширение выбранного файла не поддерживается")) throw new XoException("Расширение выбранного файла не поддерживается");
             throw new XoException("С файлом что то не так");
+        }
+
+        addFieldList(fieldList, gameXO);
+
+        return "zadanie6/filePlay";
+    }
+
+    // Воспроизводим игру из БД по идентификационному номеру истории.
+    public String historyIdPlay(ArrayList<Field> fieldList, GameXO gameXO, String historyID) {
+
+        long id = -1;
+        try {
+            id = Integer.parseInt(historyID);
+        } catch (Exception e) {
+            throw new XoException("Введенные данные не являются числом");
+        }
+        if (id < 1) throw new XoException("Нет такой истории");
+
+        Optional<Gameplay> gameplay = xoRepository.findByHistoryId(id);
+        if (gameplay.isEmpty()) throw new XoException("Нет такой истории");
+        else {
+            Gameplay gp = gameplay.get();
+            gameXO.setGameplay(gp);
         }
 
         addFieldList(fieldList, gameXO);
@@ -226,7 +248,7 @@ public class XoServices {
     }
 
     // Метод заполняет список полей.
-    private void addFieldList(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
+    private void addFieldList(ArrayList<Field> fieldList, GameXO gameXO) {
 
         // fieldList - Список полей. Каждое поле очередной ход. Сколько было ходов, столько и будет полей в списке.
 

@@ -98,6 +98,12 @@ public class XoController {
         return xoServices.nameFilePlay(fieldList, gameXO, namefile);
     }
 
+    // Воспроизводим игру из БД по идентификационному номеру истории.
+    @PostMapping("/historyID")
+    public String historyIdPlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String historyID) {
+        return xoServices.historyIdPlay(fieldList, gameXO, historyID);
+    }
+
     // Ловим ошибки.
     @ExceptionHandler(XoException.class)
     public String handle(XoException e) {
