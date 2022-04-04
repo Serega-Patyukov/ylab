@@ -28,11 +28,33 @@
                 <span><input type="text" name="namefile"><button>Воспроизвести</button></span>
             </h3>
         </form>
-        <h4>Список игр, хранящихся на сервере:</h4>
-        <div th:each="path : ${gameXO.getStrListPath()}">
-            <ul>
-                <li th:text="${path}"></li>
-            </ul>
-        </div>
+        <table >
+            <tr>
+                <td valign="top">
+                    <h4>Список игр, хранящихся на сервере:</h4>
+                    <div th:each="path : ${gameXO.getListPath()}">
+                        <ul>
+                            <li th:text="${path}"></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td valign="top">
+                    <h4>Список игр, хранящихся в БД:</h4>
+                    <div th:each="nameHist : ${gameXO.getNameHistories()}">
+                        <ul>
+                            <li>
+                                <span th:text="${nameHist.getHistoryID()}"> </span>
+                                <span th:text="${nameHist.getPlayer1()}"> </span>
+                                <span th:text="${nameHist.getPlayer2()}"> </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul>
+                        <li th:if="${gameXO.getNameHistories().size() == 0}">пусто</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
     </body>
 </html>

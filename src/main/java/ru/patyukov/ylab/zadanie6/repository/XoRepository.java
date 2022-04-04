@@ -3,7 +3,7 @@ package ru.patyukov.ylab.zadanie6.repository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.patyukov.ylab.zadanie6.model.NameHistory;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.repository.history.XoHistRepInterf;
 import ru.patyukov.ylab.zadanie6.repository.statistics.XoStatRepInterf;
 import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
@@ -42,6 +42,9 @@ public class XoRepository {
     public ModelStatisticsPlayer updateLostStat(ModelStatisticsPlayer modelStatisticsPlayer){
         return xoStatRepInterf.updateLostStat(modelStatisticsPlayer);
     }
+
+
+
 
     // Сохраняем историю игры.
     public Gameplay saveHistory(Gameplay gameplay){

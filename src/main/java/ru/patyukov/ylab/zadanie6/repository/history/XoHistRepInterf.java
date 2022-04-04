@@ -1,7 +1,7 @@
 package ru.patyukov.ylab.zadanie6.repository.history;
 
 import ru.patyukov.ylab.zadanie6.model.NameHistory;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 
 import java.util.List;
 import java.util.Optional;

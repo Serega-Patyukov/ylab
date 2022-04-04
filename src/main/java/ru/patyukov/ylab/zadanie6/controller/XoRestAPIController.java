@@ -2,8 +2,8 @@ package ru.patyukov.ylab.zadanie6.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import ru.patyukov.ylab.zadanie6.model.game.GameXO;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import ru.patyukov.ylab.zadanie6.services.GameXO;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 
 @RestController
 @RequestMapping("/api")

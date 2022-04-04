@@ -5,7 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ru.patyukov.ylab.zadanie6.model.game.GameResult;
 import ru.patyukov.ylab.zadanie6.model.game.Player;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.utils.parser.InterfaceParser;
 
 import java.io.FileReader;

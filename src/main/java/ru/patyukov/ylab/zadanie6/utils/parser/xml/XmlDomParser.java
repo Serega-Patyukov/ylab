@@ -3,7 +3,7 @@ package ru.patyukov.ylab.zadanie6.utils.parser.xml;
 import org.w3c.dom.*;
 import ru.patyukov.ylab.zadanie6.model.game.GameResult;
 import ru.patyukov.ylab.zadanie6.model.game.Player;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.utils.parser.InterfaceParser;
 
 import javax.xml.parsers.DocumentBuilder;

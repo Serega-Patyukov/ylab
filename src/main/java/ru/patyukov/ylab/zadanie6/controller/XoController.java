@@ -1,12 +1,14 @@
 package ru.patyukov.ylab.zadanie6.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import ru.patyukov.ylab.zadanie6.exceptions.XoException;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
-import ru.patyukov.ylab.zadanie6.model.game.GameXO;
+import ru.patyukov.ylab.zadanie6.services.GameXO;
 import ru.patyukov.ylab.zadanie6.services.XoServices;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 @RequestMapping("/gameplay")
 @SessionAttributes({"fieldList", "gameXO"})
 @AllArgsConstructor
+@Slf4j
 public class XoController {
 
     private final XoServices xoServices;   // Объект по работе со слоем Services.
@@ -48,9 +51,6 @@ public class XoController {
     public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
         return xoServices.statisticsPlayer(gameXO);
     }
-
-
-
 
     // Страница ошибок.
     @GetMapping("/errorFile")
@@ -96,5 +96,12 @@ public class XoController {
     @PostMapping("/nameFilePlay")
     public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
         return xoServices.nameFilePlay(fieldList, gameXO, namefile);
+    }
+
+    // Ловим ошибки.
+    @ExceptionHandler(XoException.class)
+    public String handle(XoException e) {
+        log.error(e.getMessage());
+        return "zadanie6/errorFile";
     }
 }

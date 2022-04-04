@@ -63,7 +63,6 @@ public class Field {
             result = 1;
         }
 
-
         // Находим количество клеток в ряд по вертикали.
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length - 1; j++) {
@@ -78,7 +77,6 @@ public class Field {
             }
             result = 1;
         }
-
 
         // Находим количество клеток в ряд по диагонали слева на право вниз.
         for (int i = 0; i < cells.length - 1; i++) {

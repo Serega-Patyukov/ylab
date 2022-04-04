@@ -12,18 +12,42 @@
         <h1>Крестики нолики</h1>
         <hr>
         <h3>Статистика игроков</h3>
-        <div th:if="${gameXO.getStatisticsPlayer().getStatisticsArrayList().size() == 0}">
-            <ul>
-                <li>Еще никто не играл.</li>
-            </ul>
-        </div>
-        <div th:each="element : ${gameXO.getStatisticsPlayer().getStatisticsArrayList()}">
-            Игрок - <span th:text="${element.get(0)}"></span>
-            <ul>
-                <li>победил - <span th:text="${element.get(1)}"></span></li>
-                <li>проиграл - <span th:text="${element.get(2)}"></span></li>
-            </ul>
-        </div>
+        <table>
+            <tr>
+                <td valign="top">
+                    <h4>Статистика игроков, хранящихся на сервере:</h4>
+                    <div th:if="${gameXO.getStatisticsPlayer().getStatisticsArrayList().size() == 0}">
+                        <ul>
+                            <li>Еще никто не играл.</li>
+                        </ul>
+                    </div>
+                    <div th:each="element : ${gameXO.getStatisticsPlayer().getStatisticsArrayList()}">
+                        Игрок - <span th:text="${element.get(0)}"></span>
+                        <ul>
+                            <li>победил - <span th:text="${element.get(1)}"></span></li>
+                            <li>проиграл - <span th:text="${element.get(2)}"></span></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td valign="top">
+                    <h4>Статистика игроков, хранящихся в БД:</h4>
+                    <div th:if="${gameXO.getStatisticsPlayer().getModelStatisticsPlayer().size() == 0}">
+                        <ul>
+                            <li>Еще никто не играл.</li>
+                        </ul>
+                    </div>
+
+                    <div th:each="element : ${gameXO.getStatisticsPlayer().getModelStatisticsPlayer()}">
+                        Игрок - <span th:text="${element.getName}"></span>
+                        <ul>
+                            <li>победил - <span th:text="${element.getWon}"></span></li>
+                            <li>проиграл - <span th:text="${element.getLost}"></span></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <form action="/gameplay" method="get">
             <button>Главная</button>
         </form>

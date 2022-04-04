@@ -1,4 +1,4 @@
-package ru.patyukov.ylab.zadanie6.model.game.modelGameplay;
+package ru.patyukov.ylab.zadanie6.model;
 import ru.patyukov.ylab.zadanie6.model.game.*;
 
 import java.util.ArrayList;

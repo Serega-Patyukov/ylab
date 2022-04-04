@@ -1,6 +1,13 @@
-package ru.patyukov.ylab.zadanie6.model.game;
+package ru.patyukov.ylab.zadanie6.services;
 
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
+import ru.patyukov.ylab.zadanie6.model.game.Cell;
+import ru.patyukov.ylab.zadanie6.model.game.Field;
+import ru.patyukov.ylab.zadanie6.model.game.GameResult;
+import ru.patyukov.ylab.zadanie6.model.game.Player;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.utils.StatisticsPlayer;
 import ru.patyukov.ylab.zadanie6.utils.parser.InterfaceParser;
 import ru.patyukov.ylab.zadanie6.utils.parser.json.JsonSimpleParser;
@@ -12,9 +19,12 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 // Движок игры.
 // Куча полезных методов.
+@Data
+@Slf4j
 public class GameXO {
 
     private JsonSimpleParser jsonSimpleParser = new JsonSimpleParser();    // Объект класса, который сохраняет и читает файл json.
@@ -22,8 +32,11 @@ public class GameXO {
     private InterfaceParser parser;                                      // Переменная которая может парсить json и xml.
 
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
+
     private String path = "src/main/resources/static/file/zadanie6/";  // Относительный путь к файлам хранения истории.
-    private ArrayList<String> strListPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
+    private ArrayList<String> listPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
+
+    private List<NameHistory> nameHistories = new ArrayList<>();   // Список идентификаторов истории игры и имен игроков из БД.
 
     private Gameplay gameplay = new Gameplay(new Player(), new Player());
     private boolean flag = true;             // Флаг победы. true - игра продолжается.
@@ -34,7 +47,7 @@ public class GameXO {
 
             // КОНСТРУКТОРЫ
 
-    public GameXO() {}
+    public GameXO() {  }
     public GameXO(Gameplay gameplay, Field field) {
         this.gameplay = gameplay;
         this.field = field;
@@ -58,70 +71,60 @@ public class GameXO {
 
         // Символы должны быть разными.
         if (value1.equals(value2)) {
-            System.out.println("\nОШИБКА - символы игроков должны быть разными\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - символы игроков должны быть разными. Метод createPlayer() класса GameXO");
             return -1;
         }
 
         // Имена должны быть разными
         if (namePlayer1.equals(namePlayer2)) {
-            System.out.println("\nОШИБКА - имена игроков должны быть разными\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - имена игроков должны быть разными. Метод createPlayer() класса GameXO");
             return -1;
         }
 
         // Проверяем пробелы
         for (int i = 0; i < namePlayer1.length(); i++) {
             if (namePlayer1.charAt(i) == ' ') {
-                System.out.println("\nОШИБКА - в имени первого игрока есть пробел\n" +
-                        "метод createPlayer() класса GameXO\n");
+                log.warn("ОШИБКА - в имени первого игрока есть пробел. Метод createPlayer() класса GameXO");
                 return -1;
             }
         }
         for (int i = 0; i < namePlayer2.length(); i++) {
             if (namePlayer2.charAt(i) == ' ') {
-                System.out.println("\nОШИБКА - в имени второго игрока есть пробел\n" +
-                        "метод createPlayer() класса GameXO\n");
+                log.warn("ОШИБКА - в имени второго игрока есть пробел. Метод createPlayer() класса GameXO");
                 return -1;
             }
         }
 
         // Первый игрок.
         if (namePlayer1.length() < lengthNamePlayer) {
-            System.out.println("\nОШИБКА - имя первого игрока < 3 символов\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - имя первого игрока < 3 символов. Метод createPlayer() класса GameXO");
             return -1;
         }
         if (value1.equals("Х") || value1.equals("О")) player1 = new Player(namePlayer1, value1);   // Создаем первого игрока.
         else {
-            System.out.println("\nОШИБКА - символ первого игрока != Х или О\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - символ первого игрока != Х или О. Метод createPlayer() класса GameXO");
             return -1;
         }
 
         // Второй игрок.
         if (namePlayer2.length() < lengthNamePlayer) {
-            System.out.println("\nОШИБКА - имя второго игрока < 3 символов\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - имя второго игрока < 3 символов. Метод createPlayer() класса GameXO");
             return -1;
         }
         if (value1.equals("О"))
             if (value2.equals("Х")) player2 = new Player(namePlayer2, "Х");   // Создаем второго игрока.
             else {
-                System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
-                        "метод createPlayer() класса GameXO\n");
+                log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
                 return -1;
             }
         else if (value1.equals("Х"))
             if (value2.equals("О")) player2 = new Player(namePlayer2, "О");   // Создаем второго игрока.
             else {
-                System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
-                        "метод createPlayer() класса GameXO\n");
+                log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
                 return -1;
             }
         else {
-            System.out.println("\nОШИБКА - символ второго игрока != Х или О\n" +
-                    "метод createPlayer() класса GameXO\n");
+            log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
             return -1;
         }
 
@@ -147,9 +150,7 @@ public class GameXO {
                         try {
                             FileWriter fileWriter = new FileWriter(pathResult);   // Создали пустой файл.
                         } catch (IOException e) {
-                            System.out.println("\nОШИБКА - не удалось создать пустой файл\n" +
-                                    "метод nameFile() класса GameXO\n");
-                            e.printStackTrace();
+                            log.warn("ОШИБКА - не удалось создать пустой файл. Метод nameFile() класса GameXO");
                         }
                         break;
                     }
@@ -257,9 +258,7 @@ public class GameXO {
             parser = jsonSimpleParser;
             parser.write(gameplay, pathJSON);
         } catch (Exception e) {
-            System.out.println("\nОШИБКА - не удалось сохранить историю игры\n" +
-                    "метод finish() класса GameXO\n");
-            e.printStackTrace();
+            log.warn("ОШИБКА - не удалось сохранить историю игры. Метод finish() класса GameXO");
         }
 
         // Сохраняем статистику.
@@ -282,13 +281,11 @@ public class GameXO {
             for (Path paht : paths) {   // Получаем список всех файлов.
                 String strPaht = paht.getFileName().toString();   // Получаем имена файлов без директории.
                 // Сохраняем только файлы с расширением xml и json.
-                if (strPaht.endsWith(".xml")) strListPath.add(strPaht);
-                if (strPaht.endsWith(".json")) strListPath.add(strPaht);
+                if (strPaht.endsWith(".xml")) listPath.add(strPaht);
+                if (strPaht.endsWith(".json")) listPath.add(strPaht);
             }
         } catch (Exception e) {
-            System.out.println("\nОШИБКА - не удалось загрузить историю игр предыдущих игроков\n" +
-                    "метод createGameList() класса GameXO\n");
-            e.printStackTrace();
+            log.warn("ОШИБКА - не удалось загрузить историю игр предыдущих игроков. Метод createGameList() класса GameXO");
             return -1;
         }
 
@@ -331,103 +328,19 @@ public class GameXO {
 
         gameplay.setGameResult(gameResult);   // Сохраняем null в объект который хранит историю игры.
 
-        // Сохраняем объект, который хранит историю игры в файл xml.
+        // Сохраняем объект, который хранит историю игры в файл.
         try {
+            // Сохраняем объект, который хранит историю игры в файл xml.
+            pathXML = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), xmlDomParser);
             parser = xmlDomParser;
-            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), xmlDomParser));
+            parser.write(gameplay, pathXML);
 
+            // Сохраняем объект, который хранит историю игры в файл json.
+            pathJSON = nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser);
             parser = jsonSimpleParser;
-            parser.write(gameplay, nameFile(gameplay.getPlayer1().getName(), gameplay.getPlayer2().getName(), jsonSimpleParser));
+            parser.write(gameplay, pathJSON);
         } catch (Exception e) {
-            System.out.println("\nОШИБКА - не удалось сохранить историю игры\n" +
-                    "метод draw() класса GameXO\n");
-            e.printStackTrace();
+            log.warn("ОШИБКА - не удалось сохранить историю игры. Метод draw() класса GameXO");
         }
     }                    // Метод обрабатывает ничью.
-
-            // GET SET
-
-    public String getPath() {
-        return path;
-    }
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public ArrayList<String> getStrListPath() {
-        return strListPath;
-    }
-    public void setStrListPath(ArrayList<String> strListPath) {
-        this.strListPath = strListPath;
-    }
-
-    public Gameplay getGameplay() {
-        return gameplay;
-    }
-    public void setGameplay(Gameplay gameplay) {
-        this.gameplay = gameplay;
-    }
-
-    public Field getField() {
-        return field;
-    }
-    public void setField(Field field) {
-        this.field = field;
-    }
-
-    public JsonSimpleParser getJsonSimpleParser() {
-        return jsonSimpleParser;
-    }
-    public void setJsonSimpleParser(JsonSimpleParser jsonSimpleParser) {
-        this.jsonSimpleParser = jsonSimpleParser;
-    }
-
-    public XmlDomParser getDomParser() {
-        return xmlDomParser;
-    }
-    public void setDomParser(XmlDomParser xmlDomParser) {
-        this.xmlDomParser = xmlDomParser;
-    }
-
-    public InterfaceParser getParser() {
-        return parser;
-    }
-    public void setParser(InterfaceParser parser) {
-        this.parser = parser;
-    }
-
-    public StatisticsPlayer getStatisticsPlayer() {
-        return statisticsPlayer;
-    }
-    public void setStatisticsPlayer(StatisticsPlayer statisticsPlayer) {
-        this.statisticsPlayer = statisticsPlayer;
-    }
-
-    public int getCount() {
-        return count;
-    }
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public boolean isFlag() {
-        return flag;
-    }
-    public void setFlag(boolean flag) {
-        this.flag = flag;
-    }
-
-    public String getPathJSON() {
-        return pathJSON;
-    }
-    public void setPathJSON(String pathJSON) {
-        this.pathJSON = pathJSON;
-    }
-
-    public String getPathXML() {
-        return pathXML;
-    }
-    public void setPathXML(String pathXML) {
-        this.pathXML = pathXML;
-    }
 }

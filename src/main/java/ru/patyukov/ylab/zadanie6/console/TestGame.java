@@ -1,6 +1,6 @@
 package ru.patyukov.ylab.zadanie6.console;
 
-import ru.patyukov.ylab.zadanie6.model.game.GameXO;
+import ru.patyukov.ylab.zadanie6.services.GameXO;
 
 import java.util.Scanner;
 
@@ -158,7 +158,7 @@ public class TestGame {
             System.out.println("\tИстория игр предыдущих игроков:\n");
 
             // Выводим список имен файлов с историей игр.
-            for (String buf : gameXO.getStrListPath()) System.out.println(buf);
+            for (String buf : gameXO.getListPath()) System.out.println(buf);
             System.out.println();
 
             System.out.println("\tДЛЯ ЗАПУСКА ИГРЫ ВВЕДИТЕ NEXT\n");
@@ -184,21 +184,21 @@ public class TestGame {
             else {
                 System.out.println();
 
-                if (gameXO.getStrListPath().size() == 0) {
+                if (gameXO.getListPath().size() == 0) {
                     System.out.println("\tВведенное имя не найдено. ПОВТОРИТЕ !!!");
                     System.out.println("=========================================================\n\n");
                     continue;
                 }
 
                 // Ищем введенное имя в списке имен файлов с историей игр, без директории и расширения.
-                for (int i = 0; i < gameXO.getStrListPath().size(); i++) {
-                    if (buffer.equals(gameXO.getStrListPath().get(i))) {
+                for (int i = 0; i < gameXO.getListPath().size(); i++) {
+                    if (buffer.equals(gameXO.getListPath().get(i))) {
                         try {
                             System.out.println("\tИстория игры - " + buffer);
 
                             if (buffer.endsWith(".xml")) {
                                 System.out.println("\nИстория игры из файла xml");
-                                gameXO.setParser(gameXO.getDomParser());
+                                gameXO.setParser(gameXO.getXmlDomParser());
                                 gameXO.setGameplay(gameXO.getParser().read(gameXO.getPath() + buffer, null));
                                 gameXO.getGameplay().printGameplay();
                             }
@@ -217,7 +217,7 @@ public class TestGame {
                         }
                         break;
                     }
-                    if (i == gameXO.getStrListPath().size() - 1) {
+                    if (i == gameXO.getListPath().size() - 1) {
                         System.out.println("\tВведенное имя не найдено. ПОВТОРИТЕ !!!");
                         System.out.println("=========================================================\n\n");
                     }

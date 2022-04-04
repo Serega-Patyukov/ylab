@@ -1,19 +1,24 @@
 package ru.patyukov.ylab.zadanie6.utils;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 // Класс статистики игры.
 @Data
+@Slf4j
 public class StatisticsPlayer {
 
     private String path = "src/main/resources/static/file/zadanie6/statisticsplayer.txt";   // Относительное имя файла статистики игры.
     private ArrayList<ArrayList<String>> statisticsArrayList = new ArrayList<>();         // Список для работы со статистикой.
+    private List<ModelStatisticsPlayer> modelStatisticsPlayer = new ArrayList<>();      // Статистика всех игроков из БД.
 
             // МЕТОДЫ
 
@@ -214,15 +219,12 @@ public class StatisticsPlayer {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("\nОШИБКА - не удалось вывести статистику игры\n" +
-                        "метод printStatisticsPlayer() класса StatisticsPlayer\n");
-                e.printStackTrace();
+                log.warn("ОШИБКА - не удалось вывести статистику игры. Метод printStatisticsPlayer() класса StatisticsPlayer");
                 return -1;
             }
         }
         else {
-            System.out.println("\nОШИБКА - файл статистики не найден\n" +
-                    "метод printStatisticsPlayer() класса StatisticsPlayer\n");
+            log.warn("ОШИБКА - файл статистики не найден. Метод printStatisticsPlayer() класса StatisticsPlayer");
             return -1;
         }
         return 1;

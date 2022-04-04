@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
-import ru.patyukov.ylab.zadanie6.model.NameHistory;
+import ru.patyukov.ylab.zadanie6.exceptions.XoException;
 import ru.patyukov.ylab.zadanie6.model.game.Cell;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
-import ru.patyukov.ylab.zadanie6.model.game.GameXO;
-import ru.patyukov.ylab.zadanie6.model.game.modelGameplay.Gameplay;
 import ru.patyukov.ylab.zadanie6.repository.XoRepository;
 import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
@@ -21,7 +19,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,19 +32,22 @@ public class XoServices {
 
         sessionStatus.setComplete();
 
-        //  Записываем в переменную strListPath класса gameXO список файлов с историей игры.
+        //  Записываем в переменную listPath класса gameXO список имен файлов с историей игры.
         /*
             Если возникнет ошибка при записи, то сохраняем в переменную строку "Не удалось получить список".
             Если файлов нет, то сохраним в переменную строку "пусто".
          */
         if (gameXO.createGameList() != 1) {
-            gameXO.setStrListPath(new ArrayList<>(Arrays.asList("Не удалось получить список")));
+            gameXO.setListPath(new ArrayList<>(Arrays.asList("Не удалось получить список")));
         }
         else {
-            if (gameXO.getStrListPath().size() == 0) {
-                gameXO.setStrListPath(new ArrayList<>(Arrays.asList("пусто")));
+            if (gameXO.getListPath().size() == 0) {
+                gameXO.setListPath(new ArrayList<>(Arrays.asList("пусто")));
             }
         }
+
+        // Получаем список идентификаторов истории игры и имен игроков из БД.
+        gameXO.setNameHistories(xoRepository.findByHistory());
 
         return "zadanie6/gameplay";
     }
@@ -65,6 +65,9 @@ public class XoServices {
             gameXO.getStatisticsPlayer().setStatisticsArrayList((
                     new ArrayList<>(Arrays.asList(new ArrayList<>(Arrays.asList("Не удалось получить статистику"))))));
         }
+
+        // Статистика всех игроков из БД.
+        gameXO.getStatisticsPlayer().setModelStatisticsPlayer(xoRepository.finaAllStat());
 
         return "zadanie6/statisticsplayer";
     }
@@ -123,18 +126,16 @@ public class XoServices {
             if (namePlayer.equals(gameXO.getGameplay().getPlayer1().getName())) saveStatisticsPlayer(gameXO.getGameplay().getPlayer1().getName(), gameXO.getGameplay().getPlayer2().getName());
             else saveStatisticsPlayer(gameXO.getGameplay().getPlayer2().getName(), gameXO.getGameplay().getPlayer1().getName());
 
-
-            xoRepository.saveHistory(gameXO.getGameplay());   // Сохраняем историю в БД.
-            Optional<Gameplay> gameplayTest = xoRepository.findByHistoryId(4L);   // Получаем объект истории nameplay из бд.
-
-            List<NameHistory> nameHistories = xoRepository.findByHistory();   // Получаем идентификатор истории и имена игроков.
+            // Сохраняем историю в БД.
+            xoRepository.saveHistory(gameXO.getGameplay());
         }
         // Проверяем на ничью.
         if (!gameXO.getField().gameOver()) {
             gameXO.draw();   // Обрабатываем ничью.
             gameXO.setFlag(false);
 
-            xoRepository.saveHistory(gameXO.getGameplay());   // Сохраняем историю в БД.
+            // Сохраняем историю в БД.
+            xoRepository.saveHistory(gameXO.getGameplay());
         }
 
         return "zadanie6/playNext";
@@ -143,12 +144,10 @@ public class XoServices {
     // Воспроизводим игру из файла.
     public String fileplay(@RequestPart MultipartFile file, @ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
         if (file.getOriginalFilename().equals("")) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
+            throw new XoException("Имя файла не введено");
         }
         else if ( !((file.getOriginalFilename().endsWith(".xml")) || (file.getOriginalFilename().endsWith(".json"))) ) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
+            throw new XoException("Расширение выбранного файла не поддерживается");
         }
 
         try {
@@ -160,11 +159,10 @@ public class XoServices {
                 object = (JSONObject) parser.parse(bufferedReader);   // Получаем объект object из полученного буфера.
                 gameXO.setGameplay(gameXO.getJsonSimpleParser().read(null, object));   // Получаем объект, который хранит историю игры.
             } catch (Exception e) {
-                gameXO.setGameplay(gameXO.getDomParser().read(null, file.getInputStream()));   // Получаем объект, который хранит историю игры.
+                gameXO.setGameplay(gameXO.getXmlDomParser().read(null, file.getInputStream()));   // Получаем объект, который хранит историю игры.
             }
         } catch (Exception e) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> fileplay()");   // Сообщение для сервера.
-            return "redirect:/gameplay/errorFile";
+            throw new XoException("С файлом что то не так");
         }
 
         addFieldList(fieldList, gameXO);
@@ -176,15 +174,15 @@ public class XoServices {
     public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
 
         try {
-            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getDomParser().read((gameXO.getPath() + namefile), null));
+            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getXmlDomParser().read((gameXO.getPath() + namefile), null));
             else if (namefile.endsWith(".json")) gameXO.setGameplay(gameXO.getJsonSimpleParser().read((gameXO.getPath() + namefile), null));
-            else {
-                System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
-                return "zadanie6/errorFile";
-            }
+            else if (namefile.equals("")) {
+                throw new XoException("Имя файла не введено");
+            } else throw new XoException("Расширение выбранного файла не поддерживается");
         } catch (Exception e) {
-            System.out.println("\nError in Controller -> Zadanie5Controller -> nameFilePlay()");   // Сообщение для сервера.
-            return "zadanie6/errorFile";
+            if (e.getMessage().equals("Имя файла не введено")) throw new XoException("Имя файла не введено");
+            if (e.getMessage().equals("Расширение выбранного файла не поддерживается")) throw new XoException("Расширение выбранного файла не поддерживается");
+            throw new XoException("С файлом что то не так");
         }
 
         addFieldList(fieldList, gameXO);
