@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.patyukov.ylab.zadanie6.exceptions.XoException;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
 import ru.patyukov.ylab.zadanie6.services.GameXO;
-import ru.patyukov.ylab.zadanie6.services.XoServices;
+import ru.patyukov.ylab.zadanie6.services.XoServicesInterf;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @Slf4j
 public class XoController {
 
-    private final XoServices xoServices;   // Объект по работе со слоем Services.
+    private final XoServicesInterf xoServicesInterf;   // Объект по работе со слоем Services.
 
 
             // МОДЕЛИ
@@ -43,13 +43,13 @@ public class XoController {
     // Главная страница.
     @GetMapping
     public String gameplay(@ModelAttribute GameXO gameXO, SessionStatus sessionStatus) {
-        return xoServices.gameplay(gameXO, sessionStatus);
+        return xoServicesInterf.gameplay(gameXO, sessionStatus);
     }
 
     // Страница статистики.
     @GetMapping("/statisticsplayer")
     public String statisticsPlayer(@ModelAttribute GameXO gameXO) {
-        return xoServices.statisticsPlayer(gameXO);
+        return xoServicesInterf.statisticsPlayer(gameXO);
     }
 
     // Страница ошибок.
@@ -77,31 +77,31 @@ public class XoController {
     // Создаем игроков.
     @PostMapping("/playerSave")
     public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, @ModelAttribute GameXO gameXO) {
-        return xoServices.playerSave(namePlayer1, value1, namePlayer2, value2, gameXO);
+        return xoServicesInterf.playerSave(namePlayer1, value1, namePlayer2, value2, gameXO);
     }
 
     // Очередной ход.
     @PostMapping("/playNext")
     public String playNext(@ModelAttribute GameXO gameXO, @ModelAttribute ArrayList<Field> fieldList, String xy) {
-        return xoServices.playNext(gameXO, fieldList, xy);
+        return xoServicesInterf.playNext(gameXO, fieldList, xy);
     }
 
     // Воспроизводим игру из файла.
     @PostMapping("/filePlay")
     public String fileplay(@RequestPart MultipartFile file, @ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
-        return xoServices.fileplay(file, fieldList, gameXO);
+        return xoServicesInterf.fileplay(file, fieldList, gameXO);
     }
 
     // Воспроизводим игру из файла по имении файла.
     @PostMapping("/nameFilePlay")
     public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
-        return xoServices.nameFilePlay(fieldList, gameXO, namefile);
+        return xoServicesInterf.nameFilePlay(fieldList, gameXO, namefile);
     }
 
     // Воспроизводим игру из БД по идентификационному номеру истории.
     @PostMapping("/historyID")
     public String historyIdPlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String historyID) {
-        return xoServices.historyIdPlay(fieldList, gameXO, historyID);
+        return xoServicesInterf.historyIdPlay(fieldList, gameXO, historyID);
     }
 
     // Ловим ошибки.

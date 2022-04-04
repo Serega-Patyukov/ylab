@@ -22,11 +22,12 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class XoServices {
+public class XoServices implements XoServicesInterf {
 
     private final XoRepository xoRepository;   // Объект по работе со слоем Repository.
 
     // Главная страница.
+    @Override
     public String gameplay(GameXO gameXO, SessionStatus sessionStatus) {
 
         sessionStatus.setComplete();
@@ -52,6 +53,7 @@ public class XoServices {
     }
 
     // Страница статистики.
+    @Override
     public String statisticsPlayer(GameXO gameXO) {
 
         // Записываем статистику в переменную statisticsArrayList класса StatisticsPlayer
@@ -72,6 +74,7 @@ public class XoServices {
     }
 
     // Создаем игроков.
+    @Override
     public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, GameXO gameXO) {
 
         // Создаем игроков.
@@ -85,6 +88,7 @@ public class XoServices {
     }
 
     // Очередной ход.
+    @Override
     public String playNext(GameXO gameXO, ArrayList<Field> fieldList, String xy) {
         int xNumber;
         int yNumber;
@@ -141,6 +145,7 @@ public class XoServices {
     }
 
     // Воспроизводим игру из файла.
+    @Override
     public String fileplay(MultipartFile file, ArrayList<Field> fieldList, GameXO gameXO) {
         if (file.getOriginalFilename().equals("")) {
             throw new XoException("Имя файла не введено");
@@ -170,6 +175,7 @@ public class XoServices {
     }
 
     // Воспроизводим игру из файла по имении файла.
+    @Override
     public String nameFilePlay(ArrayList<Field> fieldList, GameXO gameXO, String namefile) {
 
         try {
@@ -190,6 +196,7 @@ public class XoServices {
     }
 
     // Воспроизводим игру из БД по идентификационному номеру истории.
+    @Override
     public String historyIdPlay(ArrayList<Field> fieldList, GameXO gameXO, String historyID) {
 
         long id = -1;

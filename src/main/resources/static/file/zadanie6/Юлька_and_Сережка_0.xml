@@ -3,11 +3,11 @@
     <Player id="1" name="Юлька" symbol="О"/>
     <Player id="2" name="Сережка" symbol="Х"/>
     <Game>
-        <Step num="1" playerId="1">10</Step>
-        <Step num="2" playerId="2">11</Step>
-        <Step num="3" playerId="1">20</Step>
-        <Step num="4" playerId="2">01</Step>
-        <Step num="5" playerId="1">00</Step>
+        <Step num="1" playerId="1">00</Step>
+        <Step num="2" playerId="2">10</Step>
+        <Step num="3" playerId="1">11</Step>
+        <Step num="4" playerId="2">20</Step>
+        <Step num="5" playerId="1">22</Step>
     </Game>
     <GameResult>
         <Player id="1" name="Юлька" symbol="О"/>

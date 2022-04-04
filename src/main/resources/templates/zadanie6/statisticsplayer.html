@@ -18,7 +18,7 @@
                     <h4>Статистика игроков, хранящихся на сервере:</h4>
                     <div th:if="${gameXO.getStatisticsPlayer().getStatisticsArrayList().size() == 0}">
                         <ul>
-                            <li>Еще никто не играл.</li>
+                            <li>пусто</li>
                         </ul>
                     </div>
                     <div th:each="element : ${gameXO.getStatisticsPlayer().getStatisticsArrayList()}">
@@ -34,7 +34,7 @@
                     <h4>Статистика игроков, хранящихся в БД:</h4>
                     <div th:if="${gameXO.getStatisticsPlayer().getModelStatisticsPlayer().size() == 0}">
                         <ul>
-                            <li>Еще никто не играл.</li>
+                            <li>пусто</li>
                         </ul>
                     </div>
 
