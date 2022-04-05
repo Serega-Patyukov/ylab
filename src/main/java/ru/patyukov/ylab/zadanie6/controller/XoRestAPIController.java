@@ -69,11 +69,6 @@ public class XoRestAPIController {
         return xoServicesInterf.nameFilePlay(namefile);
     }
 
-    // Воспроизводим игру из файла.
-    @GetMapping("/fileplay")
-    public List<Field> fileplay(MultipartFile file) {
-        return xoServicesInterf.fileplay(file);
-    }
 
 
             // МЕТОДЫ POST
@@ -91,6 +86,12 @@ public class XoRestAPIController {
     @PostMapping("/playNext/{historyID}/{xy}")
     public String playNext(@PathVariable Long historyID, @PathVariable String xy) {
         return xoServicesInterf.playNext(historyID, xy);
+    }
+
+    // Воспроизводим игру из файла.
+    @PostMapping("/fileplay")
+    public List<Field> fileplay(@RequestPart MultipartFile file) {
+        return xoServicesInterf.fileplay(file);
     }
 
 

@@ -31,7 +31,7 @@ public class HomeController {
 
     @PostMapping("/zadanie6")
     public String gettZadanie6() {
-        return "redirect:/gameplay";
+        return "/zadanie6/fileplayTEST";
     }
 
 }
