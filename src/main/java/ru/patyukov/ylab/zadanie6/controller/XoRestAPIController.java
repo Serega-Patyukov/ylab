@@ -3,7 +3,9 @@ package ru.patyukov.ylab.zadanie6.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.patyukov.ylab.zadanie6.exceptions.XoException;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
@@ -49,6 +51,30 @@ public class XoRestAPIController {
         return xoServicesInterf.historyIdPlay(historyID);
     }
 
+    // Возвращаем объект истории из БД по идентификационному номеру истории.
+    @GetMapping("/returnGameplay/{historyID}")
+    public Gameplay returnGameplay(@PathVariable long historyID) {
+        return xoServicesInterf.returnGameplay(historyID);
+    }
+
+    // Имена файлов с историей игры хранящихся на диске.
+    @GetMapping("/listPath")
+    public List<String> listPath() {
+        return xoServicesInterf.listPath();
+    }
+
+    // Воспроизводим игру из файла по имении файла.
+    @GetMapping("/nameFilePlay/{namefile}")
+    public List<Field> nameFilePlay(@PathVariable String namefile) {
+        return xoServicesInterf.nameFilePlay(namefile);
+    }
+
+    // Воспроизводим игру из файла.
+    @GetMapping("/fileplay")
+    public List<Field> fileplay(MultipartFile file) {
+        return xoServicesInterf.fileplay(file);
+    }
+
 
             // МЕТОДЫ POST
 
@@ -66,6 +92,10 @@ public class XoRestAPIController {
     public String playNext(@PathVariable Long historyID, @PathVariable String xy) {
         return xoServicesInterf.playNext(historyID, xy);
     }
+
+
+            // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
+
 
     // Ловим ошибки.
     @ExceptionHandler(XoException.class)

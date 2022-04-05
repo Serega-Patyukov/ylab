@@ -221,7 +221,6 @@ public class XoServices implements XoServicesInterf {
     public List<Field> historyIdPlay(long historyID) {
 
         if (historyID < 1) throw new XoException("ОШИБКА - недопустимое значение идентификационного номера истории игры");
-
         Optional<Gameplay> gameplay = xoRepository.findByHistoryId(historyID);
         if (gameplay.isEmpty()) throw new XoException("ОШИБКА - нет такой истории");
 
@@ -233,20 +232,64 @@ public class XoServices implements XoServicesInterf {
         return addFieldList(gameXO, true);
     }
 
+    // Возвращаем объект истории из БД по идентификационному номеру истории.
+    @Override
+    public Gameplay returnGameplay(long historyID) {
 
+        if (historyID < 1) throw new XoException("ОШИБКА - недопустимое значение идентификационного номера истории игры");
+        Optional<Gameplay> gameplay = xoRepository.findByHistoryId(historyID);
+        if (gameplay.isEmpty()) throw new XoException("ОШИБКА - нет такой истории");
 
+        return gameplay.get();
+    }
 
+    // Имена файлов с историей игры хранящихся на диске.
+    @Override
+    public List<String> listPath() {
 
+        //  Записываем в переменную strListPath класса gameXO список файлов с историей игры.
+
+        GameXO gameXO = new GameXO();
+
+        if (gameXO.createGameList() != 1) throw new XoException("ОШИБКА - Не удалось получить список");
+        if (gameXO.getListPath().size() == 0) throw new XoException("Файлы не с историей не найдены.");
+
+        return gameXO.getListPath();
+    }
+
+    // Воспроизводим игру из файла по имении файла.
+    @Override
+    public List<Field> nameFilePlay(String namefile) {
+
+        GameXO gameXO = new GameXO();
+
+        try {
+            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getXmlDomParser().read((gameXO.getPath() + namefile), null));
+            else if (namefile.endsWith(".json")) gameXO.setGameplay(gameXO.getJsonSimpleParser().read((gameXO.getPath() + namefile), null));
+            else if (namefile.equals("")) {
+                throw new XoException("ОШИБКА - Имя файла не введено");
+            } else throw new XoException("ОШИБКА - Расширение выбранного файла не поддерживается");
+        } catch (Exception e) {
+            if (e.getMessage().equals("ОШИБКА - Имя файла не введено")) throw new XoException("ОШИБКА - Имя файла не введено");
+            if (e.getMessage().equals("ОШИБКА - Расширение выбранного файла не поддерживается")) {
+                throw new XoException("ОШИБКА - Расширение выбранного файла не поддерживается");
+            }
+            throw new XoException("ОШИБКА - С файлом что то не так");
+        }
+        return addFieldList(gameXO, true);
+    }
 
     // Воспроизводим игру из файла.
     @Override
-    public String fileplay(@ModelAttribute MultipartFile file, ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
+    public List<Field> fileplay(MultipartFile file) {
+
+        GameXO gameXO = new GameXO();
 
         if (file.getOriginalFilename().equals("")) {
-            throw new XoException("Имя файла не введено");
+            throw new XoException("ОШИБКА - Имя файла не введено");
         }
         else if ( !((file.getOriginalFilename().endsWith(".xml")) || (file.getOriginalFilename().endsWith(".json"))) ) {
-            throw new XoException("Расширение выбранного файла не поддерживается");
+            throw new XoException("ОШИБКА - Расширение выбранного файла не поддерживается");
         }
 
         try {
@@ -261,37 +304,11 @@ public class XoServices implements XoServicesInterf {
                 gameXO.setGameplay(gameXO.getXmlDomParser().read(null, file.getInputStream()));   // Получаем объект, который хранит историю игры.
             }
         } catch (Exception e) {
-            throw new XoException("С файлом что то не так");
+            throw new XoException("ОШИБКА - С файлом что то не так");
         }
 
-        //addFieldList(fieldList, gameXO);
-
-        return "zadanie6/filePlay";
+        return addFieldList(gameXO, false);
     }
-
-    // Воспроизводим игру из файла по имении файла.
-    @Override
-    public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
-
-        try {
-            if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getXmlDomParser().read((gameXO.getPath() + namefile), null));
-            else if (namefile.endsWith(".json")) gameXO.setGameplay(gameXO.getJsonSimpleParser().read((gameXO.getPath() + namefile), null));
-            else if (namefile.equals("")) {
-                throw new XoException("Имя файла не введено");
-            } else throw new XoException("Расширение выбранного файла не поддерживается");
-        } catch (Exception e) {
-            if (e.getMessage().equals("Имя файла не введено")) throw new XoException("Имя файла не введено");
-            if (e.getMessage().equals("Расширение выбранного файла не поддерживается")) throw new XoException("Расширение выбранного файла не поддерживается");
-            throw new XoException("С файлом что то не так");
-        }
-
-        //addFieldList(fieldList, gameXO);
-
-        return "zadanie6/filePlay";
-    }
-
-
-
 
 
             // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ

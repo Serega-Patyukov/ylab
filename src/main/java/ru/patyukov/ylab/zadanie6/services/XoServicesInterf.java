@@ -1,6 +1,7 @@
 package ru.patyukov.ylab.zadanie6.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import ru.patyukov.ylab.zadanie6.model.Gameplay;
 import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
@@ -26,17 +27,17 @@ public interface XoServicesInterf {
     List<NameHistory> listNameHistory();
 
     // Воспроизводим игру из БД по идентификационному номеру истории.
-    public List<Field> historyIdPlay(long historyID);
+    List<Field> historyIdPlay(long historyID);
 
+    // Возвращаем объект истории из БД по идентификационному номеру истории.
+    Gameplay returnGameplay(long historyID);
 
-
-
-
-    // Воспроизводим игру из файла.
-    String fileplay(MultipartFile file, ArrayList<Field> fieldList, GameXO gameXO);
+    // Имена файлов с историей игры хранящихся на диске.
+    List<String> listPath();
 
     // Воспроизводим игру из файла по имении файла.
-    String nameFilePlay(ArrayList<Field> fieldList, GameXO gameXO, String namefile);
+    List<Field> nameFilePlay(String namefile);
 
-
+    // Воспроизводим игру из файла.
+    List<Field> fileplay(MultipartFile file);
 }

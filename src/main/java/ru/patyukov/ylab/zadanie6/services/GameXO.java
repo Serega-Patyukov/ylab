@@ -35,7 +35,7 @@ public class GameXO {
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
 
     private String path = "src/main/resources/static/file/zadanie6/";  // Относительный путь к файлам хранения истории.
-    private ArrayList<String> listPath = new ArrayList<>();           // Список имен файлов с историей игр, без директории и расширения.
+    private List<String> listPath = new ArrayList<>();           // Список имен файлов с историей игр, без директории и расширения.
 
     private List<NameHistory> nameHistories = new ArrayList<>();   // Список идентификаторов истории игры и имен игроков из БД.
 
