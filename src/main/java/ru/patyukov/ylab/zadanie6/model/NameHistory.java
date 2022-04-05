@@ -7,7 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class NameHistory {
 
-    private long historyID;     // Идентификатор истории.
+    private long historyID;      // Идентификатор истории.
+    private boolean status;     // Состояние игры. false - игра не завершена. true - игра завершена.
     private String player1;    // Игрок, который ходит первым.
     private String player2;   // Игрок, который ходит вторым.
 

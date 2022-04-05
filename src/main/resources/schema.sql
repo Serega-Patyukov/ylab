@@ -7,12 +7,15 @@ CREATE TABLE IF NOT EXISTS StatisticsPlayer (
 
 CREATE TABLE IF NOT EXISTS historygame (
                                            history_id IDENTITY,
+                                           status BOOLEAN NOT NULL,
                                            name_player_1 VARCHAR (28) NOT NULL,
                                            value_1 VARCHAR (1) NOT NULL,
                                            id_1 VARCHAR (1) NOT NULL,
+                                           start_stop_1 BOOLEAN NOT NULL,
                                            name_player_2 VARCHAR (28) NOT NULL,
                                            value_2 VARCHAR (1) NOT NULL,
                                            id_2 VARCHAR (1) NOT NULL,
+                                           start_stop_2 BOOLEAN NOT NULL,
                                            id_pobed VARCHAR (1) NOT NULL,
                                            primary key (history_id)
 );

@@ -17,8 +17,8 @@ import java.util.List;
 public class StatisticsPlayer {
 
     private String path = "src/main/resources/static/file/zadanie6/statisticsplayer.txt";   // Относительное имя файла статистики игры.
-    private ArrayList<ArrayList<String>> statisticsArrayList = new ArrayList<>();         // Список для работы со статистикой.
-    private List<ModelStatisticsPlayer> modelStatisticsPlayer = new ArrayList<>();      // Статистика всех игроков из БД.
+    private List<ModelStatisticsPlayer> statisticsArrayList = new ArrayList<>();           // Список для работы со статистикой.
+    private List<ModelStatisticsPlayer> modelStatisticsPlayer = new ArrayList<>();        // Статистика всех игроков из БД.
 
             // МЕТОДЫ
 
@@ -211,10 +211,19 @@ public class StatisticsPlayer {
                         String lost = ""; // Количество поражений.
 
                         if (j > 2) {   // Пропускаем первые 3 строчки в файле.
-                            for (int i = 2; i < 30; i++) name += buf.charAt(i);   // Получаем имя.
-                            for (int i = 33; i < 43; i++) won += buf.charAt(i);   // Получаем количество побед.
-                            for (int i = 46; i < 56; i++) lost += buf.charAt(i);   // Получаем количество поражений.
-                            statisticsArrayList.add(new ArrayList<>(Arrays.asList(name, won, lost)));
+                            for (int i = 2; i < 30; i++) {
+                                if (buf.charAt(i) == ' ') break;
+                                name += buf.charAt(i);   // Получаем имя.
+                            }
+                            for (int i = 33; i < 43; i++) {
+                                if (buf.charAt(i) == ' ') break;
+                                won += buf.charAt(i);   // Получаем количество побед.
+                            }
+                            for (int i = 46; i < 56; i++) {
+                                if (buf.charAt(i) == ' ') break;
+                                lost += buf.charAt(i);   // Получаем количество поражений.
+                            }
+                            statisticsArrayList.add(new ModelStatisticsPlayer(name, Integer.parseInt(won), Integer.parseInt(lost)));
                         }
                     }
                 }

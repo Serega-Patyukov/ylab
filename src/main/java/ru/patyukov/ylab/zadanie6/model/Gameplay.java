@@ -1,14 +1,16 @@
 package ru.patyukov.ylab.zadanie6.model;
+import lombok.Data;
 import ru.patyukov.ylab.zadanie6.model.game.*;
 
 import java.util.ArrayList;
 
 // Объект класса хранит историю игры. И тут есть метод для вывода в консоль истории игры.
+@Data
 public class Gameplay {
 
-    private long historyID;
-
-    private Player player1;    // Игрок, который ходит первым.
+    private boolean status = false;    // Состояние игры. false - игра не завершена. true - игра завершена.
+    private long historyID;         // Идентификационный номер игры
+    private Player player1;      // Игрок, который ходит первым.
     private Player player2;   // Игрок, который ходит вторым.
 
     private ArrayList<Step> game = new ArrayList<>();   // Список ходов.
@@ -80,41 +82,4 @@ public class Gameplay {
         return game.size();
 
     }       // Количество ходов.
-
-            // GET SET
-
-    public Player getPlayer1() {
-        return player1;
-    }
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
-    }
-    public void setPlayer2(Player player2) {
-        this.player2 = player2;
-    }
-
-    public ArrayList<Step> getGame() {
-        return game;
-    }
-    public void setGame(ArrayList<Step> game) {
-        this.game = game;
-    }
-
-    public GameResult getGameResult() {
-        return gameResult;
-    }
-    public void setGameResult(GameResult gameResult) {
-        this.gameResult = gameResult;
-    }
-
-    public long getHistoryID() {
-        return historyID;
-    }
-    public void setHistoryID(long historyID) {
-        this.historyID = historyID;
-    }
 }

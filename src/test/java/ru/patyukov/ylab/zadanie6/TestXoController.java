@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.patyukov.ylab.zadanie5.game.GameXO;
-import ru.patyukov.ylab.zadanie6.controller.XoController;
+//import ru.patyukov.ylab.zadanie6.controller.XoController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +14,9 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(XoController.class)
-public class TestXoController {
+//
+//@WebMvcTest(XoController.class)
+//public class TestXoController {
 
 //    XoController xoController = new XoController();
 //
@@ -138,4 +138,4 @@ public class TestXoController {
 //        mockMvc.perform(get("/api/returnJSON"));
 //    }
 
-}
+//}

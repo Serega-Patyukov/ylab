@@ -1,10 +1,13 @@
 package ru.patyukov.ylab.zadanie6.model.game;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 // Объект класса хранит один ход.
+@Data
 public class Step {
 
-    private long stepID;
-
+    private long stepID;       // Идентификационный номер хода.
     private String playerId;  // id игрока.
     private String num;      // Номер хода.
     private int x;          // Координата х.
@@ -37,41 +40,4 @@ public class Step {
         return String.valueOf(x) + y;
 
     }   // Метод возвращает координаты х у в виде строки.
-
-            // GET SET
-
-    public String getPlayerId() {
-        return playerId;
-    }
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
-    }
-
-    public String getNum() {
-        return num;
-    }
-    public void setNum(String num) {
-        this.num = num;
-    }
-
-    public int getX() {
-        return x;
-    }
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public long getStepID() {
-        return stepID;
-    }
-    public void setStepID(long stepID) {
-        this.stepID = stepID;
-    }
 }

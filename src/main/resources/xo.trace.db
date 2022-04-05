@@ -1,3 +1,0 @@
-2022-04-04 17:45:24 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "HISTORYGAME" not found (this database is empty); SQL statement:
-select history_id, name_player_1, name_player_2 from historygame [42104-210]

@@ -2,6 +2,7 @@ package ru.patyukov.ylab.zadanie6.services;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import ru.patyukov.ylab.zadanie6.exceptions.XoException;
 import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Cell;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
@@ -34,14 +35,15 @@ public class GameXO {
     private StatisticsPlayer statisticsPlayer = new StatisticsPlayer(); // Статистика игры.
 
     private String path = "src/main/resources/static/file/zadanie6/";  // Относительный путь к файлам хранения истории.
-    private ArrayList<String> listPath = new ArrayList<>();        // Список имен файлов с историей игр, без директории и расширения.
+    private ArrayList<String> listPath = new ArrayList<>();           // Список имен файлов с историей игр, без директории и расширения.
 
     private List<NameHistory> nameHistories = new ArrayList<>();   // Список идентификаторов истории игры и имен игроков из БД.
 
     private Gameplay gameplay = new Gameplay(new Player(), new Player());
-    private boolean flag = true;             // Флаг победы. true - игра продолжается.
+
     private Field field = new Field();    // создаем поле
     private int count = 0;             // Номер хода.
+
     public String pathJSON;        // Файл, который хранит историю игры в json.
     public String pathXML;      // Файл, который хранит историю игры в xml.
 
@@ -55,7 +57,7 @@ public class GameXO {
 
             // МЕТОДЫ
 
-    public int createPlayer(String namePlayer1, String value1, String namePlayer2, String value2) {
+    public void createPlayer(String namePlayer1, String value1, String namePlayer2, String value2) {
 
         // Создаем игроков.
 
@@ -71,67 +73,55 @@ public class GameXO {
 
         // Символы должны быть разными.
         if (value1.equals(value2)) {
-            log.warn("ОШИБКА - символы игроков должны быть разными. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - символы игроков должны быть разными. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
 
         // Имена должны быть разными
         if (namePlayer1.equals(namePlayer2)) {
-            log.warn("ОШИБКА - имена игроков должны быть разными. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - имена игроков должны быть разными. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
 
         // Проверяем пробелы
         for (int i = 0; i < namePlayer1.length(); i++) {
             if (namePlayer1.charAt(i) == ' ') {
-                log.warn("ОШИБКА - в имени первого игрока есть пробел. Метод createPlayer() класса GameXO");
-                return -1;
+                throw new XoException("ОШИБКА - в имени первого игрока есть пробел. Метод createPlayer() класса GameXO. Повторите запрос.");
             }
         }
         for (int i = 0; i < namePlayer2.length(); i++) {
             if (namePlayer2.charAt(i) == ' ') {
-                log.warn("ОШИБКА - в имени второго игрока есть пробел. Метод createPlayer() класса GameXO");
-                return -1;
+                throw new XoException("ОШИБКА - в имени второго игрока есть пробел. Метод createPlayer() класса GameXO. Повторите запрос.");
             }
         }
 
         // Первый игрок.
         if (namePlayer1.length() < lengthNamePlayer) {
-            log.warn("ОШИБКА - имя первого игрока < 3 символов. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - имя первого игрока < 3 символов. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
         if (value1.equals("Х") || value1.equals("О")) player1 = new Player(namePlayer1, value1);   // Создаем первого игрока.
         else {
-            log.warn("ОШИБКА - символ первого игрока != Х или О. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - символ первого игрока != Х или О. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
 
         // Второй игрок.
         if (namePlayer2.length() < lengthNamePlayer) {
-            log.warn("ОШИБКА - имя второго игрока < 3 символов. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - имя второго игрока < 3 символов. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
         if (value1.equals("О"))
             if (value2.equals("Х")) player2 = new Player(namePlayer2, "Х");   // Создаем второго игрока.
             else {
-                log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
-                return -1;
+                throw new XoException("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO. Повторите запрос.");
             }
         else if (value1.equals("Х"))
             if (value2.equals("О")) player2 = new Player(namePlayer2, "О");   // Создаем второго игрока.
             else {
-                log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
-                return -1;
+                throw new XoException("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO. Повторите запрос.");
             }
         else {
-            log.warn("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO");
-            return -1;
+            throw new XoException("ОШИБКА - символ второго игрока != Х или О. Метод createPlayer() класса GameXO. Повторите запрос.");
         }
 
         gameplay.setPlayer1(player1);
         gameplay.setPlayer2(player2);
-
-        return 1;
 
     }   // Создаем игроков.
     private String nameFile(String namePlayer1, String namePlayer2, InterfaceParser parser) {

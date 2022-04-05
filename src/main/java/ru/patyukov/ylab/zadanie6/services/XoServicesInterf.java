@@ -1,24 +1,36 @@
 package ru.patyukov.ylab.zadanie6.services;
 
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface XoServicesInterf {
 
-    // Главная страница.
-    String gameplay(GameXO gameXO, SessionStatus sessionStatus);
+    // Статистика из БД.
+    List<ModelStatisticsPlayer> statisticsPlayerBD();
 
-    // Страница статистики.
-    String statisticsPlayer(GameXO gameXO);
+    // Статистика из файла.
+    List<ModelStatisticsPlayer> statisticsPlayerFile();
 
     // Создаем игроков.
-    String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, GameXO gameXO);
+    String playerSave(String namePlayer1, String value1, String namePlayer2, String value2);
 
     // Очередной ход.
-    String playNext(GameXO gameXO, ArrayList<Field> fieldList, String xy);
+    String playNext(Long historyID, String xy);
+
+    // Получаем идентификатор истории игры, имена игроков и статус игры из БД.
+    List<NameHistory> listNameHistory();
+
+    // Воспроизводим игру из БД по идентификационному номеру истории.
+    public List<Field> historyIdPlay(long historyID);
+
+
+
+
 
     // Воспроизводим игру из файла.
     String fileplay(MultipartFile file, ArrayList<Field> fieldList, GameXO gameXO);
@@ -26,6 +38,5 @@ public interface XoServicesInterf {
     // Воспроизводим игру из файла по имении файла.
     String nameFilePlay(ArrayList<Field> fieldList, GameXO gameXO, String namefile);
 
-    // Воспроизводим игру из БД по идентификационному номеру истории.
-    String historyIdPlay(ArrayList<Field> fieldList, GameXO gameXO, String historyID);
+
 }

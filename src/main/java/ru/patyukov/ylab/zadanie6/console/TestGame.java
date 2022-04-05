@@ -9,15 +9,17 @@ public class TestGame {
 
     private static Scanner scanner = new Scanner(System.in);
 
+    private static boolean flag = true;
+
     public static void main(String[] args) {
 
         GameXO gameXO = new GameXO();      // Движок игры.
 
-        while (gameXO.isFlag()) {
+        while (flag) {
             System.out.println("\n\n\t\tКРЕСТИКИ НОЛИКИ\n");
 
             gameResult(gameXO);   // Метод просмотра истории и управления.
-            if (!gameXO.isFlag()) break;
+            if (!flag) break;
 
             gameXO = new GameXO();      // Движок игры. Нужно обнулится.
             System.out.println("=========================================================\n\n");
@@ -137,8 +139,10 @@ public class TestGame {
             System.out.print("Символ - ");
             String value2 = scanner.nextLine();
 
-            if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) System.out.println("ОШИБКА - не правильный ввод\n");
-            else break;
+//            if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) System.out.println("ОШИБКА - не правильный ввод\n");
+//            else break;
+            // Закомментировано потому что изменилась работа метода createPlayer()
+            break;
         }
     }      // Создаем игроков.
     public static void gameResult(GameXO gameXO) {
@@ -167,7 +171,7 @@ public class TestGame {
 
             // Обработка ввода.
             if (buffer.equals("EXIT")) {
-                gameXO.setFlag(false);
+                flag = false;
                 return;
             }
             else if (buffer.equals("STAT")) {

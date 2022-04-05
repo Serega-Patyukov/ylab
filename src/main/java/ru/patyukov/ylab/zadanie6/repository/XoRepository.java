@@ -44,7 +44,10 @@ public class XoRepository {
     }
 
 
-
+    // Обновляем историю.
+    public Gameplay updateHistory(Gameplay gameplay) {
+        return xoHistRepInterf.updateHistory(gameplay);
+    }
 
     // Сохраняем историю игры.
     public Gameplay saveHistory(Gameplay gameplay){
@@ -56,7 +59,7 @@ public class XoRepository {
         return xoHistRepInterf.findByHistoryId(historyID);
     }
 
-    // Получаем идентификатор истории игры и имена игроков.
+    // Получаем идентификатор истории игры, имена игроков и статус игры.
     public List<NameHistory> findByHistory() {
         return xoHistRepInterf.findByHistory();
     }

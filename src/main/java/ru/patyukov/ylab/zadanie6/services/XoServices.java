@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import ru.patyukov.ylab.zadanie6.exceptions.XoException;
 import ru.patyukov.ylab.zadanie6.model.Gameplay;
+import ru.patyukov.ylab.zadanie6.model.NameHistory;
 import ru.patyukov.ylab.zadanie6.model.game.Cell;
 import ru.patyukov.ylab.zadanie6.model.game.Field;
+import ru.patyukov.ylab.zadanie6.model.game.GameResult;
 import ru.patyukov.ylab.zadanie6.repository.XoRepository;
 import ru.patyukov.ylab.zadanie6.model.ModelStatisticsPlayer;
 
@@ -17,7 +19,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,95 +28,119 @@ public class XoServices implements XoServicesInterf {
 
     private final XoRepository xoRepository;   // Объект по работе со слоем Repository.
 
-    // Главная страница.
+    // Создаем игроков
     @Override
-    public String gameplay(GameXO gameXO, SessionStatus sessionStatus) {
+    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2) {
 
-        sessionStatus.setComplete();
-
-        //  Записываем в переменную listPath класса gameXO список имен файлов с историей игры.
         /*
-            Если возникнет ошибка при записи, то сохраняем в переменную строку "Не удалось получить список".
-            Если файлов нет, то сохраним в переменную строку "пусто".
+        Метод на вход получат имена и символы игроков.
+
+        Если при обработке полученных данных не произойдет выброса исключения XoException, то:
+            - метод проверяет свободно ли поле. Если занято, то вернет соответствующее сообщение. Иначе
+            - метод создает игру (объект который хранит историю игры), присваивает ей идентификационный номер historyID,
+            и сохраняет созданную игру в БД.
+        Иначе перехваченное исключение вернет описание ошибки.
+
+        Метод вернет статус ОК.
+        Метод вернет идентификационный номер historyID, по которому нужно будет обращаться в следующих запросах, для продолжения игры.
+        Метод вернет имя игрока, который начинает играть.
          */
-        if (gameXO.createGameList() != 1) {
-            gameXO.setListPath(new ArrayList<>(Arrays.asList("Не удалось получить список")));
-        }
-        else {
-            if (gameXO.getListPath().size() == 0) {
-                gameXO.setListPath(new ArrayList<>(Arrays.asList("пусто")));
+
+        // Проверяем доступность поля.
+        List<NameHistory> nameHistories = xoRepository.findByHistory();   //   Получаем идентификатор истории игры, имена игроков и статус игры.
+        if (nameHistories.size() > 0) {
+            long historyID = nameHistories.get(nameHistories.size() - 1).getHistoryID();   // Из списка получаем последний идентификатор истории.
+            Optional<Gameplay> optionalGameplay = xoRepository.findByHistoryId(historyID);   // Получаем игру из БД по идентификатору.
+            if (!optionalGameplay.isEmpty()) {   // Если история есть
+                if (!optionalGameplay.get().isStatus()) throw new XoException("Поле занято. Ждите."); // Если поле занято.
             }
         }
 
-        // Получаем список идентификаторов истории игры и имен игроков из БД.
-        gameXO.setNameHistories(xoRepository.findByHistory());
 
-        return "zadanie6/gameplay";
-    }
+        GameXO gameXO = new GameXO();   // Создаем временный объект игрового движка.
+        gameXO.getGameplay().setGameResult(new GameResult());   // Добавляем объект для хранения игрока победителя.
 
-    // Страница статистики.
-    @Override
-    public String statisticsPlayer(GameXO gameXO) {
-
-        // Записываем статистику в переменную statisticsArrayList класса StatisticsPlayer
-        /*
-            Если возникнет ошибка при записи, то сохраняем в переменную строку "Не удалось получить статистику".
-         */
-
-        gameXO.getStatisticsPlayer().setStatisticsArrayList(new ArrayList<>());   // Очищаем список.
-        if (gameXO.getStatisticsPlayer().printStatisticsPlayer(false) != 1) {   // Записываем статистику в список.
-            gameXO.getStatisticsPlayer().setStatisticsArrayList((
-                    new ArrayList<>(Arrays.asList(new ArrayList<>(Arrays.asList("Не удалось получить статистику"))))));
-        }
-
-        // Статистика всех игроков из БД.
-        gameXO.getStatisticsPlayer().setModelStatisticsPlayer(xoRepository.finaAllStat());
-
-        return "zadanie6/statisticsplayer";
-    }
-
-    // Создаем игроков.
-    @Override
-    public String playerSave(String namePlayer1, String value1, String namePlayer2, String value2, GameXO gameXO) {
-
-        // Создаем игроков.
-        if (gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2) != 1) {
-            return "zadanie6/createPlayer";
-        }
+        gameXO.createPlayer(namePlayer1, value1, namePlayer2, value2);   // Создаем игроков.
 
         gameXO.queue();   // Определяем кто первым начнет.
 
-        return "zadanie6/playNext";
+        xoRepository.saveHistory(gameXO.getGameplay());   // Сохраняем в БД объект, который хранит историю игры.
+
+        if (gameXO.getGameplay().getPlayer1().getId().equals("1")) return "" +
+                "OK - Игроки созданы. " +
+                "historyID - " + gameXO.getGameplay().getHistoryID() + ". " +
+                "Начнет " + gameXO.getGameplay().getPlayer1().getName();
+        else return  "" +
+                "OK - Игроки созданы. " +
+                "historyID - " + gameXO.getGameplay().getHistoryID() + ". " +
+                "Начнет " + gameXO.getGameplay().getPlayer2().getName();
     }
 
     // Очередной ход.
     @Override
-    public String playNext(GameXO gameXO, ArrayList<Field> fieldList, String xy) {
+    public String playNext(Long historyID, String xy) {
+
+        /*
+        Метод на вход получает идентификационный номер игры (объекта который хранит историю) и координаты.
+
+        По идентификационному номеру метод из БД получает игру (объекта который хранит историю).
+        Если игры с полученным номером нет, то метод кидает исключение XoException с соответствующим сообщением.
+        Если игра с полученным номером есть, но статус этой игры true, (что означает, что игра завершена),
+        то метод кидает исключение XoException с соответствующим сообщением.
+
+        Метод проверит координаты.
+        Если возникнет ошибка, то метод кинет исключение XoException с соответствующим сообщением.
+
+        Иначе игру можно продолжить.
+
+        В процессе игры могут возникать исключения XoException.
+        Перехватчик исключений вернет соответсвующее сообщение.
+
+        По завершению очередного хода метод сохраняет историю в БД.
+        И возвращает результат очередного хода в виде сообщения.
+         */
+
+        String result = "";   // Тут будет ответ метода.
+
+        Optional<Gameplay> optionalGameplay = xoRepository.findByHistoryId(historyID);   // Получаем игру из БД.
+        if (optionalGameplay.isEmpty()) throw new XoException("ОШИБКА - истории с указанным идентификационным номером не найдена. Повторите запрос.");
+        if (optionalGameplay.get().isStatus()) throw new XoException("ОШИБКА - истории с указанным идентификационным номером завершена. Повторите запрос.");
+
         int xNumber;
         int yNumber;
 
-        if (xy.length() != 2) return "zadanie6/playNext";
+        if (xy.length() != 2) throw new XoException("ОШИБКА - координаты должны состоять из 2 символов.  Повторите запрос.");
 
         try {
             xNumber = Integer.parseInt(String.valueOf(xy.charAt(0)));
             yNumber = Integer.parseInt(String.valueOf(xy.charAt(1)));
         } catch (Exception e) {
-            return "zadanie6/playNext";
+            throw new XoException("ОШИБКА - в координатах не должно быть символов отличных от цифр.  Повторите запрос.");
         }
 
         // ИГРА НАЧАЛАСЬ.
 
-        gameXO.setCount(gameXO.getCount() + 1);
+        GameXO gameXO = new GameXO();   // Создаем временный объект игрового движка.
+        gameXO.getGameplay().setGameResult(new GameResult());   // Добавляем объект для хранения игрока победителя.
 
+        gameXO.setGameplay(optionalGameplay.get());   // Помещаем историю игры в игровой движок.
+
+        // Инициализируем поля движка.
+        gameXO.setCount(gameXO.getGameplay().sizeGame() + 1);   // Задаем номер следующего шага.
+        addFieldList(gameXO, false);   // Задаем поле.
+
+        // Первый игрок делает очередной ход.
         if (gameXO.getGameplay().getPlayer1().isStartStop()) {
             if (gameXO.goPlayer1(gameXO.getCount(), xNumber, yNumber) != 1) {  // Первый игрок делает очередной ход.
-                return "zadanie6/playNext";
+                throw new XoException("ОШИБКА - первый игрок мухлюет. Его забанил хранитель кода. Пусть повторит запрос.");
             }
-        }
+            result = "OK - игрок " + gameXO.getGameplay().getPlayer1().getName() + " сделал ход";
+        }   // Второй игрок делает очередной ход.
         else if (gameXO.getGameplay().getPlayer2().isStartStop()) {
             if (gameXO.goPlayer2(gameXO.getCount(), xNumber, yNumber) != 1) {   // Второй игрок делает очередной ход.
-                return "zadanie6/playNext";
+                throw new XoException("ОШИБКА - второй игрок мухлюет. Его забанил хранитель кода. Пусть повторит запрос");
             }
+            result =  "OK - игрок " + gameXO.getGameplay().getPlayer2().getName() + " сделал ход";
         }
 
         // ПОДВОДИМ ИТОГИ ОЧЕРЕДНОГО ХОДА.
@@ -123,30 +149,99 @@ public class XoServices implements XoServicesInterf {
         // Обрабатываем победителя, если он есть.
         if (!namePlayer.equals("")) {
             gameXO.finish(namePlayer);   // Обрабатываем победителя.
-            gameXO.setFlag(false);
 
             // Сохраняем статистику в БД.
             if (namePlayer.equals(gameXO.getGameplay().getPlayer1().getName())) saveStatisticsPlayer(gameXO.getGameplay().getPlayer1().getName(), gameXO.getGameplay().getPlayer2().getName());
             else saveStatisticsPlayer(gameXO.getGameplay().getPlayer2().getName(), gameXO.getGameplay().getPlayer1().getName());
 
-            // Сохраняем историю в БД.
-            xoRepository.saveHistory(gameXO.getGameplay());
+            // Завершаем игру.
+            gameXO.getGameplay().setStatus(true);
+
+            result = "OK - Победил - " + namePlayer;
         }
         // Проверяем на ничью.
         if (!gameXO.getField().gameOver()) {
             gameXO.draw();   // Обрабатываем ничью.
-            gameXO.setFlag(false);
 
-            // Сохраняем историю в БД.
-            xoRepository.saveHistory(gameXO.getGameplay());
+            // Завершаем игру.
+            gameXO.getGameplay().setStatus(true);
+
+            result = "OK - Ничья";
         }
 
-        return "zadanie6/playNext";
+        // Обновляем историю в БД.
+        xoRepository.updateHistory(gameXO.getGameplay());
+
+        return result;
     }
+
+    // Статистика из БД.
+    @Override
+    public List<ModelStatisticsPlayer> statisticsPlayerBD() {
+
+        GameXO gameXO = new GameXO();
+
+         // Статистика всех игроков из БД.
+         gameXO.getStatisticsPlayer().setModelStatisticsPlayer(xoRepository.finaAllStat());
+
+         if (gameXO.getStatisticsPlayer().getModelStatisticsPlayer().size() == 0) throw new XoException("В статистике пусто");
+
+        return gameXO.getStatisticsPlayer().getModelStatisticsPlayer();
+    }
+
+    // Статистика из файла.
+    @Override
+    public List<ModelStatisticsPlayer> statisticsPlayerFile() {
+
+        // Записываем статистику в переменную statisticsArrayList класса StatisticsPlayer
+        /*
+            Если возникнет ошибка при записи, то кидаем исключение.
+         */
+
+        GameXO gameXO = new GameXO();
+
+        if (gameXO.getStatisticsPlayer().printStatisticsPlayer(false) != 1) {   // Записываем статистику в список.
+            throw new XoException("ОШИБКА - Не удалось получить статистику");
+        }
+
+        if (gameXO.getStatisticsPlayer().getStatisticsArrayList().size() == 0) throw new XoException("В статистике пусто");
+
+        return gameXO.getStatisticsPlayer().getStatisticsArrayList();
+    }
+
+    // Получаем идентификатор истории игры, имена игроков и статус игры из БД.
+    @Override
+    public List<NameHistory> listNameHistory() {
+        if (xoRepository.findByHistory().size() == 0) throw new XoException("В истории пусто");
+        return xoRepository.findByHistory();
+    }
+
+    // Воспроизводим игру из БД по идентификационному номеру истории.
+    @Override
+    public List<Field> historyIdPlay(long historyID) {
+
+        if (historyID < 1) throw new XoException("ОШИБКА - недопустимое значение идентификационного номера истории игры");
+
+        Optional<Gameplay> gameplay = xoRepository.findByHistoryId(historyID);
+        if (gameplay.isEmpty()) throw new XoException("ОШИБКА - нет такой истории");
+
+        GameXO gameXO = new GameXO();   // Создаем временный объект движка игры.
+        gameXO.getGameplay().setGameResult(new GameResult());   // Создаем объект хранящий победителя.
+        Gameplay gp = gameplay.get();   // Получаем историю игры из БД.
+        gameXO.setGameplay(gp);   // Передаем историю игры игровому движку.
+
+        return addFieldList(gameXO, true);
+    }
+
+
+
+
+
 
     // Воспроизводим игру из файла.
     @Override
-    public String fileplay(MultipartFile file, ArrayList<Field> fieldList, GameXO gameXO) {
+    public String fileplay(@ModelAttribute MultipartFile file, ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO) {
+
         if (file.getOriginalFilename().equals("")) {
             throw new XoException("Имя файла не введено");
         }
@@ -169,14 +264,14 @@ public class XoServices implements XoServicesInterf {
             throw new XoException("С файлом что то не так");
         }
 
-        addFieldList(fieldList, gameXO);
+        //addFieldList(fieldList, gameXO);
 
         return "zadanie6/filePlay";
     }
 
     // Воспроизводим игру из файла по имении файла.
     @Override
-    public String nameFilePlay(ArrayList<Field> fieldList, GameXO gameXO, String namefile) {
+    public String nameFilePlay(@ModelAttribute ArrayList<Field> fieldList, @ModelAttribute GameXO gameXO, String namefile) {
 
         try {
             if (namefile.endsWith(".xml")) gameXO.setGameplay(gameXO.getXmlDomParser().read((gameXO.getPath() + namefile), null));
@@ -190,34 +285,13 @@ public class XoServices implements XoServicesInterf {
             throw new XoException("С файлом что то не так");
         }
 
-        addFieldList(fieldList, gameXO);
+        //addFieldList(fieldList, gameXO);
 
         return "zadanie6/filePlay";
     }
 
-    // Воспроизводим игру из БД по идентификационному номеру истории.
-    @Override
-    public String historyIdPlay(ArrayList<Field> fieldList, GameXO gameXO, String historyID) {
 
-        long id = -1;
-        try {
-            id = Integer.parseInt(historyID);
-        } catch (Exception e) {
-            throw new XoException("Введенные данные не являются числом");
-        }
-        if (id < 1) throw new XoException("Нет такой истории");
 
-        Optional<Gameplay> gameplay = xoRepository.findByHistoryId(id);
-        if (gameplay.isEmpty()) throw new XoException("Нет такой истории");
-        else {
-            Gameplay gp = gameplay.get();
-            gameXO.setGameplay(gp);
-        }
-
-        addFieldList(fieldList, gameXO);
-
-        return "zadanie6/filePlay";
-    }
 
 
             // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
@@ -254,31 +328,47 @@ public class XoServices implements XoServicesInterf {
         }
     }
 
-    // Метод заполняет список полей.
-    private void addFieldList(ArrayList<Field> fieldList, GameXO gameXO) {
+    // Метод заполняет поля.
+    private List<Field> addFieldList(GameXO gameXO, boolean flag) {
 
-        // fieldList - Список полей. Каждое поле очередной ход. Сколько было ходов, столько и будет полей в списке.
+        /*
+        flag - true метод заполняет и возвращает список полей fieldList.
+             - false метод заполняет и возвращает поле для игрового движка.
+         */
+
+        // Список полей. Каждое поле очередной ход. Сколько было ходов, столько и будет полей в списке.
+        ArrayList<Field> fieldList = new ArrayList<>();
 
         // Заполняем список полей пустыми полями, количество которых равно количеству ходов.
         for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) fieldList.add(new Field());
 
-        Cell[] temp = new Cell[gameXO.getGameplay().sizeGame()];   // Массив всех клеток с ходами.
+        // Массив всех клеток с ходами. Тут задаем размер.
+        Cell[] temp = new Cell[gameXO.getGameplay().sizeGame()];
 
         // Проходим по каждому ходу. И заполняем массив клеток с ходами.
         for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) {
 
             Field buf = new Field();
 
-            // Получаем массив клеток поля по координатам.
+            // Получаем клетку поля.
             temp[i] = buf.cell(gameXO.getGameplay().getGame().get(i).getX(), gameXO.getGameplay().getGame().get(i).getY());
 
-            // По id игрока устанавливаем значение клетки (Х или О).
-            if (gameXO.getGameplay().getPlayer1().getId().equals(gameXO.getGameplay().getGame().get(i).getPlayerId())) temp[i].setValue(gameXO.getGameplay().getPlayer1().getValue());
-            else temp[i].setValue(gameXO.getGameplay().getPlayer2().getValue());
+            // По id игрока устанавливаем значение переменных клетки.
+            if (gameXO.getGameplay().getPlayer1().getId().equals(gameXO.getGameplay().getGame().get(i).getPlayerId())) {
+                temp[i].setValue(gameXO.getGameplay().getPlayer1().getValue());   // Задаем символ.
+                temp[i].setNamePlayer(gameXO.getGameplay().getPlayer1().getName());   // Задаем имя игрока который владеет клеткой.
+                temp[i].setStatus(false);   // Делаем клетку занятой.
+            }
+            else {
+                temp[i].setValue(gameXO.getGameplay().getPlayer2().getValue());   // Задаем символ.
+                temp[i].setNamePlayer(gameXO.getGameplay().getPlayer2().getName());   // Задаем имя игрока который владеет клеткой.
+                temp[i].setStatus(false);   // Делаем клетку занятой.
+            }
         }
 
-        // Тут заполняется список полей. Каждое поле (каждый ход).
-        for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) {   // Перебираем все поля из списка полей.
+        if (flag) {
+            // Тут заполняется список полей. Каждое поле (каждый ход).
+            for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) {   // Перебираем все поля из списка полей.
             /*
                 Это описание к следующему циклу.
 
@@ -288,16 +378,34 @@ public class XoServices implements XoServicesInterf {
                    - На 2 поле сохраним 0, 1 и 3 ход
                    - И так далее
              */
-            for (int l = 0, n = 0; (l < temp.length) && (n <= i); l++, n++) {
-                for (int j = 0; j < 3; j++) {    // Тут перебираем все поле.
-                    for (int k = 0; k < 3; k++) {   // Тут перебираем все поле.
-                        if ((j == temp[l].getX()) && (k == temp[l].getY())) {   // Сохраняем клетку из массива клеток на поле.
-                            Cell buf = fieldList.get(i).cell(j, k);
-                            buf.setValue(temp[l].getValue());
+                for (int l = 0, n = 0; (l < temp.length) && (n <= i); l++, n++) {
+                    for (int j = 0; j < 3; j++) {    // Тут перебираем все поле.
+                        for (int k = 0; k < 3; k++) {   // Тут перебираем все поле.
+                            if ((j == temp[l].getX()) && (k == temp[l].getY())) {   // Сохраняем клетку из массива клеток на поле.
+                                Cell buf = fieldList.get(i).cell(j, k);
+                                buf.setValue(temp[l].getValue());
+                                buf.setNamePlayer(temp[l].getNamePlayer());
+                                buf.setStatus(false);
+                            }
                         }
                     }
                 }
             }
+            return fieldList;
+        } else {
+            // Заполняем поле в игровом движке.
+            List<Field> fieldListBuf = new ArrayList<>();
+            Field field = new Field();
+            for (int i = 0; i < gameXO.getGameplay().sizeGame(); i++) {
+                Cell cell = temp[i];
+                Cell cellField = field.cell(cell.getX(), cell.getY());
+                cellField.setValue(cell.getValue());              // Задаем символ.
+                cellField.setNamePlayer(cell.getNamePlayer());   // Задаем имя игрока который владеет клеткой.
+                cellField.setStatus(false);                     // Делаем клетку занятой.
+            }
+            fieldListBuf.add(field);
+            gameXO.setField(field);
+            return fieldListBuf;
         }
     }
 }
