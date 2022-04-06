@@ -52,7 +52,7 @@ public class XoHistRep implements XoHistRepInterf {
         List<Step> stepList = gameplay.getGame();   // Получаем список ходов.
 
         // Сохраняем последний шаг в связанную таблицу step.
-        saveStep(gameplay.getHistoryID(), stepList.get(stepList.size() - 1));
+        if (stepList.size() != 0) saveStep(gameplay.getHistoryID(), stepList.get(stepList.size() - 1));
 
         return gameplay;
     }
