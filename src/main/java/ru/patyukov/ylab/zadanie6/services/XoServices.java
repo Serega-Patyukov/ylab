@@ -315,7 +315,7 @@ public class XoServices implements XoServicesInterf {
 
 
     // Метод сохраняет статистику игры в БД.
-    public void saveStatisticsPlayer(String namePlayerWon, String namePlayerLost) {
+    private void saveStatisticsPlayer(String namePlayerWon, String namePlayerLost) {
 
         // Метод сохраняет статистику игры в БД.
     /*
