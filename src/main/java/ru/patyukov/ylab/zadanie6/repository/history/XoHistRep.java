@@ -206,7 +206,7 @@ public class XoHistRep implements XoHistRepInterf {
     // Получаем идентификатор истории игры, имена игроков и статус игры.
     @Override
     public List<NameHistory> findByHistory() {
-        return jdbcTemplate.query("select history_id, status, name_player_1, name_player_2 from historygame", this::rowMap);
+        return jdbcTemplate.query("select history_id, status, name_player_1, id_1, name_player_2, id_2, id_pobed from historygame", this::rowMap);
     }
 
     private NameHistory rowMap(ResultSet row, int rowNum) throws SQLException {
@@ -214,6 +214,9 @@ public class XoHistRep implements XoHistRepInterf {
                 row.getLong("history_id"),
                 row.getBoolean("status"),
                 row.getString("name_player_1"),
-                row.getString("name_player_2"));
+                row.getString("id_1"),
+                row.getString("name_player_2"),
+                row.getString("id_2"),
+                row.getString("id_pobed"));
     }
 }

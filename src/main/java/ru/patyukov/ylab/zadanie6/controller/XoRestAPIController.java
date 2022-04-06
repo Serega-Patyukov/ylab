@@ -17,15 +17,25 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/gameplay/api")
 @AllArgsConstructor
 public class XoRestAPIController {
 
     private final XoServicesInterf xoServicesInterf;   // Объект по работе со слоем Services.
 
-
-            // МЕТОДЫ GET
-
+    @GetMapping("/help")
+    public String help() {
+        return "http://localhost:8080/gameplay/api/statisticsplayerBD - Статистика игроков. Хранится в БД.\n" +
+                "http://localhost:8080/gameplay/api/statisticsplayerFile - Статистика игроков. Хранится в файле в локальном хранилище.\n" +
+                "http://localhost:8080/gameplay/api/listPath - Имена файлов с историей игр. Файлы хранится в локальном хранилище.\n" +
+                "http://localhost:8080/gameplay/api/nameFilePlay/{namefile} - Воспроизведение игры из файла по имении файла.\n" +
+                "http://localhost:8080/gameplay/api/listNameHistory - Краткая информация об истории игр. Хранится в БД. Тут можно узнать идентификатор игры historyID.\n" +
+                "http://localhost:8080/gameplay/api/historyIdPlay/{historyID} - Воспроизведение игры из БД по идентификационному номеру истории.\n" +
+                "http://localhost:8080/gameplay/api/returnGameplay/{historyID} - Возвращение объекта истории из БД по идентификационному номеру.\n" +
+                "http://localhost:8080/gameplay/api/fileplay - Воспроизведение игры из файла json или xml.\n" +
+                "http://localhost:8080/gameplay/api/playerSave - Создание игроков и получение идентификационного номера присвоенного игре.\n" +
+                "http://localhost:8080/gameplay/api/playNext/{historyID}/{xy} - Очередной ход. Оправка координат по идентификационному номеру";
+    }
 
     // Статистика из БД.
     @GetMapping("/statisticsplayerBD")
@@ -39,7 +49,19 @@ public class XoRestAPIController {
         return xoServicesInterf.statisticsPlayerFile();
     }
 
-    // Получаем идентификатор истории игры, имена игроков и статус игры из БД.
+    // Имена файлов с историей игр, хранящихся в локальном хранилище.
+    @GetMapping("/listPath")
+    public List<String> listPath() {
+        return xoServicesInterf.listPath();
+    }
+
+    // Воспроизводим игру из файла по имении файла.
+    @GetMapping("/nameFilePlay/{namefile}")
+    public List<Field> nameFilePlay(@PathVariable String namefile) {
+        return xoServicesInterf.nameFilePlay(namefile);
+    }
+
+    // Краткая информация об истории игр. Получаем идентификатор истории игры, имена игроков и статус игры из БД.
     @GetMapping("/listNameHistory")
     public List<NameHistory> listNameHistory() {
         return xoServicesInterf.listNameHistory();
@@ -57,22 +79,11 @@ public class XoRestAPIController {
         return xoServicesInterf.returnGameplay(historyID);
     }
 
-    // Имена файлов с историей игры хранящихся на диске.
-    @GetMapping("/listPath")
-    public List<String> listPath() {
-        return xoServicesInterf.listPath();
+    // Воспроизводим игру из файла.
+    @PostMapping("/fileplay")
+    public List<Field> fileplay(@RequestPart MultipartFile file) {
+        return xoServicesInterf.fileplay(file);
     }
-
-    // Воспроизводим игру из файла по имении файла.
-    @GetMapping("/nameFilePlay/{namefile}")
-    public List<Field> nameFilePlay(@PathVariable String namefile) {
-        return xoServicesInterf.nameFilePlay(namefile);
-    }
-
-
-
-            // МЕТОДЫ POST
-
 
     // Создаем игроков.
     @PostMapping("/playerSave")
@@ -86,12 +97,6 @@ public class XoRestAPIController {
     @PostMapping("/playNext/{historyID}/{xy}")
     public String playNext(@PathVariable Long historyID, @PathVariable String xy) {
         return xoServicesInterf.playNext(historyID, xy);
-    }
-
-    // Воспроизводим игру из файла.
-    @PostMapping("/fileplay")
-    public List<Field> fileplay(@RequestPart MultipartFile file) {
-        return xoServicesInterf.fileplay(file);
     }
 
 

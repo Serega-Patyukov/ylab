@@ -252,7 +252,7 @@ public class XoServices implements XoServicesInterf {
         GameXO gameXO = new GameXO();
 
         if (gameXO.createGameList() != 1) throw new XoException("ОШИБКА - Не удалось получить список");
-        if (gameXO.getListPath().size() == 0) throw new XoException("Файлы не с историей не найдены.");
+        if (gameXO.getListPath().size() == 0) throw new XoException("Файлы с историей не найдены.");
 
         return gameXO.getListPath();
     }
